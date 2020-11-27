@@ -1,0 +1,19 @@
+{
+  "name": "fat-arrow",
+  "version": "0.1.0",
+  "description": "Fat Arrow is a library for Typed Functional Programming in TypeScript compatible with Node.js and all major browsers.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/matteoantoci/fat-arrow.git"
+  },
+  "author": "Matteo Antoci",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/matteoantoci/fat-arrow/issues"
+  },
+  "homepage": "https://github.com/matteoantoci/fat-arrow#readme"
+}
