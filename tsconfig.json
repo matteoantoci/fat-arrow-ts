@@ -14,11 +14,8 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "noFallthroughCasesInSwitch": true,
-	"emitDeclarationOnly": true,
-	"declaration": true,
-	"outDir": "dist"
   },
   "include": [
-    "src/index.ts"
+    "src"
   ]
 }
