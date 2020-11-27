@@ -8,7 +8,7 @@ Fat Arrow is a library for Typed Functional Programming in TypeScript compatible
   
 ```bash  
 npm install @m84/fat-arrow  
-```  
+```
   
 ## Quick start  
   
@@ -53,7 +53,14 @@ See the API documentation for more details on this topic.
 
 ### Jest matchers
 
-Just add `import '@m84/fat-arrow/jest-matchers'` to your `setupTest.ts` and you'll be able to use these additional matchers in your tests:
+* Install `jest-matchers-utils`
+    ```bash  
+    npm install --save-dev jest-matcher-utils
+    ```
+  
+* Add `import '@m84/fat-arrow/jest-matchers'` to your `setupTest.ts`
+
+These steps will let you be able to use these additional matchers in your tests:
 * `expect(actual).toBeRight(expected)` -> asserts if `expected` is _right_ and has the expected value. It accepts both raw values and data type instances.
 * `expect(actual).toBeLeft(expected)` -> asserts if `expected` is _left_ and has the expected value. It accepts both raw values and data type instances.
 * `expect(spy).toHaveBeenLastCalledWithRight(expected)` -> asserts if a `jest.Mock` has been called last time with the expected _right_ value
