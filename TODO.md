@@ -1,5 +1,3 @@
-[ ] detach project
-
 [ ] add index.ts
 
 [ ] project on github
