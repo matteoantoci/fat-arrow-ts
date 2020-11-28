@@ -1,5 +1,5 @@
 {
-  "name": "@m84/fat-arrow",
+  "name": "fat-arrow-ts",
   "version": "0.1.0",
   "description": "Fat Arrow is a library for Typed Functional Programming in TypeScript compatible with Node.js and all major browsers.",
   "main": "dist/index.js",
