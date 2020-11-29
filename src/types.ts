@@ -1,10 +1,10 @@
-export type AnyEither = Either<any, any>
+export interface AnyEither extends Either<any, any> {}
 
 export type RightValue<E, A> = A | Either<E, A>
 
 export type LeftValue<E, A> = E | Either<E, A>
 
-export type Either<E, A> = {
+export interface Either<E, A> {
 	isLeft: boolean
 	isRight: boolean
 	toString(): string
@@ -17,6 +17,6 @@ export type Either<E, A> = {
 	mapIf(predicate: (value: A) => boolean, ifTrue: (right: A) => RightValue<E, A>): Either<E, A>
 }
 
-export type Maybe<A> = Either<void, A>
+export interface Maybe<A> extends Either<void, A> {}
 
-export type Result<A> = Either<Error, A>
+export interface Result<A> extends Either<Error, A> {}
