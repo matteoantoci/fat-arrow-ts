@@ -235,16 +235,23 @@ Works very similar to `map` but it also accepts a _predicate_ `(value: A) => boo
 It will map your type class instances only if the predicate returns `true`.
 
 ```typescript
-import { right } from 'fat-arrow-ts'; 
+import { right, left } from 'fat-arrow-ts'; 
 
-const isOdd = (num: number) => num % 2 !== 0
+const isFizzBuzz = (it: number) => it % 15 === 0
+const isFizz = (it: number) => it % 3 === 0
+const isBuzz = (it: number) => it % 5 === 0
 
-const makeEven = (num: number) => num - 1
+const fizzBuzz = (i: number) =>
+	right<string, number>(i)
+		.mapIf(isFizzBuzz, () => left('FizzBuzz'))
+		.mapIf(isFizz, () => left('Fizz'))
+		.mapIf(isBuzz, () => left('Buzz'))
+		.fold()
 
-const toEven = (value: Either<Error, number>) => value.mapIf(isOdd, makeEven)
-
-console.log(toEven(right(4)).fold()) // 4
-console.log(toEven(right(5)).fold()) // 4
+console.log(fizzBuzz(3)) // Fizz
+console.log(fizzBuzz(5)) // Buzz
+console.log(fizzBuzz(15)) // FizzBuzz
+console.log(fizzBuzz(2)) // 2
 ```
 
 #### `mapLeft`
