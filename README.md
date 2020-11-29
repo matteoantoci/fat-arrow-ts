@@ -29,7 +29,7 @@ export default {
 ## Quick start  
   
 ```typescript  
-import { left, right } from 'fat-arrow-ts ';  
+import { left, right } from 'fat-arrow-ts';  
   
 const getDivision = (numerator: number, denominator: number): Either<Error, number> => {  
     if (denominator === 0) {  
@@ -58,7 +58,7 @@ print(getDivision(10, 5).map(addTwo)) // Result is 4. Hooray!
 Fat Arrow's factory functions and data types' methods support flattening to accept both TS native values and data types themselves; in the latter case, data types objects will be flattened.  
   
 ```typescript  
-import { right } from 'fat-arrow-ts ';  
+import { right } from 'fat-arrow-ts';  
   
 const myValue = right<Error, number>(5)  
   
@@ -78,7 +78,7 @@ Here is the list of `Either<E, A>` type class methods.
 States if `Either<E, A>` is in _right_ state.
 
 ```typescript
-import { right } from 'fat-arrow-ts ';  
+import { right } from 'fat-arrow-ts';  
   
 const myValue = right<Error, number>(5)  
   
@@ -90,7 +90,7 @@ console.log(myValue.isRight) // true
 States if `Either<E, A>` is in _left_ state.
 
 ```typescript
-import { left } from 'fat-arrow-ts ';  
+import { left } from 'fat-arrow-ts';  
   
 const myValue = left<Error, number>(new Error('Ouch!'))  
   
@@ -102,7 +102,7 @@ console.log(myValue.isLeft) // true
 Takes an `Either<any, any>` in input and asserts if the passed value has the same state and **structural equality**.
 
 ```typescript
-import { right, left } from 'fat-arrow-ts ';  
+import { right, left } from 'fat-arrow-ts';  
   
 const aRightValue = right<object, object>({ foo: 'foo' })
 console.log(aRightValue.equals(aRightValue)) // true
@@ -126,7 +126,7 @@ It comes with two overloaded call signatures
 * `(ifLeft: (left: E) => B, ifRight: (right: A) => B) => B`: will accept two callbacks that will let you trigger side effects or map the value before returning it.
 
 ```typescript
-import { right, left } from 'fat-arrow-ts ';  
+import { right, left } from 'fat-arrow-ts';  
   
 const aRightValue = right<Error, number>(5)
 
@@ -158,7 +158,7 @@ By default `map` method will try to convert the returned value to an `Either<E, 
 Returning a _left_ value, you can switch to a _left_ state.
 
 ```typescript
-import { right, left } from 'fat-arrow-ts '; 
+import { right, left } from 'fat-arrow-ts'; 
   
 const myValue = right<Error, number>(5)
  
@@ -202,7 +202,7 @@ Works very similar to `map` but it also accepts a _predicate_ `(value: A) => boo
 It will map your type class instances only if the predicate returns `true`.
 
 ```typescript
-import { right } from 'fat-arrow-ts '; 
+import { right } from 'fat-arrow-ts'; 
 
 const isOdd = (num: number) => num % 2 !== 0
 
@@ -223,7 +223,7 @@ By default `mapLeft` method will try to convert the returned value to an `Either
 Returning a _right_ value, you can switch your type class instances to a _right_ state.
 
 ```typescript
-import { right, left } from 'fat-arrow-ts ';
+import { right, left } from 'fat-arrow-ts';
   
 const myValue = left<Error, number>(new Error('Ouch!'))
  
@@ -269,7 +269,7 @@ The main difference with `mapLeft` is that it will try to convert the mapped val
 As the name suggests, it works similarly to ES Promise `catch`. An optimal tool to recover from errors.
 
 ```typescript
-import { right } from 'fat-arrow-ts '; 
+import { right } from 'fat-arrow-ts'; 
 
 const aLeftValue = left<Error, string>(new Error('Ouch!'))
 
@@ -291,7 +291,7 @@ Here is a list of factory function that will let you create data type objects
 Takes a value in input and creates an `Either<E, A>` object with _right_ state.
   
 ```typescript  
-import { right } from 'fat-arrow-ts ';  
+import { right } from 'fat-arrow-ts';  
   
 const myValue = right<Error, number>(5)  
   
@@ -307,7 +307,7 @@ console.log(right(myValue).equals(myValue)) // true
 Takes a value in input and creates an `Either<E, A>` object with _left_ state.
   
 ```typescript  
-import { left } from 'fat-arrow-ts ';  
+import { left } from 'fat-arrow-ts';  
   
 const myValue = left<Error, number>(new Error('Ouch!'))  
   
@@ -326,7 +326,7 @@ Takes a value in input and creates an `Either<void, A>` object:
 * if the input value is non-nullable the produced object will have _right_ state.
   
 ```typescript  
-import { Maybe, maybe } from 'fat-arrow-ts ';  
+import { Maybe, maybe } from 'fat-arrow-ts';  
   
 const myMap = new Map([  
     ['key1', 'value1'],  
@@ -364,7 +364,7 @@ console.log(maybe(missing).isLeft) // true
 Takes a non-nullable value in input and creates a `Either<void, A>` object with _right_ state.
   
 ```typescript  
-import { just, none, maybe } from 'fat-arrow-ts ';  
+import { just, none, maybe } from 'fat-arrow-ts';  
   
 const myValue = just(5)  
   
@@ -382,7 +382,7 @@ console.log(just(myValue).equals(myValue)) // true
 Creates a `Either<void, A>` object with _left_ state.
   
 ```typescript  
-import { just, none, maybe } from 'fat-arrow-ts ';  
+import { just, none, maybe } from 'fat-arrow-ts';  
   
 const myValue = none()  
   
@@ -402,7 +402,7 @@ It takes a callback `() => A | Either<Error, A>` in input that will be run safel
 * if the callback throws an error, the `Error` will be returned as an `Either<Error, A>` with _left_ state
   
 ```typescript  
-import { tryCatch } from 'fat-arrow-ts ';
+import { tryCatch } from 'fat-arrow-ts';
 
 const getFullName = (name: string, surname: string) => {
     if (name.length < 1 || name.surname < 1) {
