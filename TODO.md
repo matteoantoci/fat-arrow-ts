@@ -1,8 +1,7 @@
 [ ] alpha validation
 
 [ ] improve readme
-* add index
-* add anchors
+* add ifElse
 
 [ ] add useEither
 

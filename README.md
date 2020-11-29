@@ -3,6 +3,34 @@
 Fat Arrow is a library for Typed Functional Programming in TypeScript compatible with Node.js and all major browsers.
 
 :warning: **Alpha release! API may change** :warning:
+
+* [Installation](#installation)
+* [Quick start](#quick-start)
+* [Features](#features)
+  + [Flattening](#flattening)
+* [API](#api)
+  + [Either](#either)
+    - [`isRight`](#-isright-)
+    - [`isLeft`](#-isleft-)
+    - [`equals`](#-equals-)
+    - [`fold`](#-fold-)
+    - [`map`](#-map-)
+    - [`mapIf`](#-mapif-)
+    - [`mapLeft`](#-mapleft-)
+    - [`catch`](#-catch-)
+  + [Factory functions](#factory-functions)
+    - [`right`](#-right-)
+    - [`left`](#-left-)
+    - [`maybe`](#-maybe-)
+    - [`just`](#-just-)
+    - [`none`](#-none-)
+    - [`tryCatch`](#-trycatch-)
+  + [Jest matchers](#jest-matchers)
+    - [toBeRight](#toberight)
+    - [toBeLeft](#tobeleft)
+    - [toHaveBeenLastCalledWithRight](#tohavebeenlastcalledwithright)
+    - [toHaveBeenLastCalledWithLeft](#tohavebeenlastcalledwithleft)
+* [Examples](#examples)
   
 ## Installation  
   
