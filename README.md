@@ -47,7 +47,7 @@ Optional: setup Jest custom matchers
 npm install --save-dev jest-matcher-utils
 ```
 
-```typescript
+```ts
 // In jest.config.ts
 
 export default {
@@ -59,7 +59,7 @@ export default {
   
 ## Quick start
   
-```typescript  
+```ts  
 import { left, right } from 'fat-arrow-ts';  
   
 const getDivision = (numerator: number, denominator: number): Either<Error, number> => {  
@@ -88,7 +88,7 @@ print(getDivision(10, 5).map(addTwo)) // Result is 4. Hooray!
   
 Fat Arrow's factory functions and data types' methods support flattening to accept both TS native values and data types themselves; in the latter case, data types objects will be flattened.  
   
-```typescript  
+```ts  
 import { right } from 'fat-arrow-ts';  
   
 const myValue = right<Error, number>(5)  
@@ -108,7 +108,7 @@ Here is the list of `Either<E, A>` type class methods.
 
 States if `Either<E, A>` is in _right_ state.
 
-```typescript
+```ts
 import { right } from 'fat-arrow-ts';  
   
 const myValue = right<Error, number>(5)  
@@ -120,7 +120,7 @@ console.log(myValue.isRight) // true
 
 States if `Either<E, A>` is in _left_ state.
 
-```typescript
+```ts
 import { left } from 'fat-arrow-ts';  
   
 const myValue = left<Error, number>(new Error('Ouch!'))  
@@ -132,7 +132,7 @@ console.log(myValue.isLeft) // true
 
 Takes an `Either<any, any>` in input and asserts if the passed value has the same state and **structural equality**.
 
-```typescript
+```ts
 import { right, left } from 'fat-arrow-ts';  
   
 const aRightValue = right<object, object>({ foo: 'foo' })
@@ -156,7 +156,7 @@ It comes with two overloaded call signatures
 * `() => E | A`: will return the value as it is
 * `(ifLeft: (left: E) => B, ifRight: (right: A) => B) => B`: will accept two callbacks that will let you trigger side effects or map the value before returning it.
 
-```typescript
+```ts
 import { right, left } from 'fat-arrow-ts';  
   
 const aRightValue = right<Error, number>(5)
@@ -190,7 +190,7 @@ Returning a _left_ value, you can switch to a _left_ state.
 
 If you are used to ES Promises you may find a lot of similarities with the `.then()` method.
 
-```typescript
+```ts
 import { right, left } from 'fat-arrow-ts'; 
   
 const myValue = right<Error, number>(5)
@@ -234,7 +234,7 @@ Works very similar to `map` but it also accepts a _predicate_ `(value: A) => boo
 
 It will map your type class instances only if the predicate returns `true`.
 
-```typescript
+```ts
 import { right, left } from 'fat-arrow-ts'; 
 
 const isFizzBuzz = (it: number) => it % 15 === 0
@@ -262,7 +262,7 @@ By default `mapLeft` method will try to convert the returned value to an `Either
 
 Returning a _right_ value, you can switch your type class instances to a _right_ state.
 
-```typescript
+```ts
 import { right, left } from 'fat-arrow-ts';
   
 const myValue = left<Error, number>(new Error('Ouch!'))
@@ -308,7 +308,7 @@ The main difference with `mapLeft` is that it will try to convert the mapped val
 
 As the name suggests, it works similarly to ES Promise `catch`. An optimal tool to recover from errors.
 
-```typescript
+```ts
 import { right } from 'fat-arrow-ts'; 
 
 const aLeftValue = left<Error, string>(new Error('Ouch!'))
@@ -330,7 +330,7 @@ Here is a list of factory function that will let you create data type objects
   
 Takes a value in input and creates an `Either<E, A>` object with _right_ state.
   
-```typescript  
+```ts  
 import { right } from 'fat-arrow-ts';  
   
 const myValue = right<Error, number>(5)  
@@ -346,7 +346,7 @@ console.log(right(myValue).equals(myValue)) // true
   
 Takes a value in input and creates an `Either<E, A>` object with _left_ state.
   
-```typescript  
+```ts  
 import { left } from 'fat-arrow-ts';  
   
 const myValue = left<Error, number>(new Error('Ouch!'))  
@@ -365,7 +365,7 @@ Takes a value in input and creates a `Maybe<A>` object, that is, an `Either<void
 * if the input value is nullable (`null | undefined`) the produced object will have _left_ state;
 * if the input value is non-nullable the produced object will have _right_ state.
   
-```typescript  
+```ts  
 import { Maybe, maybe } from 'fat-arrow-ts';  
   
 const myMap = new Map([  
@@ -403,7 +403,7 @@ console.log(maybe(missing).isLeft) // true
   
 Takes a non-nullable value in input and creates a `Maybe<A>` object with _right_ state.
   
-```typescript  
+```ts  
 import { just, none, maybe } from 'fat-arrow-ts';  
   
 const myValue = just(5)  
@@ -421,7 +421,7 @@ console.log(just(myValue).equals(myValue)) // true
   
 Creates a `Maybe<A>` object with _left_ state.
   
-```typescript  
+```ts  
 import { just, none, maybe } from 'fat-arrow-ts';  
   
 const myValue = none()  
@@ -441,7 +441,7 @@ It takes a callback `() => A | Result<A>` in input that will be run safely. It r
 * if the callback runs correctly the result of the callback will be returned as a `Result<A>` with _right_ state
 * if the callback throws an error, the `Error` will be returned as a `Result<A>` with _left_ state
   
-```typescript  
+```ts  
 import { tryCatch } from 'fat-arrow-ts';
 
 const getFullName = (name: string, surname: string): string => {
@@ -474,7 +474,7 @@ console.log(mySafeValue.isLeft) // true
   
 Takes a value in input and creates a `Result<A>` object with _right_ state.
   
-```typescript  
+```ts  
 import { ok } from 'fat-arrow-ts';  
   
 const myValue = ok(5)  
@@ -491,7 +491,7 @@ console.log(error(myValue).equals(myValue)) // true
   
 Takes a `string` or an `Error` (or its extensions) in input and creates a `Result<A>` object with _left_ state.
   
-```typescript  
+```ts  
 import { error } from 'fat-arrow-ts';  
   
 const myValue = error('Ouch!')  
@@ -512,7 +512,7 @@ See [Installation](#installation) for setup.
 
 Asserts if `expected` is _right_ and has the expected value. It accepts both raw values and data type instances.
 
-```typescript
+```ts
 import { right } from './either'
  
 it('is right', () => {
@@ -526,7 +526,7 @@ it('is right', () => {
 
 Asserts if `expected` is _left_ and has the expected value. It accepts both raw values and data type instances.
 
-```typescript
+```ts
 import { left } from './either'
  
 it('is left', () => {
@@ -540,7 +540,7 @@ it('is left', () => {
 
 Asserts if a `jest.Mock` has been called last time with the expected _right_ value
 
-```typescript
+```ts
 it('is called with right', () => {
     const spy = jest.fn()
 
@@ -554,7 +554,7 @@ it('is called with right', () => {
 
 Asserts if a `jest.Mock` has been called last time with the expected _left_ value
 
-```typescript
+```ts
 it('is called with left', () => {
     const spy = jest.fn()
 
