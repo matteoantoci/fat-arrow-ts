@@ -1,4 +1,4 @@
-# => Fat Arrow &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/facebook/react/blob/master/LICENSE)
+# => Fat Arrow &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/facebook/react/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/fat-arrow-ts.svg?style=flat)](https://www.npmjs.com/package/fat-arrow-ts)
 
 Fat Arrow is a library for Typed Functional Programming in TypeScript compatible with Node.js and all major browsers.
 
@@ -17,7 +17,7 @@ Optional: setup Jest custom matchers
 
 export default {
     setupFilesAfterEnv: [
-      'fat-arrow-ts/dist/jest-matchers'
+      'fat-arrow-ts/jest-matchers'
     ],
 }
 ```
