@@ -31,6 +31,7 @@ Fat Arrow is a library for Typed Functional Programming in TypeScript compatible
     - [toHaveBeenLastCalledWithRight](#tohavebeenlastcalledwithright)
     - [toHaveBeenLastCalledWithLeft](#tohavebeenlastcalledwithleft)
 * [Examples](#examples)
+    + [Tennis game](#tennis-game)
   
 ## Installation
   
@@ -456,24 +457,66 @@ console.log(myValue.isLeft) // true
 
 ### Jest matchers
 
-See _Installation_ for setup.
+See [Installation](#installation) for setup.
 
 #### toBeRight
 
 Asserts if `expected` is _right_ and has the expected value. It accepts both raw values and data type instances.
 
+```typescript
+import { right } from './either'
+ 
+it('is right', () => {
+    const actual = right<Error, number>(5)
+
+    expect(actual).toBeRight(5);
+})
+```
+
 #### toBeLeft
 
 Asserts if `expected` is _left_ and has the expected value. It accepts both raw values and data type instances.
+
+```typescript
+import { left } from './either'
+ 
+it('is left', () => {
+    const actual = left<Error, number>(new Error())
+
+    expect(actual).toBeLeft(new Error());
+})
+```
 
 #### toHaveBeenLastCalledWithRight
 
 Asserts if a `jest.Mock` has been called last time with the expected _right_ value
 
+```typescript
+it('is called with right', () => {
+    const spy = jest.fn()
+
+    runYourCode(spy)
+
+    expect(spy).toHaveBeenLastCalledWithRight(5);
+})
+```
+
 #### toHaveBeenLastCalledWithLeft
 
 Asserts if a `jest.Mock` has been called last time with the expected _left_ value
 
+```typescript
+it('is called with left', () => {
+    const spy = jest.fn()
+
+    runYourCode(spy)
+
+    expect(spy).toHaveBeenLastCalledWithLeft(5);
+})
+```
+
 ## Examples
+
+### Tennis game
 
 See examples folder =)
