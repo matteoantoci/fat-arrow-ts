@@ -102,7 +102,7 @@ See the API documentation for more details on this topic.
 
 ### Either
 
-Here is the list of `Either<E, A>` type class methods.
+Here is the list of `Either<E, A>` type class properties and methods.
 
 #### `isRight`
 
