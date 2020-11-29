@@ -10,21 +10,21 @@ Fat Arrow is a library for Typed Functional Programming in TypeScript compatible
   + [Flattening](#flattening)
 * [API](#api)
   + [Either](#either)
-    - [`isRight`](#-isright-)
-    - [`isLeft`](#-isleft-)
-    - [`equals`](#-equals-)
-    - [`fold`](#-fold-)
-    - [`map`](#-map-)
-    - [`mapIf`](#-mapif-)
-    - [`mapLeft`](#-mapleft-)
-    - [`catch`](#-catch-)
+    - [`isRight`](#-isright)
+    - [`isLeft`](#-isleft)
+    - [`equals`](#-equals)
+    - [`fold`](#-fold)
+    - [`map`](#-map)
+    - [`mapIf`](#-mapif)
+    - [`mapLeft`](#-mapleft)
+    - [`catch`](#-catch)
   + [Factory functions](#factory-functions)
-    - [`right`](#-right-)
-    - [`left`](#-left-)
-    - [`maybe`](#-maybe-)
-    - [`just`](#-just-)
-    - [`none`](#-none-)
-    - [`tryCatch`](#-trycatch-)
+    - [`right`](#-right)
+    - [`left`](#-left)
+    - [`maybe`](#-maybe)
+    - [`just`](#-just)
+    - [`none`](#-none)
+    - [`tryCatch`](#-trycatch)
   + [Jest matchers](#jest-matchers)
     - [toBeRight](#toberight)
     - [toBeLeft](#tobeleft)
@@ -32,7 +32,7 @@ Fat Arrow is a library for Typed Functional Programming in TypeScript compatible
     - [toHaveBeenLastCalledWithLeft](#tohavebeenlastcalledwithleft)
 * [Examples](#examples)
   
-## Installation  
+## Installation
   
 ```bash  
 npm install fat-arrow-ts   
@@ -54,7 +54,7 @@ export default {
 }
 ```
   
-## Quick start  
+## Quick start
   
 ```typescript  
 import { left, right } from 'fat-arrow-ts';  
@@ -79,7 +79,7 @@ print(getDivision(10, 0).map(addTwo)) // Doh! Division by zero!
 print(getDivision(10, 5).map(addTwo)) // Result is 4. Hooray!  
 ```  
   
-## Features  
+## Features
   
 ### Flattening
   
@@ -314,7 +314,7 @@ console.log(recovered.fold()) // 'Who cares!'
 
 Here is a list of factory function that will let you create data type objects
   
-#### `right`  
+#### `right`
   
 Takes a value in input and creates an `Either<E, A>` object with _right_ state.
   
@@ -330,7 +330,7 @@ console.log(left(myValue).isRight) // true
 console.log(right(myValue).equals(myValue)) // true  
 ```  
 
-#### `left`  
+#### `left`
   
 Takes a value in input and creates an `Either<E, A>` object with _left_ state.
   
@@ -347,7 +347,7 @@ console.log(right(myValue).isLeft) // true
 ```  
   
   
-#### `maybe`  
+#### `maybe`
 
 Takes a value in input and creates an `Either<void, A>` object:
 * if the input value is nullable (`null | undefined`) the produced object will have _left_ state;
@@ -387,7 +387,7 @@ console.log(maybe(missing).isLeft) // true
 ```  
   
   
-#### `just`  
+#### `just`
   
 Takes a non-nullable value in input and creates a `Either<void, A>` object with _right_ state.
   
@@ -405,7 +405,7 @@ console.log(just(myValue).equals(myValue)) // true
 ```  
   
   
-#### `none`  
+#### `none`
   
 Creates a `Either<void, A>` object with _left_ state.
   
@@ -423,7 +423,7 @@ console.log(maybe(myValue).equals(myValue)) // true
 console.log(just(myValue).equals(myValue)) // true  
 ```
 
-#### `tryCatch`  
+#### `tryCatch`
   
 It takes a callback `() => A | Either<Error, A>` in input that will be run safely:
 * if the callback runs correctly the result of the callback will be returned as an `Either<Error, A>` with _right_ state
