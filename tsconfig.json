@@ -3,8 +3,8 @@
     "target": "es5",
     "lib": ["esnext"],
     "allowJs": true,
-    "skipLibCheck": true,
     "esModuleInterop": true,
+	"alwaysStrict": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -13,7 +13,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
-    "noFallthroughCasesInSwitch": true,
+	"removeComments": true,
+	"noUnusedLocals": true,
+	"noUnusedParameters": true,
+	"noImplicitReturns": true,
+	"noFallthroughCasesInSwitch": true,
 	"noEmit": true
   },
   "include": [
