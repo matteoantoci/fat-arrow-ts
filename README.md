@@ -9,6 +9,18 @@ Fat Arrow is a library for Typed Functional Programming in TypeScript compatible
 ```bash  
 npm install fat-arrow-ts   
 ```
+
+Optional: setup Jest custom matchers
+
+```typescript
+// In jest.config.ts
+
+export default {
+    setupFilesAfterEnv: [
+      'fat-arrow-ts/dist/jest-matchers'
+    ],
+}
+```
   
 ## Quick start  
   
@@ -51,21 +63,6 @@ console.log(right(myValue).equals(myValue)) // true
   
 See the API documentation for more details on this topic.
 
-### Jest matchers
-
-* Install `jest-matchers-utils`
-    ```bash  
-    npm install --save-dev jest-matcher-utils
-    ```
-  
-* Add `import 'fat-arrow-ts /jest-matchers'` to your `setupTest.ts`
-
-These steps will let you be able to use these additional matchers in your tests:
-* `expect(actual).toBeRight(expected)` -> asserts if `expected` is _right_ and has the expected value. It accepts both raw values and data type instances.
-* `expect(actual).toBeLeft(expected)` -> asserts if `expected` is _left_ and has the expected value. It accepts both raw values and data type instances.
-* `expect(spy).toHaveBeenLastCalledWithRight(expected)` -> asserts if a `jest.Mock` has been called last time with the expected _right_ value
-* `expect(spy).toHaveBeenLastCalledWithLeft(expected)` -> asserts if a `jest.Mock` has been called last time with the expected _left_ value
-  
 ## API
 
 ### Either
@@ -422,6 +419,26 @@ const myValue = tryCatch(() => getFullName('', '')).map((it) => it.toUpperCase()
 console.log(myValue.fold()) // Error
 console.log(myValue.isLeft) // true  
 ```
+
+### Jest matchers
+
+See _Installation_ for setup.
+
+#### toBeRight
+
+Asserts if `expected` is _right_ and has the expected value. It accepts both raw values and data type instances.
+
+#### toBeLeft
+
+Asserts if `expected` is _left_ and has the expected value. It accepts both raw values and data type instances.
+
+#### toHaveBeenLastCalledWithRight
+
+Asserts if a `jest.Mock` has been called last time with the expected _right_ value
+
+#### toHaveBeenLastCalledWithLeft
+
+Asserts if a `jest.Mock` has been called last time with the expected _left_ value
 
 ## Examples
 
