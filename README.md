@@ -131,7 +131,7 @@ console.log(myValue.fold()) // 5
 // Mapping values
 const aLeftValue = left<Error, number>(new Error('Ouch!'))
 
-console.log(anotherValue.fold(e => 0, it => it)) // 0
+console.log(aLeftValue.fold(e => 0, it => it)) // 0
 
 // Triggering side effects
 aLeftValue.fold(
@@ -200,9 +200,11 @@ It will map your type class instances only if the predicate returns `true`.
 ```typescript
 import { right } from 'fat-arrow-ts '; 
 
-const toEven = (value: Either<Error, number>) => value.mapIf(
-  it => it % 2 !== 0, it => it - 1
-)
+const isOdd = (num: number) => num % 2 !== 0
+
+const makeEven = (num: number) => num - 1
+
+const toEven = (value: Either<Error, number>) => value.mapIf(isOdd, makeEven)
 
 console.log(toEven(right(4)).fold()) // 4
 console.log(toEven(right(5)).fold()) // 4
