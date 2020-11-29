@@ -12,6 +12,10 @@ npm install fat-arrow-ts
 
 Optional: setup Jest custom matchers
 
+```bash  
+npm install --save-dev jest-matcher-utils
+```
+
 ```typescript
 // In jest.config.ts
 
