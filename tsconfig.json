@@ -14,9 +14,7 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "noFallthroughCasesInSwitch": true,
-	"rootDir": "src",
-	"sourceMap": true,
-	"declaration": true
+	"noEmit": true
   },
   "include": [
 	"src"
