@@ -1,6 +1,6 @@
 {
   "name": "fat-arrow-ts",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Fat Arrow is a library for Typed Functional Programming in TypeScript compatible with Node.js and all major browsers.",
   "main": "index.js",
   "types": "index.d.ts",
