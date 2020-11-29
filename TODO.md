@@ -1,13 +1,8 @@
-[ ] add index.ts
-
-[ ] project on github
-
-[ ] publish
-
 [ ] alpha validation
 
 [ ] improve readme
 * add index
+* add anchors
 
 [ ] add useEither
 
