@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/matteoantoci/fat-arrow.git"
+    "url": "git+https://github.com/matteoantoci/fat-arrow-ts.git"
   },
   "author": "Matteo Antoci",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/matteoantoci/fat-arrow/issues"
+    "url": "https://github.com/matteoantoci/fat-arrow-ts/issues"
   },
-  "homepage": "https://github.com/matteoantoci/fat-arrow#readme",
+  "homepage": "https://github.com/matteoantoci/fat-arrow-ts#readme",
   "dependencies": {
     "fast-deep-equal": "^3.1.3"
   },
