@@ -25,6 +25,8 @@ Fat Arrow is a library for Typed Functional Programming in TypeScript compatible
     - [`just`](#just)
     - [`none`](#none)
     - [`tryCatch`](#trycatch)
+    - [`ok`](#ok)
+    - [`error`](#error)
   + [Jest matchers](#jest-matchers)
     - [toBeRight](#toberight)
     - [toBeLeft](#tobeleft)
@@ -185,6 +187,8 @@ Takes a callback of type `(value: A) => B | Either<E, B>` and applies it to the 
 By default `map` method will try to convert the returned value to an `Either<E, B>` _right_ state so that you can also produce raw values from your callback.
 
 Returning a _left_ value, you can switch to a _left_ state.
+
+If you are used to ES Promises you may find a lot of similarities with the `.then()` method.
 
 ```typescript
 import { right, left } from 'fat-arrow-ts'; 
@@ -350,7 +354,7 @@ console.log(right(myValue).isLeft) // true
   
 #### `maybe`
 
-Takes a value in input and creates an `Either<void, A>` object:
+Takes a value in input and creates a `Maybe<A>` object, that is, an `Either<void, A>` object:
 * if the input value is nullable (`null | undefined`) the produced object will have _left_ state;
 * if the input value is non-nullable the produced object will have _right_ state.
   
@@ -390,7 +394,7 @@ console.log(maybe(missing).isLeft) // true
   
 #### `just`
   
-Takes a non-nullable value in input and creates a `Either<void, A>` object with _right_ state.
+Takes a non-nullable value in input and creates a `Maybe<A>` object with _right_ state.
   
 ```typescript  
 import { just, none, maybe } from 'fat-arrow-ts';  
@@ -408,7 +412,7 @@ console.log(just(myValue).equals(myValue)) // true
   
 #### `none`
   
-Creates a `Either<void, A>` object with _left_ state.
+Creates a `Maybe<A>` object with _left_ state.
   
 ```typescript  
 import { just, none, maybe } from 'fat-arrow-ts';  
@@ -426,14 +430,14 @@ console.log(just(myValue).equals(myValue)) // true
 
 #### `tryCatch`
   
-It takes a callback `() => A | Either<Error, A>` in input that will be run safely:
-* if the callback runs correctly the result of the callback will be returned as an `Either<Error, A>` with _right_ state
-* if the callback throws an error, the `Error` will be returned as an `Either<Error, A>` with _left_ state
+It takes a callback `() => A | Result<A>` in input that will be run safely. It returns a `Result<A>` that is an `Either<Error, A>`.
+* if the callback runs correctly the result of the callback will be returned as a `Result<A>` with _right_ state
+* if the callback throws an error, the `Error` will be returned as a `Result<A>` with _left_ state
   
 ```typescript  
 import { tryCatch } from 'fat-arrow-ts';
 
-const getFullName = (name: string, surname: string) => {
+const getFullName = (name: string, surname: string): string => {
     if (name.length < 1 || name.surname < 1) {
         throw new Error()
     }
@@ -442,17 +446,55 @@ const getFullName = (name: string, surname: string) => {
 
 //-- If callback runs correctly --//
 
-const myValue = tryCatch(() => getFullName('John', 'Doe')).map((it) => it.toUpperCase())
+const result: Result<string> = tryCatch(() => getFullName('John', 'Doe'))
+
+const myValue = result.map((it) => it.toUpperCase())
   
 console.log(myValue.fold()) // JOHN DOE
 console.log(myValue.isRight) // true
   
 //-- If callback throws --//
 
-const myValue = tryCatch(() => getFullName('', '')).map((it) => it.toUpperCase())
+const safeResult: Result<string> = tryCatch(() => getFullName('', ''))
+
+const mySafeValue = safeResult.map((it) => it.toUpperCase())
   
-console.log(myValue.fold()) // Error
+console.log(mySafeValue.fold()) // Error
+console.log(mySafeValue.isLeft) // true  
+```
+
+#### `ok`
+  
+Takes a value in input and creates a `Result<A>` object with _right_ state.
+  
+```typescript  
+import { ok } from 'fat-arrow-ts';  
+  
+const myValue = ok(5)  
+  
+console.log(myValue.fold()) // 5  
+console.log(myValue.isRight) // true  
+  
+// Flattening  
+console.log(ok(myValue).equals(myValue)) // true  
+console.log(error(myValue).equals(myValue)) // true  
+```
+
+#### `error`
+  
+Takes a `string` or an `Error` (or its extensions) in input and creates a `Result<A>` object with _left_ state.
+  
+```typescript  
+import { error } from 'fat-arrow-ts';  
+  
+const myValue = error('Ouch!')  
+  
+console.log(myValue.fold().message) // 'Ouch!'  
 console.log(myValue.isLeft) // true  
+  
+// Flattening  
+console.log(error(myValue).equals(myValue)) // true  
+console.log(ok(myValue).equals(myValue)) // true  
 ```
 
 ### Jest matchers

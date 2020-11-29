@@ -50,14 +50,6 @@ export const left = <E = [Error, 'Cannot infer E in Left<E, A>'], A = [Error, 'C
 	l: LeftValue<E, A>
 ): Either<E, A> => leftOf(l)
 
-export const tryCatch = <A>(factory: () => RightValue<Error, A>): Either<Error, A> => {
-	try {
-		return right(factory())
-	} catch (e) {
-		return left(e)
-	}
-}
-
 // TODO: add docs
 export const ifElse = <E, A>(
 	bool: boolean,

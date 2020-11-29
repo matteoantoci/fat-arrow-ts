@@ -5,8 +5,8 @@
 * add notes on typings
 * add credits
 
-[ ] add Async monad
+[ ] add Async adt
 
 [ ] add useEither
 
-[ ] add Validation monad
+[ ] add Validation adt

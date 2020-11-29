@@ -1,4 +1,4 @@
-import { ifElse, left, right, tryCatch } from './either'
+import { ifElse, left, right } from './either'
 import { Either } from './types'
 
 const runMonadChecks = (adt: Either<Error, number>, of: (value: any) => Either<Error, number>) => {
@@ -376,32 +376,16 @@ describe('Either', () => {
 		})
 	})
 
-	describe('tryCatch', () => {
-		describe('when callback runs', () => {
-			it('runs safely', () => {
-				expect(tryCatch(() => 5)).toBeRight(5)
-			})
-		})
-
-		describe('when callback throws', () => {
-			it('runs safely', () => {
-				expect(tryCatch(() => {
-					throw new Error()
-				})).toBeLeft(new Error())
-			})
-		})
-	})
-
 	describe('integration', () => {
 		it('works', () => {
 			const actual = right<string, number>(0)
 				.map((it) => it + 10)
 				.map((it) => it * 2)
-				.map((it) => left<string, number>('nooo'))
-				.mapLeft((it) => right<Error, number>(100))
+				.map(() => left<string, number>('nooo'))
+				.mapLeft(() => right<Error, number>(100))
 				.map((it) => (it === 100 ? right<Error, string>('happy') : left<Error, string>(new Error())))
 				.fold(
-					(it) => 'very sad',
+					() => 'very sad',
 					(it) => it
 				)
 

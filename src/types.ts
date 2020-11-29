@@ -18,3 +18,5 @@ export type Either<E, A> = {
 }
 
 export type Maybe<A> = Either<void, A>
+
+export type Result<A> = Either<Error, A>
