@@ -1,6 +1,6 @@
 {
   "name": "fat-arrow-ts",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "Fat Arrow is a library for Typed Functional Programming in TypeScript compatible with Node.js and all major browsers.",
   "main": "index.js",
   "types": "index.d.ts",
@@ -41,20 +41,20 @@
     "contents": "dist"
   },
   "keywords": [
-	"typescript",
-	"functional programming",
-	"maybe",
-	"result",
-	"either",
-	"adt",
-	"algebraic data type",
-	"arrow",
-	"kotlin",
-	"monad",
-	"functor",
-	"functional data structure",
-	"fp types",
-	"typeclasses",
-	"category theory"
+    "typescript",
+    "functional programming",
+    "maybe",
+    "result",
+    "either",
+    "adt",
+    "algebraic data type",
+    "arrow",
+    "kotlin",
+    "monad",
+    "functor",
+    "functional data structure",
+    "fp types",
+    "typeclasses",
+    "category theory"
   ]
 }
