@@ -60,7 +60,7 @@ export default {
 ## Quick start
   
 ```ts  
-import { left, right } from 'fat-arrow-ts';  
+import { left, right, Either } from 'fat-arrow-ts';  
   
 const getDivision = (numerator: number, denominator: number): Either<Error, number> => {  
     if (denominator === 0) {  

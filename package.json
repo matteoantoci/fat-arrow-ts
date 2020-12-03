@@ -39,5 +39,22 @@
   },
   "np": {
     "contents": "dist"
-  }
+  },
+  "keywords": [
+	"typescript",
+	"functional programming",
+	"maybe",
+	"result",
+	"either",
+	"adt",
+	"algebraic data type",
+	"arrow",
+	"kotlin",
+	"monad",
+	"functor",
+	"functional data structure",
+	"fp types",
+	"typeclasses",
+	"category theory"
+  ]
 }
