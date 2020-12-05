@@ -1,5 +1,7 @@
-import { Result, RightValue } from './types'
+import { Either, RightValue } from './types'
 import { left, right } from './either'
+
+export type Result<A> = Either<Error, A>
 
 export const ok = <A>(value: A | Result<A>): Result<A> => right(value)
 

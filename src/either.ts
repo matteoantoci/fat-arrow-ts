@@ -1,12 +1,12 @@
 import equal from 'fast-deep-equal/es6/react'
 import { createAdtBuilder } from './utils/adt-builder'
-import { Either, LeftValue, RightValue } from './types'
+import { Either, Left, LeftValue, Right, RightValue } from './types'
 
 const builder = createAdtBuilder({})
 
 const rightOf = <E, A>(value: RightValue<E, A>): Either<E, A> =>
 	builder.flatten<A, Either<E, A>>(value).seal(
-		(data): Either<E, A> => ({
+		(data): Right<E, A> => ({
 			toString: () => `right(${data})`,
 			isLeft: false,
 			isRight: true,
@@ -25,7 +25,7 @@ const rightOf = <E, A>(value: RightValue<E, A>): Either<E, A> =>
 
 const leftOf = <E, A>(value: LeftValue<E, A>): Either<E, A> =>
 	builder.flatten<E, Either<E, A>>(value).seal(
-		(data): Either<E, A> => ({
+		(data): Left<E, A> => ({
 			toString: () => `left(${data})`,
 			isLeft: true,
 			isRight: false,

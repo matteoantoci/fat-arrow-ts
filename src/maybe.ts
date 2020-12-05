@@ -1,6 +1,6 @@
-import { Maybe } from './types'
 import { left, right } from './either'
 import { once } from './lambda'
+import { Either } from './types'
 
 const isNonNullable = <T>(data: T): data is NonNullable<T> => {
 	try {
@@ -9,6 +9,8 @@ const isNonNullable = <T>(data: T): data is NonNullable<T> => {
 		return false
 	}
 }
+
+export type Maybe<A> = Either<void, A>
 
 type MaybeValue<T> = T | null | undefined | Maybe<T>
 

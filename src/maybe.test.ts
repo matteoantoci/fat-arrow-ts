@@ -1,5 +1,4 @@
-import { just, maybe, none } from './maybe'
-import { Maybe } from './types'
+import { just, Maybe, maybe, none } from './maybe'
 
 describe('Maybe', () => {
 	describe('maybe', () => {
