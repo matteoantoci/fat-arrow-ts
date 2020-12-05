@@ -5,6 +5,7 @@ Fat Arrow is a library for Typed Functional Programming in TypeScript compatible
 :warning: **Alpha release! API may change** :warning:
 
 * [Installation](#installation)
+  + [Setup Jest custom matchers](#setup-jest-custom-matchers)
 * [Quick start](#quick-start)
 * [Features](#features)
   + [Flattening](#flattening)
@@ -41,20 +42,34 @@ Fat Arrow is a library for Typed Functional Programming in TypeScript compatible
 npm install fat-arrow-ts   
 ```
 
-Optional: setup Jest custom matchers
+#### Setup Jest custom matchers
+
+An optional set of steps to have Fat Arrow's support in your Jest tests.
+
+See [Jest matchers](#jest-matchers) for more information.
 
 ```bash  
 npm install --save-dev jest-matcher-utils
 ```
 
+Be sure to have a reference to a setup file in your `jest.config.ts`
+
 ```ts
 // In jest.config.ts
 
 export default {
-    setupFilesAfterEnv: [
-      'fat-arrow-ts/jest-matchers'
+    setupFiles: [
+      './setupTests.ts'
     ],
 }
+```
+
+Include this in your setup file
+
+```ts
+// In setupTests.ts
+
+import 'fat-arrow-ts/jest-matchers'
 ```
   
 ## Quick start
