@@ -1,7 +1,6 @@
-* alpha validation
-
 * improve readme
 	* add credits
-	* add Validation
+	
+* add jest macthers tests
 
 * add Async adt ???

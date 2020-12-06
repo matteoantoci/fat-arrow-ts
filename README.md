@@ -583,22 +583,22 @@ As you can see you can have many _left_ values for a single _right_ value. This 
 
 It takes a value in input and an array of validation functions. It then runs through all the validation functions collecting all possible _left_ values, if any.
 
-A validation function must return a `success` value, containing `A`, or a `failure` value containing `E`.
+A validation function must return a `pass` value, containing `A`, otherwise a `fail` value containing `E`.
 
 If all the validations pass the validation output will have _right_ state, otherwise a _left_ state.
 
 ```ts
-import { failure, success, validate, Validation } from 'fat-arrow-ts'
+import { fail, pass, validate, Validation } from 'fat-arrow-ts'
 
 const isPasswordLongEnough = (password: string): Validation<string, string> =>
-		password.length > 6 ? success(password) : failure('Password must have more than 6 characters.')
+		password.length > 6 ? pass(password) : fail('Password must have more than 6 characters.')
 
 const isPasswordStrongEnough = (password: string): Validation<string, string> =>
-	/[\W]/.test(password) ? success(password) : failure('Password must contain a special character.')
+	/[\W]/.test(password) ? pass(password) : fail('Password must contain a special character.')
 
 const validations = [isPasswordLongEnough, isPasswordStrongEnough]
 
-const validatePassword = (pwd: string) => validate('qwertyu!', validations)
+const validatePassword = (pwd: string) => validate(pwd, validations)
 
 //-- If all validations pass --//
 console.log(validatePassword('qwertyu!').fold()) // 'qwertyu!'
@@ -607,6 +607,48 @@ console.log(validatePassword('qwertyu!').isRight) // true
 //-- If one (or more) validations fail --//
 console.log(validatePassword('qwerty').fold()) // ['Password must have more than 6 characters.', 'Password must contain a special character.']
 console.log(validatePassword('qwerty').isLeft) // true
+```
+
+#### `pass`
+
+Takes a value in input and creates a `Validation<E, A>` object with _right_ state.
+
+```ts  
+import { pass, fail } from 'fat-arrow-ts';  
+  
+const myValue = pass(5)  
+  
+console.log(myValue.fold()) // 5  
+console.log(myValue.isRight) // true  
+  
+// Flattening  
+console.log(pass(myValue).equals(myValue)) // true  
+console.log(fail(myValue).equals(myValue)) // true  
+```
+
+#### `fail`
+
+Takes a value in input and creates a `Validation<E, A>` object with _left_ state.
+
+The input could be a plain `E` value or an array `E[]`.
+
+```ts  
+import { pass, fail } from 'fat-arrow-ts';  
+  
+const myValue = fail('error')
+  
+console.log(myValue.fold()) // ['error']
+console.log(myValue.isLeft) // true
+
+// Using arrays
+const anotherValue = fail(['first error', 'second error'])
+
+console.log(myValue.fold()) // ['first error', 'second error']
+console.log(myValue.isLeft) // true
+  
+// Flattening  
+console.log(pass(myValue).equals(myValue)) // true  
+console.log(fail(myValue).equals(myValue)) // true  
 ```
 
 
