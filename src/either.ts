@@ -42,11 +42,11 @@ const leftOf = <E, A>(value: LeftValue<E, A>): Either<E, A> =>
 		})
 	)
 
-export const right = <E = [Error, 'Cannot infer E in Right<E, A>'], A = [Error, 'Cannot infer A in Right<E, A>']>(
+export const right = <E = [Error, 'Please specify E type in right<E, A>'], A = never>(
 	r: RightValue<E, A>
 ): Either<E, A> => rightOf(r)
 
-export const left = <E = [Error, 'Cannot infer E in Left<E, A>'], A = [Error, 'Cannot infer A in Left<E, A>']>(
+export const left = <E = never, A = [Error, 'Please specify A type in left<E, A>']>(
 	l: LeftValue<E, A>
 ): Either<E, A> => leftOf(l)
 

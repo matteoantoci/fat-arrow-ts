@@ -1,6 +1,6 @@
 import { failure, success, validate, Validation } from './validation'
 
-describe('validation', () => {
+describe('Validation', () => {
 	const isPasswordLongEnough = (password: string): Validation<string, string> =>
 		password.length > 6 ? success(password) : failure('Password must have more than 6 characters.')
 

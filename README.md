@@ -15,20 +15,20 @@ Fat Arrow is a library for Typed Functional Programming in TypeScript compatible
     + [API](#api)
       - [`isRight`](#isright)
       - [`isLeft`](#isleft)
-      - [`equals`](#-equals-)
-      - [`fold`](#-fold-)
-      - [`map`](#-map-)
-      - [`mapIf`](#-mapif-)
-      - [`mapLeft`](#-mapleft-)
-      - [`catch`](#-catch-)
+      - [`equals`](#equals)
+      - [`fold`](#fold)
+      - [`map`](#map)
+      - [`mapIf`](#mapif)
+      - [`mapLeft`](#mapleft)
+      - [`catch`](#catch)
   * [Maybe](#maybe)
-    + [`maybe`](#-maybe-)
-    + [`just`](#-just-)
-    + [`none`](#-none-)
+    + [`maybe`](#maybe)
+    + [`just`](#just)
+    + [`none`](#none)
   * [Result](#result)
-    + [`tryCatch`](#-trycatch-)
-    + [`ok`](#-ok-)
-    + [`error`](#-error-)
+    + [`tryCatch`](#trycatch)
+    + [`ok`](#ok)
+    + [`error`](#error)
   * [Jest matchers](#jest-matchers)
     + [toBeRight](#toberight)
     + [toBeLeft](#tobeleft)
@@ -415,7 +415,7 @@ A `Maybe<A>` is a type alias for `Either<void, A>`. Fat Arrow provides you with 
 
 #### `maybe`
 
-Takes a value in input and creates a `Maybe<A>` object, that is, an `Either<void, A>` object:
+Takes a value in input and creates a `Maybe<A>` object.
 * if the input value is nullable (`null | undefined`) the produced object will have _left_ state;
 * if the input value is non-nullable the produced object will have _right_ state.
   
@@ -501,7 +501,7 @@ A `Result<A>` is a type alias for `Either<Error, A>`. Fat Arrow provides you wit
 
 #### `tryCatch`
 
-It takes a callback `() => A | Result<A>` in input that will be run safely. It returns a `Result<A>` that is an `Either<Error, A>`.
+It takes a callback `() => A | Result<A>` in input that will be run safely and returns a `Result<A>` instance.
 * if the callback runs correctly the result of the callback will be returned as a `Result<A>` with _right_ state
 * if the callback throws an error, the `Error` will be returned as a `Result<A>` with _left_ state
   
@@ -572,6 +572,42 @@ console.log(error(myValue).equals(myValue)) // true
 console.log(ok(myValue).equals(myValue)) // true  
 ```
 
+
+### Validation
+
+A `Validation<E, A>` is a type alias for `Either<E[], A>`.
+
+As you can see you can have many _left_ values for a single _right_ value. This kind of data type is the perfect solution to model validation outputs.
+
+#### `validate`
+
+It takes a value in input and an array of validation functions. It then runs through all the validation functions collecting all possible _left_ values, if any.
+
+A validation function must return a `success` value, containing `A`, or a `failure` value containing `E`.
+
+If all the validations pass the validation output will have _right_ state, otherwise a _left_ state.
+
+```ts
+import { failure, success, validate, Validation } from 'fat-arrow-ts'
+
+const isPasswordLongEnough = (password: string): Validation<string, string> =>
+		password.length > 6 ? success(password) : failure('Password must have more than 6 characters.')
+
+const isPasswordStrongEnough = (password: string): Validation<string, string> =>
+	/[\W]/.test(password) ? success(password) : failure('Password must contain a special character.')
+
+const validations = [isPasswordLongEnough, isPasswordStrongEnough]
+
+const validatePassword = (pwd: string) => validate('qwertyu!', validations)
+
+//-- If all validations pass --//
+console.log(validatePassword('qwertyu!').fold()) // 'qwertyu!'
+console.log(validatePassword('qwertyu!').isRight) // true
+
+//-- If one (or more) validations fail --//
+console.log(validatePassword('qwerty').fold()) // ['Password must have more than 6 characters.', 'Password must contain a special character.']
+console.log(validatePassword('qwerty').isLeft) // true
+```
 
 
 ### Jest matchers
