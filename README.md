@@ -6,11 +6,7 @@ Fat Arrow is a library for Typed Functional Programming in TypeScript compatible
 
 - [Installation](#installation)
 	+ [Setup Jest matchers](#setup-jest-matchers)
-	
-
 - [Quick start](#quick-start)
-  
-
 - [Essentials](#essentials)
 	* [Flattening](#flattening)
 	* [Either](#either)
@@ -42,8 +38,6 @@ Fat Arrow is a library for Typed Functional Programming in TypeScript compatible
 		+ [toBeLeft](#tobeleft)
 		+ [toHaveBeenLastCalledWithRight](#tohavebeenlastcalledwithright)
 		+ [toHaveBeenLastCalledWithLeft](#tohavebeenlastcalledwithleft)
-	
-
 - [Examples](#examples)
 	* [Tennis game](#tennis-game)
 
