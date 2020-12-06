@@ -4,43 +4,48 @@ Fat Arrow is a library for Typed Functional Programming in TypeScript compatible
 
 :warning: **Alpha release! API may change** :warning:
 
-* [Installation](#installation)
-  + [Setup Jest custom matchers](#setup-jest-custom-matchers)
-* [Quick start](#quick-start)
-* [Features](#features)
-  + [Flattening](#flattening)
-* [API](#api)
-  + [Either](#either)
-    - [`isRight`](#isright)
-    - [`isLeft`](#isleft)
-    - [`equals`](#equals)
-    - [`fold`](#fold)
-    - [`map`](#map)
-    - [`mapIf`](#mapif)
-    - [`mapLeft`](#mapleft)
-    - [`catch`](#catch)
-  + [Factory functions](#factory-functions)
-    - [`right`](#right)
-    - [`left`](#left)
-    - [`maybe`](#maybe)
-    - [`just`](#just)
-    - [`none`](#none)
-    - [`tryCatch`](#trycatch)
-    - [`ok`](#ok)
-    - [`error`](#error)
-  + [Jest matchers](#jest-matchers)
-    - [toBeRight](#toberight)
-    - [toBeLeft](#tobeleft)
-    - [toHaveBeenLastCalledWithRight](#tohavebeenlastcalledwithright)
-    - [toHaveBeenLastCalledWithLeft](#tohavebeenlastcalledwithleft)
-* [Examples](#examples)
-    + [Tennis game](#tennis-game)
-  
+- [Installation](#installation)
+    + [Setup Jest custom matchers](#setup-jest-custom-matchers)
+- [Quick start](#quick-start)
+- [Essentials](#essentials)
+  * [Flattening](#flattening)
+  * [Either](#either)
+    + [`right`](#right)
+    + [`left`](#left)
+    + [API](#api)
+      - [`isRight`](#isright)
+      - [`isLeft`](#isleft)
+      - [`equals`](#-equals-)
+      - [`fold`](#-fold-)
+      - [`map`](#-map-)
+      - [`mapIf`](#-mapif-)
+      - [`mapLeft`](#-mapleft-)
+      - [`catch`](#-catch-)
+  * [Maybe](#maybe)
+    + [`maybe`](#-maybe-)
+    + [`just`](#-just-)
+    + [`none`](#-none-)
+  * [Result](#result)
+    + [`tryCatch`](#-trycatch-)
+    + [`ok`](#-ok-)
+    + [`error`](#-error-)
+  * [Jest matchers](#jest-matchers)
+    + [toBeRight](#toberight)
+    + [toBeLeft](#tobeleft)
+    + [toHaveBeenLastCalledWithRight](#tohavebeenlastcalledwithright)
+    + [toHaveBeenLastCalledWithLeft](#tohavebeenlastcalledwithleft)
+- [Examples](#examples)
+  * [Tennis game](#tennis-game)
+
+
+
 ## Installation
-  
+
 ```bash  
 npm install fat-arrow-ts   
 ```
+
+
 
 #### Setup Jest custom matchers
 
@@ -51,6 +56,8 @@ See [Jest matchers](#jest-matchers) for more information.
 ```bash  
 npm install --save-dev jest-matcher-utils
 ```
+
+
 
 Be sure to have a reference to a setup file in your `jest.config.ts`
 
@@ -64,6 +71,7 @@ export default {
 }
 ```
 
+
 Include this in your setup file
 
 ```ts
@@ -71,9 +79,11 @@ Include this in your setup file
 
 import 'fat-arrow-ts/jest-matchers'
 ```
-  
+
+
+
 ## Quick start
-  
+
 ```ts  
 import { left, right, Either } from 'fat-arrow-ts';  
   
@@ -95,31 +105,75 @@ const print = (value: Either<Error, number>) =>
   
 print(getDivision(10, 0).map(addTwo)) // Doh! Division by zero!  
 print(getDivision(10, 5).map(addTwo)) // Result is 4. Hooray!  
-```  
-  
-## Features
-  
+```
+
+
+
+## Essentials
+
 ### Flattening
-  
+
 Fat Arrow's factory functions and data types' methods support flattening to accept both TS native values and data types themselves; in the latter case, data types objects will be flattened.  
-  
+
 ```ts  
 import { right } from 'fat-arrow-ts';  
   
 const myValue = right<Error, number>(5)  
   
 console.log(right(myValue).equals(myValue)) // true  
-```  
-  
-See the API documentation for more details on this topic.
+```
 
-## API
+
 
 ### Either
 
-Here is the list of `Either<E, A>` type class properties and methods.
+An `Either<E, A>` value may contain either a value of type `E` or a value of type `A`, at any given time. In other words, it could be in *left* state or *right* state.
 
-#### `isRight`
+Let's see how we can create `Either<E, A>` instances.
+
+#### `right`
+
+Takes a value in input and creates an `Either<E, A>` object with _right_ state.
+
+```ts  
+import { right } from 'fat-arrow-ts';  
+  
+const myValue = right<Error, number>(5)  
+  
+console.log(myValue.fold()) // 5  
+  
+// Flattening  
+console.log(left(myValue).isRight) // true  
+console.log(right(myValue).equals(myValue)) // true  
+```
+
+
+
+#### `left`
+
+Takes a value in input and creates an `Either<E, A>` object with _left_ state.
+
+```ts  
+import { left } from 'fat-arrow-ts';  
+  
+const myValue = left<Error, number>(new Error('Ouch!'))  
+  
+console.log(myValue.fold()) // Error  
+  
+// Flattening  
+console.log(left(myValue).equals(myValue)) // true  
+console.log(right(myValue).isLeft) // true  
+```
+
+
+
+#### API
+
+Let's go through all `Either<E, A>` properties and methods
+
+
+
+##### `isRight`
 
 States if `Either<E, A>` is in _right_ state.
 
@@ -131,7 +185,9 @@ const myValue = right<Error, number>(5)
 console.log(myValue.isRight) // true 
 ```
 
-#### `isLeft`
+
+
+##### `isLeft`
 
 States if `Either<E, A>` is in _left_ state.
 
@@ -143,7 +199,9 @@ const myValue = left<Error, number>(new Error('Ouch!'))
 console.log(myValue.isLeft) // true 
 ```
 
-#### `equals`
+
+
+##### `equals`
 
 Takes an `Either<any, any>` in input and asserts if the passed value has the same state and **structural equality**.
 
@@ -163,7 +221,9 @@ console.log(aLeftValueWithSameContents.equals(aRightValue)) // false
 console.log(aRightValue.equals(right({ foo: 'foo' }))) // true
 ```
 
-#### `fold`
+
+
+##### `fold`
 
 It lets you handle or unwrap the raw value in your data type instances.
 
@@ -195,7 +255,9 @@ aLeftValue.fold(
 )
 ```
 
-#### `map`
+
+
+##### `map`
 
 Takes a callback of type `(value: A) => B | Either<E, B>` and applies it to the _right_ value of your type class instances.
 
@@ -243,7 +305,9 @@ console.log(leftResult.isLeft) // true
 console.log(leftResult.fold()) // Error
 ```
 
-#### `mapIf`
+
+
+##### `mapIf`
 
 Works very similar to `map` but it also accepts a _predicate_ `(value: A) => boolean` as first parameter.
 
@@ -269,7 +333,9 @@ console.log(fizzBuzz(15)) // FizzBuzz
 console.log(fizzBuzz(2)) // 2
 ```
 
-#### `mapLeft`
+
+
+##### `mapLeft`
 
 Similar to `map`, it will let you apply callbacks of type `(value: E) => G | Either<G, A>` to the _left_ value of your type class instances.
 
@@ -314,8 +380,10 @@ const rightResult = myValue.mapLeft(
 console.log(rightResult.isRight) // true 
 console.log(rightResult.fold()) // 5
 ```
-  
-#### `catch`
+
+
+
+##### `catch`
 
 It takes a callback of type `(value: E) => A | Either<E, A>` and applies it to the _left_ value of your type class instances. 
 
@@ -335,45 +403,16 @@ const recovered = aLeftValue.catch(e => {
 
 console.log(recovered.isRight) // true
 console.log(recovered.fold()) // 'Who cares!'
-```  
-  
-### Factory functions
+```
 
-Here is a list of factory function that will let you create data type objects
-  
-#### `right`
-  
-Takes a value in input and creates an `Either<E, A>` object with _right_ state.
-  
-```ts  
-import { right } from 'fat-arrow-ts';  
-  
-const myValue = right<Error, number>(5)  
-  
-console.log(myValue.fold()) // 5  
-  
-// Flattening  
-console.log(left(myValue).isRight) // true  
-console.log(right(myValue).equals(myValue)) // true  
-```  
 
-#### `left`
-  
-Takes a value in input and creates an `Either<E, A>` object with _left_ state.
-  
-```ts  
-import { left } from 'fat-arrow-ts';  
-  
-const myValue = left<Error, number>(new Error('Ouch!'))  
-  
-console.log(myValue.fold()) // Error  
-  
-// Flattening  
-console.log(left(myValue).equals(myValue)) // true  
-console.log(right(myValue).isLeft) // true  
-```  
-  
-  
+
+### Maybe
+
+A `Maybe<A>` is a type alias for `Either<void, A>`. Fat Arrow provides you with some utilities to model nullable values (eg: input values).
+
+
+
 #### `maybe`
 
 Takes a value in input and creates a `Maybe<A>` object, that is, an `Either<void, A>` object:
@@ -411,13 +450,14 @@ console.log(missing.isLeft) // true
 // Flattening  
 console.log(maybe(missing).equals(missing)) // true  
 console.log(maybe(missing).isLeft) // true  
-```  
-  
-  
+```
+
+
+
 #### `just`
-  
+
 Takes a non-nullable value in input and creates a `Maybe<A>` object with _right_ state.
-  
+
 ```ts  
 import { just, none, maybe } from 'fat-arrow-ts';  
   
@@ -429,13 +469,14 @@ console.log(myValue.isRight) // true
 // Flattening  
 console.log(maybe(myValue).equals(myValue)) // true  
 console.log(just(myValue).equals(myValue)) // true  
-```  
-  
-  
+```
+
+
+
 #### `none`
-  
+
 Creates a `Maybe<A>` object with _left_ state.
-  
+
 ```ts  
 import { just, none, maybe } from 'fat-arrow-ts';  
   
@@ -450,8 +491,16 @@ console.log(maybe(myValue).equals(myValue)) // true
 console.log(just(myValue).equals(myValue)) // true  
 ```
 
+
+
+### Result
+
+A `Result<A>` is a type alias for `Either<Error, A>`. Fat Arrow provides you with some utilities to model computations that may throw or return `Error`.
+
+
+
 #### `tryCatch`
-  
+
 It takes a callback `() => A | Result<A>` in input that will be run safely. It returns a `Result<A>` that is an `Either<Error, A>`.
 * if the callback runs correctly the result of the callback will be returned as a `Result<A>` with _right_ state
 * if the callback throws an error, the `Error` will be returned as a `Result<A>` with _left_ state
@@ -485,10 +534,12 @@ console.log(mySafeValue.fold()) // Error
 console.log(mySafeValue.isLeft) // true  
 ```
 
+
+
 #### `ok`
-  
+
 Takes a value in input and creates a `Result<A>` object with _right_ state.
-  
+
 ```ts  
 import { ok } from 'fat-arrow-ts';  
   
@@ -502,10 +553,12 @@ console.log(ok(myValue).equals(myValue)) // true
 console.log(error(myValue).equals(myValue)) // true  
 ```
 
+
+
 #### `error`
-  
+
 Takes a `string` or an `Error` (or its extensions) in input and creates a `Result<A>` object with _left_ state.
-  
+
 ```ts  
 import { error } from 'fat-arrow-ts';  
   
@@ -519,9 +572,13 @@ console.log(error(myValue).equals(myValue)) // true
 console.log(ok(myValue).equals(myValue)) // true  
 ```
 
+
+
 ### Jest matchers
 
-See [Installation](#installation) for setup.
+Fat Arrow provides you with some Jest custom matchers to help you writing tests for your code. See [Installation](#installation) for setup.
+
+
 
 #### toBeRight
 
@@ -537,6 +594,8 @@ it('is right', () => {
 })
 ```
 
+
+
 #### toBeLeft
 
 Asserts if `expected` is _left_ and has the expected value. It accepts both raw values and data type instances.
@@ -550,6 +609,8 @@ it('is left', () => {
     expect(actual).toBeLeft(new Error());
 })
 ```
+
+
 
 #### toHaveBeenLastCalledWithRight
 
@@ -565,6 +626,8 @@ it('is called with right', () => {
 })
 ```
 
+
+
 #### toHaveBeenLastCalledWithLeft
 
 Asserts if a `jest.Mock` has been called last time with the expected _left_ value
@@ -578,6 +641,8 @@ it('is called with left', () => {
     expect(spy).toHaveBeenLastCalledWithLeft(5);
 })
 ```
+
+
 
 ## Examples
 

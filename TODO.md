@@ -1,12 +1,7 @@
-[ ] alpha validation
+* alpha validation
 
-[ ] improve readme
-* add ifElse
-* add notes on typings
-* add credits
+* improve readme
+	* add credits
+	* add Validation
 
-[ ] add Async adt
-
-[ ] add useEither
-
-[ ] add Validation adt
+* add Async adt ???
