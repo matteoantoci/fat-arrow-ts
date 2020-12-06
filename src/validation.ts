@@ -9,10 +9,13 @@ type ValidationFailureValue<E, A> = E | E[] | Validation<E, A>
 
 type ValidationIO<E, A> = (data: A) => ValidationSuccessValue<E, A>
 
-export const success = <E = never, A = never>(data: ValidationSuccessValue<E, A>): Validation<E, A> => right(data)
+export const success = <E = [Error, 'Please specify E type in success<E, A>'], A = never>(
+	data: ValidationSuccessValue<E, A>
+): Validation<E, A> => right(data)
 
-export const failure = <E = never, A = never>(data: ValidationFailureValue<E, A>): Validation<E, A> =>
-	left(data).mapLeft((it) => (Array.isArray(it) ? it : [it]))
+export const failure = <E = never, A = [Error, 'Please specify A type in failure<E, A>']>(
+	data: ValidationFailureValue<E, A>
+): Validation<E, A> => left(data).mapLeft((it) => (Array.isArray(it) ? it : [it]))
 
 export const validate = <E, A>(
 	data: ValidationSuccessValue<E, A>,

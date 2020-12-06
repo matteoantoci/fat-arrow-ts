@@ -9,14 +9,24 @@ describe('validation', () => {
 
 	const validations = [isPasswordLongEnough, isPasswordStrongEnough]
 
-	it('works', () => {
-		expect(validate('qwerty', validations)).toBeLeft([
-			'Password must have more than 6 characters.',
-			'Password must contain a special character.',
-		])
+	describe('when no errors occurred', () => {
+		it('validates', () => {
+			expect(validate('qwertyu!', validations)).toBeRight('qwertyu!')
+		})
+	})
 
-		expect(validate('qwertyu', validations)).toBeLeft(['Password must contain a special character.'])
+	describe('when one error occurred', () => {
+		it('validates', () => {
+			expect(validate('qwertyu', validations)).toBeLeft(['Password must contain a special character.'])
+		})
+	})
 
-		expect(validate('qwertyu!', validations)).toBeRight('qwertyu!')
+	describe('when multiple errors occurred', () => {
+		it('validates', () => {
+			expect(validate('qwerty', validations)).toBeLeft([
+				'Password must have more than 6 characters.',
+				'Password must contain a special character.',
+			])
+		})
 	})
 })
