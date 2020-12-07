@@ -1,5 +1,5 @@
 import { ifElse, left, right } from './either'
-import { Either } from './types'
+import { Either } from './either.types'
 
 const runMonadChecks = (adt: Either<Error, number>, of: (value: any) => Either<Error, number>) => {
 	describe('Monad', () => {
@@ -49,12 +49,14 @@ describe('Either', () => {
 		})
 
 		describe('equals', () => {
-			describe('when using adt', () => {
-				it('asserts equality', () => {
-					expect(adt.equals(right(2))).toBeTruthy()
-					expect(adt.equals(right(1))).toBeFalsy()
-					expect(adt.equals(left(2))).toBeFalsy()
-				})
+			it('asserts equality', () => {
+				expect(adt.equals(right(2))).toBeTruthy()
+				expect(adt.equals(right(1))).toBeFalsy()
+				expect(adt.equals(left(2))).toBeFalsy()
+			})
+
+			it('asserts deep equality', () => {
+				expect(right({}).equals(right({}))).toBeTruthy()
 			})
 		})
 
@@ -135,7 +137,7 @@ describe('Either', () => {
 				const newAdt = 999
 				const spy = jest.fn().mockReturnValue(newAdt)
 
-				const actual = adt.catch(spy)
+				const actual = adt.orElse(spy)
 
 				expect(actual).toBeRight(adt)
 				expect(spy).not.toHaveBeenCalled()
@@ -145,7 +147,7 @@ describe('Either', () => {
 				const newAdt = right(999)
 				const spy = jest.fn().mockReturnValue(newAdt)
 
-				const actual = adt.catch(spy)
+				const actual = adt.orElse(spy)
 
 				expect(actual).toBeRight(adt)
 				expect(spy).not.toHaveBeenCalled()
@@ -155,7 +157,7 @@ describe('Either', () => {
 				const newAdt = left<Error, number>(new Error())
 				const spy = jest.fn().mockReturnValue(newAdt)
 
-				const actual = adt.catch(spy)
+				const actual = adt.orElse(spy)
 
 				expect(actual).toBeRight(adt)
 				expect(spy).not.toHaveBeenCalled()
@@ -170,16 +172,6 @@ describe('Either', () => {
 					const ifTrue = jest.fn().mockReturnValue(expected)
 
 					expect(adt.mapIf(predicate, ifTrue)).toBeRight(expected)
-					expect(predicate).toHaveBeenLastCalledWith(value)
-					expect(ifTrue).toHaveBeenLastCalledWith(value)
-				})
-
-				it('maps correctly', () => {
-					const expected = left('foo')
-					const predicate = jest.fn().mockReturnValue(true)
-					const ifTrue = jest.fn().mockReturnValue(expected)
-
-					expect(adt.mapIf(predicate, ifTrue)).toBeLeft(expected)
 					expect(predicate).toHaveBeenLastCalledWith(value)
 					expect(ifTrue).toHaveBeenLastCalledWith(value)
 				})
@@ -213,16 +205,14 @@ describe('Either', () => {
 		})
 
 		describe('equals', () => {
-			describe('when using adt', () => {
-				it('asserts equality', () => {
-					expect(adt.equals(right(error))).toBeFalsy()
-					expect(adt.equals(left(error))).toBeTruthy()
-				})
+			it('asserts equality', () => {
+				expect(adt.equals(right(error))).toBeFalsy()
+				expect(adt.equals(left(error))).toBeTruthy()
+			})
 
-				it('asserts deep equality', () => {
-					expect(adt.equals(left(new Error()))).toBeTruthy()
-					expect(adt.equals(left(new Error('foooo')))).toBeFalsy()
-				})
+			it('asserts deep equality', () => {
+				expect(adt.equals(left(new Error()))).toBeTruthy()
+				expect(adt.equals(left(new Error('foooo')))).toBeFalsy()
 			})
 		})
 
@@ -298,11 +288,11 @@ describe('Either', () => {
 			})
 		})
 
-		describe('catch', () => {
+		describe('orElse', () => {
 			it('supports data return', () => {
 				const newAdt = 999
 
-				const actual = adt.catch(() => newAdt)
+				const actual = adt.orElse(() => newAdt)
 
 				expect(actual).toBeRight(newAdt)
 			})
@@ -310,7 +300,7 @@ describe('Either', () => {
 			it('supports right return', () => {
 				const newAdt = right<Error, number>(999)
 
-				const actual = adt.catch(() => newAdt)
+				const actual = adt.orElse(() => newAdt)
 
 				expect(actual).toBeRight(newAdt)
 			})
@@ -318,7 +308,7 @@ describe('Either', () => {
 			it('supports left return', () => {
 				const newAdt = left<Error, number>(new Error())
 
-				const actual = adt.catch(() => newAdt)
+				const actual = adt.orElse(() => newAdt)
 
 				expect(actual).toBeLeft(newAdt)
 			})

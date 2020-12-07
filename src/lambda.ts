@@ -11,3 +11,5 @@ export const once = <A extends any[], R>(fn: OnceParams<A, R>): OnceParams<A, R>
 		}
 	}
 }
+
+export const repeat = <A>(factory: () => A, times: number) => Array(times).fill(null).map(factory)

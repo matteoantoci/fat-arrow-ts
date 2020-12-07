@@ -1,5 +1,5 @@
-import { maybe } from '../../src/maybe'
-import { left, right } from '../../src/either'
+import { maybe } from '../../src/maybe/maybe'
+import { left, right } from '../../src/either/either'
 
 const SCORES = ['love', 'fifteen', 'thirty', 'forty']
 

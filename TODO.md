@@ -1,6 +1,9 @@
-* improve readme
-	* add credits
-	
-* add jest macthers tests
+* Add `Task<A>`
 
-* add Async adt ???
+* Readme
+  * move docs to Github wiki
+  * add credits
+
+* Lambda module
+	* add tests
+	* add docs
