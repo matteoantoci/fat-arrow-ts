@@ -66,8 +66,8 @@ Be sure to have a reference to a setup file in your `jest.config.ts`
 
 export default {
 	setupFilesAfterEnv: [
-      './setupTests.ts'
-    ],
+	  './setupTests.ts'
+	],
 }
 ```
 
