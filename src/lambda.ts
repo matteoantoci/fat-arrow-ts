@@ -12,7 +12,10 @@ export const once = <A extends any[], R>(fn: OnceParams<A, R>): OnceParams<A, R>
 	}
 }
 
-export const repeat = <A>(times: number, factory: () => A) => Array(times).fill(null).map(factory)
+export const repeat = <T>(times: number, factory: (index: number) => T) =>
+	Array(times)
+		.fill(null)
+		.map((_, i) => factory(i))
 
 export const rotate = <T>(n: number, arr: T[]): T[] => arr.slice(n, arr.length).concat(arr.slice(0, n))
 

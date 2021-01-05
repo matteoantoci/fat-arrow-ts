@@ -22,6 +22,7 @@ describe('Lambda', () => {
 			const result = repeat(times, fn)
 
 			expect(fn).toHaveBeenCalledTimes(times)
+			expect(fn).toHaveBeenLastCalledWith(times - 1)
 			expect(result.length).toBe(times)
 		})
 	})
