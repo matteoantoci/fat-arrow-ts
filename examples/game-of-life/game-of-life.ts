@@ -39,7 +39,7 @@ type GameOfLifeState = {
 }
 
 const createInitialState = (width: number, height: number): GameOfLifeState => ({
-	grid: repeat(() => repeat(createDeadCell, width), height),
+	grid: repeat(height, () => repeat(createDeadCell, width)),
 })
 
 export const createGameOfLife = (width: number, height: number): GameOfLife => {

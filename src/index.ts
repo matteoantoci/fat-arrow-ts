@@ -9,3 +9,5 @@ export { tryCatch } from './result/result'
 
 export type { Validation } from './validation/validation'
 export { validate, fail, pass } from './validation/validation'
+
+export { repeat, rotate, chunk, once } from './lambda'
