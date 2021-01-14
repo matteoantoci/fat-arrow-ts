@@ -130,8 +130,8 @@ An `Maybe<A>` value is useful to model nullable values.
 #### `maybe`
 
 Takes a value in input and creates a `Maybe<A>` object.
-* if the input value is nullable (`null | undefined`) the produced object will have _just_ state;
-* if the input value is non-nullable the produced object will have _none_ state.
+* if the input value is non-nullable the produced object will have _just_ state.
+* if the input value is nullable (`null | undefined`) the produced object will have _none_ state;
 
 ```ts  
 import { Maybe, maybe } from 'fat-arrow-ts';  
@@ -143,7 +143,7 @@ const myMap = new Map([
   
 const getValue = (key: string): Maybe<string> => maybe(myMap.get(key))
 
-//-- If value is right --//
+//-- If value is "just" --//
 
 const existing = getValue('key1')  
   
@@ -154,7 +154,7 @@ console.log(existing.isJust) // true
 console.log(maybe(existing).equals(existing)) // true  
 console.log(maybe(existing).isJust) // true  
 
-//-- If value is left --//
+//-- If value is "none" --//
   
 const missing = getValue('foo')  
   
