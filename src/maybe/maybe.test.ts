@@ -49,6 +49,7 @@ describe('Maybe', () => {
 		})
 
 		it('flattens', () => {
+			expect(just(adt)).toBeJust(value)
 			expect(just(adt)).toBeJust(adt)
 		})
 
@@ -60,7 +61,8 @@ describe('Maybe', () => {
 			})
 
 			it('asserts deep equality', () => {
-				expect(just({}).equals(just({}))).toBeTruthy()
+				expect(just({ foo: 1 }).equals(just({ foo: 1 }))).toBeTruthy()
+				expect(just({ foo: 1 }).equals(just({ foo: 2 }))).toBeFalsy()
 			})
 		})
 
@@ -173,12 +175,14 @@ describe('Maybe', () => {
 
 		runMonadChecks(adt, none)
 
-		it('is just', () => {
+		it('is none', () => {
 			expect(adt.isNone).toBe(true)
 		})
 
 		it('is serializable', () => {
 			expect(adt.toString()).toBe('none()')
+			expect(JSON.stringify(adt)).toBe('null')
+			expect(JSON.stringify({ prop: adt })).toBe('{"prop":null}')
 		})
 
 		it('has identity', () => {
@@ -299,7 +303,8 @@ describe('Maybe', () => {
 		it('handles nullables', () => {
 			expect(maybe(null)).toBeNone()
 			expect(maybe(undefined)).toBeNone()
-			expect(maybe((() => {})())).toBeNone()
+			expect(maybe((() => {
+			})())).toBeNone()
 		})
 	})
 })

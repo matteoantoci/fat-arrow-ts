@@ -1,9 +1,10 @@
+import { Serializer } from "../utils/serializer";
+
 export type AnyMaybe = Maybe<any>
 
 export type JustValueOrMaybe<A> = A | Maybe<A>
 
-interface MaybeProto<A> {
-	toString(): string
+interface MaybeProto<A> extends Serializer {
 	equals(value: AnyMaybe): boolean
 	map<B>(ifJust: (just: A) => JustValueOrMaybe<B>): Maybe<B>
 	mapIf(predicate: (just: A) => boolean, ifTrue: (just: A) => JustValueOrMaybe<A>): Maybe<A>

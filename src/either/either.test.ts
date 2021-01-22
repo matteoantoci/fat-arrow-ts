@@ -48,6 +48,11 @@ describe('Either', () => {
 			expect(adt.toString()).toBe('right(2)')
 		})
 
+		it('flattens', () => {
+			expect(right(adt)).toBeRight(value)
+			expect(right(adt)).toBeRight(adt)
+		})
+
 		describe('equals', () => {
 			it('asserts equality', () => {
 				expect(adt.equals(right(2))).toBeTruthy()
@@ -132,7 +137,7 @@ describe('Either', () => {
 			})
 		})
 
-		describe('catch', () => {
+		describe('orElse', () => {
 			it('supports data return', () => {
 				const newAdt = 999
 				const spy = jest.fn().mockReturnValue(newAdt)
@@ -201,7 +206,12 @@ describe('Either', () => {
 		})
 
 		it('is serializable', () => {
-			expect(adt.toString()).toBe('left(Error)')
+			expect(adt.toString()).toBe('left({})')
+		})
+
+		it('flattens', () => {
+			expect(left(adt)).toBeLeft(error)
+			expect(left(adt)).toBeLeft(adt)
 		})
 
 		describe('equals', () => {

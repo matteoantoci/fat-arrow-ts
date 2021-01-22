@@ -1,6 +1,7 @@
 import equal from 'fast-deep-equal/es6/react'
 import { createAdtBuilder } from '../utils/adt-builder'
 import { Either, Left, LeftValueOrEither, Right, RightValueOrEither } from './either.types'
+import { createSerializer } from '../utils/serializer'
 
 const builder = createAdtBuilder({})
 
@@ -12,7 +13,7 @@ export const right = <
 ): Either<E, A> =>
 	builder.flatten<A, Either<E, A>>(value).seal(
 		(data): Right<E, A> => ({
-			toString: () => `right(${data})`,
+			...createSerializer('right', data),
 			isLeft: false,
 			isRight: true,
 			equals: (operand) =>
@@ -28,15 +29,12 @@ export const right = <
 		})
 	)
 
-export const left = <
-	E = [Error, 'Please specify E type in left<E, A>'],
-	A = [Error, 'Please specify A type in left<E, A>']
->(
+export const left = <E = [Error, 'Please specify E type in left<E, A>'], A = [Error, 'Please specify A type in left<E, A>']>(
 	value: LeftValueOrEither<E>
 ): Either<E, A> =>
 	builder.flatten<E, Either<E, A>>(value).seal(
 		(data): Left<E, A> => ({
-			toString: () => `left(${data})`,
+			...createSerializer('left', data),
 			isLeft: true,
 			isRight: false,
 			equals: (operand) =>

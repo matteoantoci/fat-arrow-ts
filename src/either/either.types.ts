@@ -1,9 +1,10 @@
+import { Serializer } from "../utils/serializer";
+
 export type RightValueOrEither<A> = A | Either<any, A>
 
 export type LeftValueOrEither<E> = E | Either<E, any>
 
-interface EitherProto<E, A> {
-	toString(): string
+interface EitherProto<E, A> extends Serializer {
 	equals(value: AnyEither): boolean
 	map<B>(ifRight: (right: A) => RightValueOrEither<B>): Either<E, B>
 	mapIf(predicate: (right: A) => boolean, ifTrue: (right: A) => RightValueOrEither<A>): Either<E, A>
