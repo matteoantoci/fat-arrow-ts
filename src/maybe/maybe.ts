@@ -2,7 +2,7 @@ import equal from 'fast-deep-equal/es6/react'
 import { once } from '../lambda'
 import { createAdtBuilder } from '../utils/adt-builder'
 import { Just, JustValueOrMaybe, Maybe, None } from './maybe.types'
-import { createSerializer } from "../utils/serializer";
+import { createSerializer } from '../utils/serializer'
 
 const builder = createAdtBuilder({})
 
@@ -24,7 +24,8 @@ export const just = <A>(value: NonNullable<JustValueOrMaybe<A>>): Maybe<A> =>
 		})
 	)
 
-const VOID = (() => {})()
+const VOID = (() => {
+})()
 
 export const none = once(
 	<A = [Error, 'Please specify type in none']>(): Maybe<A> =>
@@ -55,4 +56,4 @@ const isNonNullable = <T>(data: T): data is NonNullable<T> => {
 	}
 }
 
-export const maybe = <A>(value?: JustValueOrMaybe<A>): Maybe<A> => (isNonNullable(value) ? just(value) : none())
+export const maybe = <A>(value?: JustValueOrMaybe<A> | null): Maybe<A> => (isNonNullable(value) ? just(value) : none())
