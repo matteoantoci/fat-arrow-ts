@@ -2,6 +2,7 @@ import equal from 'fast-deep-equal/es6/react'
 import { createAdtBuilder } from '../utils/adt-builder'
 import { Either, Left, LeftValueOrEither, Right, RightValueOrEither } from './either.types'
 import { createSerializer } from '../utils/serializer'
+import { maybe, none } from "../maybe/maybe";
 
 const builder = createAdtBuilder({})
 
@@ -27,6 +28,7 @@ export const right = <
 			mapIf: (predicate, ifTrue) => (predicate(data) ? right(ifTrue(data)) : right(data)),
 			mapLeft: () => right(data),
 			orElse: () => right(data),
+			toMaybe: () => maybe(data),
 		})
 	)
 
@@ -49,6 +51,7 @@ export const left = <E = [Error, 'Please specify E type in left<E, A>'], A = [Er
 			mapIf: () => left(data),
 			mapLeft: (ifLeft) => left(ifLeft(data)),
 			orElse: (ifLeft) => right(ifLeft(data)),
+			toMaybe: () => none(),
 		})
 	)
 

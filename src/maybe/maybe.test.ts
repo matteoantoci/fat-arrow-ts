@@ -170,7 +170,7 @@ describe('Maybe', () => {
 		})
 
 		describe('toEither', () => {
-			it('maps to Either', () => {
+			it('maps to right', () => {
 				const actual = adt.toEither(() => 'left');
 
 				expect(actual).toBeRight(value)
@@ -301,7 +301,7 @@ describe('Maybe', () => {
 		})
 
 		describe('toEither', () => {
-			it('maps to Either', () => {
+			it('maps to left', () => {
 				const expected = 'left';
 
 				const actual = adt.toEither(() => expected);

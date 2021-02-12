@@ -203,6 +203,12 @@ describe('Either', () => {
 				})
 			})
 		})
+
+		describe('toMaybe', () => {
+			it('maps to just', () => {
+				expect(adt.toMaybe()).toBeJust(value)
+			})
+		})
 	})
 
 	describe('left', () => {
@@ -365,6 +371,12 @@ describe('Either', () => {
 					expect(predicate).not.toHaveBeenCalled()
 					expect(ifTrue).not.toHaveBeenCalled()
 				})
+			})
+		})
+
+		describe('toMaybe', () => {
+			it('maps to none', () => {
+				expect(adt.toMaybe()).toBeNone()
 			})
 		})
 	})

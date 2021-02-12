@@ -730,6 +730,11 @@ console.log(recovered.fold()) // 'Who cares!'
 TBD...
 
 
+##### `toMaybe`
+
+TBD...
+
+
 #### Either Jest matchers
 
 See [Setup Jest matchers](#setup-jest-matchers) for installation instructions.
