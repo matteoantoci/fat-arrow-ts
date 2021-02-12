@@ -7,7 +7,7 @@ const MAX_SCORE_INDEX = SCORES.length - 1
 
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 
-const getAllScoreText = (player: Player) => maybe(SCORES[player.scoreIndex]).map(capitalize).fold()
+const getAllScoreText = (player: Player) => maybe(SCORES[player.scoreIndex]).flatMap(capitalize).fold()
 
 type Player = {
 	name: string

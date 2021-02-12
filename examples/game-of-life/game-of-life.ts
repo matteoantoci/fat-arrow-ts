@@ -45,7 +45,7 @@ const createInitialState = (width: number, height: number): GameOfLifeState => (
 export const createGameOfLife = (width: number, height: number): GameOfLife => {
 	const state: GameOfLifeState = createInitialState(width, height)
 
-	const getCell = (row: number, col: number) => maybe(state.grid[row]).map((it) => maybe(it[col]))
+	const getCell = (row: number, col: number) => maybe(state.grid[row]).flatMap((it) => maybe(it[col]))
 
 	const setLivingCell = (row: number, col: number): void => {
 		maybe(state.grid[row]).fold(

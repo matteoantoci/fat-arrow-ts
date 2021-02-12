@@ -12,23 +12,23 @@ const runMonadChecks = (adt: Maybe<number>, of: (value: any) => Maybe<number>) =
 		})
 
 		it('has left identity', () => {
-			const f = (a: any) => of(a).map((x: number) => x * 2)
+			const f = (a: any) => of(a).flatMap((x: number) => x * 2)
 
-			expect(adt.map(f).equals(f(adt))).toBe(true)
+			expect(adt.flatMap(f).equals(f(adt))).toBe(true)
 		})
 
 		it('has right identity', () => {
-			expect(adt.map(of).equals(adt)).toBe(true)
+			expect(adt.flatMap(of).equals(adt)).toBe(true)
 		})
 
 		it('has associativity', () => {
-			const f = (a: any) => of(a).map((x: number) => x * 2)
-			const g = (a: any) => of(a).map((x: number) => x + 2)
+			const f = (a: any) => of(a).flatMap((x: number) => x * 2)
+			const g = (a: any) => of(a).flatMap((x: number) => x + 2)
 
 			adt
-				.map(f)
-				.map(f)
-				.equals(adt.map((x: any) => f(x).map(g)))
+				.flatMap(f)
+				.flatMap(f)
+				.equals(adt.flatMap((x: any) => f(x).flatMap(g)))
 		})
 	})
 }
@@ -70,7 +70,7 @@ describe('Maybe', () => {
 			it('supports data return', () => {
 				const newAdt = 999
 
-				const actual = adt.map(() => newAdt)
+				const actual = adt.flatMap(() => newAdt)
 
 				expect(actual).toBeJust(newAdt)
 			})
@@ -78,7 +78,7 @@ describe('Maybe', () => {
 			it('supports just return', () => {
 				const newAdt = just(999)
 
-				const actual = adt.map(() => newAdt)
+				const actual = adt.flatMap(() => newAdt)
 
 				expect(actual).toBeJust(newAdt)
 			})
@@ -86,7 +86,7 @@ describe('Maybe', () => {
 			it('supports none return', () => {
 				const newAdt = none()
 
-				const actual = adt.map(() => newAdt)
+				const actual = adt.flatMap(() => newAdt)
 
 				expect(actual).toBeNone()
 			})
@@ -225,7 +225,7 @@ describe('Maybe', () => {
 		describe('fold', () => {
 			describe('without params', () => {
 				it('folds', () => {
-					expect(none().fold()).toBe(undefined)
+					expect(none().fold()).toBe(null)
 				})
 			})
 

@@ -26,7 +26,7 @@ export const validate = <E = never, A = never>(
 	validations: ValidationIO<A>[]
 ): Validation<E, A> => {
 	const lefts = validations.reduce((acc: E[], validate) => {
-		const out = pass<E, A>(data).map(validate)
+		const out = pass<E, A>(data).flatMap(validate)
 		return out.isLeft ? acc.concat(out.fold()) : acc
 	}, [])
 	return lefts.length ? fail(lefts) : pass(data)

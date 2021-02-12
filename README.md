@@ -49,16 +49,6 @@ npm install fat-arrow-ts
 
 #### Setup Jest matchers
 
-An optional set of steps to have Fat Arrow's support in your Jest tests.
-
-See [Jest matchers](#jest-matchers) for more information.
-
-```bash  
-npm install --save-dev jest-matcher-utils
-```
-
-
-
 Be sure to have a reference to a setup file in your `jest.config.ts`
 
 ```ts
@@ -102,8 +92,8 @@ const print = (value: Either<Error, number>) =>
         (result) => console.log(`Result is ${result}. Hooray!`)  
     )  
   
-print(getDivision(10, 0).map(addTwo)) // Doh! Division by zero!  
-print(getDivision(10, 5).map(addTwo)) // Result is 4. Hooray!  
+print(getDivision(10, 0).flatMap(addTwo)) // Doh! Division by zero!  
+print(getDivision(10, 5).flatMap(addTwo)) // Result is 4. Hooray!  
 ```
 
 
@@ -289,11 +279,11 @@ aNoneValue.fold(
 )
 ```
 
-##### `map`
+##### `flatMap`
 
 Takes a callback of type `<B>(value: A) => B | Maybe<B>` and applies it to the _just_ value of your type class instances.
 
-By default `map` method will try to convert the returned value to an `Maybe<B>` _just_ state so that you can also produce raw values from your callbacks.
+By default `flatMap` method will try to convert the returned value to an `Maybe<B>` _just_ state so that you can also produce raw values from your callbacks.
 
 Returning a _none_ value, you can switch to a _none_ state.
 
@@ -304,7 +294,7 @@ import { just, none, Maybe } from 'fat-arrow-ts';
   
 const myValue = just(5)
  
-const justResult: Maybe<number> = myValue.map(
+const justResult: Maybe<number> = myValue.flatMap(
   it => it + 5
 )
 
@@ -312,7 +302,7 @@ console.log(justResult.isJust) // true
 console.log(justResult.fold()) // 10
 
 // Will be flattened
-const sameTypeJustResult: Maybe<number> = myValue.map(
+const sameTypeJustResult: Maybe<number> = myValue.flatMap(
   it => just(it + 5)
 )
 
@@ -320,7 +310,7 @@ console.log(sameTypeJustResult.isJust) // true
 console.log(sameTypeJustResult.fold()) // 10
 
 // You can return just values with a different type
-const anotherTypeJustResult: Maybe<string> = myValue.map(
+const anotherTypeJustResult: Maybe<string> = myValue.flatMap(
   it => just('foo')
 )
 
@@ -328,7 +318,7 @@ console.log(anotherTypeJustResult.isJust) // true
 console.log(anotherTypeJustResult.fold()) // 'foo'
 
 // You can return none values
-const noneResult: Maybe<number> = myValue.map(
+const noneResult: Maybe<number> = myValue.flatMap(
   it => none()
 )
 
@@ -339,7 +329,7 @@ console.log(noneResult.fold()) // undefined
 
 ##### `mapIf`
 
-Works very similar to `map` but it also accepts a _predicate_ `(value: A) => boolean` as first parameter.
+Works very similar to `flatMap` but it also accepts a _predicate_ `(value: A) => boolean` as first parameter.
 
 It will map your type class instances only if the predicate returns `true`.
 
@@ -579,11 +569,11 @@ aLeftValue.fold(
 
 
 
-##### `map`
+##### `flatMap`
 
 Takes a callback of type `(value: A) => B | Either<E, B>` and applies it to the _right_ value of your type class instances.
 
-By default `map` method will try to convert the returned value to an `Either<E, B>` _right_ state so that you can also produce raw values from your callback.
+By default `flatMap` method will try to convert the returned value to an `Either<E, B>` _right_ state so that you can also produce raw values from your callback.
 
 Returning a _left_ value, you can switch to a _left_ state.
 
@@ -594,7 +584,7 @@ import { right, left } from 'fat-arrow-ts';
   
 const myValue = right<Error, number>(5)
  
-const rightResult: Either<Error, number> = myValue.map(
+const rightResult: Either<Error, number> = myValue.flatMap(
   it => it + 5
 )
 
@@ -602,7 +592,7 @@ console.log(rightResult.isRight) // true
 console.log(rightResult.fold()) // 5
 
 // Will be flattened
-const sameTypeResult: Either<Error, number> = myValue.map(
+const sameTypeResult: Either<Error, number> = myValue.flatMap(
   it => right(it + 5)
 )
 
@@ -610,7 +600,7 @@ console.log(sameTypeResult.isRight) // true
 console.log(sameTypeResult.fold()) // 5
 
 // You can return right values with a different type
-const anotherTypeRightResult: Either<Error, string> = myValue.map(
+const anotherTypeRightResult: Either<Error, string> = myValue.flatMap(
   it => right('foo')
 )
 
@@ -618,7 +608,7 @@ console.log(anotherTypeRightResult.isRight) // true
 console.log(anotherTypeRightResult.fold()) // 'foo'
 
 // Will be flattened to a Either<Error, number> with left state
-const leftResult: Either<Error, number> = myValue.map(
+const leftResult: Either<Error, number> = myValue.flatMap(
   it => left<Error, number>(new Error())
 ) 
 
@@ -630,7 +620,7 @@ console.log(leftResult.fold()) // Error
 
 ##### `mapIf`
 
-Works very similar to `map` but it also accepts a _predicate_ `(value: A) => boolean` as first parameter.
+Works very similar to `flatMap` but it also accepts a _predicate_ `(value: A) => boolean` as first parameter.
 
 It will map your type class instances only if the predicate returns `true`.
 
@@ -658,7 +648,7 @@ console.log(fizzBuzz(2)) // 2
 
 ##### `mapLeft`
 
-Similar to `map`, it will let you apply callbacks of type `(value: E) => G | Either<G, A>` to the _left_ value of your type class instances.
+Similar to `flatMap`, it will let you apply callbacks of type `(value: E) => G | Either<G, A>` to the _left_ value of your type class instances.
 
 By default `mapLeft` method will try to convert the returned value to an `Either<G, A>` _left_ state so that you can also produce raw values from your callback.
 
@@ -824,7 +814,7 @@ const getFullName = (name: string, surname: string): string => {
 
 const result: Result<string> = tryCatch(() => getFullName('John', 'Doe'))
 
-const myValue = result.map((it) => it.toUpperCase())
+const myValue = result.flatMap((it) => it.toUpperCase())
   
 console.log(myValue.fold()) // JOHN DOE
 console.log(myValue.isRight) // true
@@ -833,7 +823,7 @@ console.log(myValue.isRight) // true
 
 const safeResult: Result<string> = tryCatch(() => getFullName('', ''))
 
-const mySafeValue = safeResult.map((it) => it.toUpperCase())
+const mySafeValue = safeResult.flatMap((it) => it.toUpperCase())
   
 console.log(mySafeValue.fold()) // Error
 console.log(mySafeValue.isLeft) // true  

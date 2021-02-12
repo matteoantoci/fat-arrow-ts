@@ -12,23 +12,23 @@ const runMonadChecks = (adt: Either<Error, number>, of: (value: any) => Either<E
 		})
 
 		it('has left identity', () => {
-			const f = (a: any) => of(a).map((x: number) => x * 2)
+			const f = (a: any) => of(a).flatMap((x: number) => x * 2)
 
-			expect(adt.map(f).equals(f(adt))).toBe(true)
+			expect(adt.flatMap(f).equals(f(adt))).toBe(true)
 		})
 
 		it('has right identity', () => {
-			expect(adt.map(of).equals(adt)).toBe(true)
+			expect(adt.flatMap(of).equals(adt)).toBe(true)
 		})
 
 		it('has associativity', () => {
-			const f = (a: any) => of(a).map((x: number) => x * 2)
-			const g = (a: any) => of(a).map((x: number) => x + 2)
+			const f = (a: any) => of(a).flatMap((x: number) => x * 2)
+			const g = (a: any) => of(a).flatMap((x: number) => x + 2)
 
 			adt
-				.map(f)
-				.map(f)
-				.equals(adt.map((x: any) => f(x).map(g)))
+				.flatMap(f)
+				.flatMap(f)
+				.equals(adt.flatMap((x: any) => f(x).flatMap(g)))
 		})
 	})
 }
@@ -69,7 +69,7 @@ describe('Either', () => {
 			it('supports data return', () => {
 				const newAdt = 999
 
-				const actual = adt.map(() => newAdt)
+				const actual = adt.flatMap(() => newAdt)
 
 				expect(actual).toBeRight(newAdt)
 			})
@@ -77,7 +77,7 @@ describe('Either', () => {
 			it('supports right return', () => {
 				const newAdt = right<Error, number>(999)
 
-				const actual = adt.map(() => newAdt)
+				const actual = adt.flatMap(() => newAdt)
 
 				expect(actual).toBeRight(newAdt)
 			})
@@ -85,7 +85,7 @@ describe('Either', () => {
 			it('supports left return', () => {
 				const newAdt = left<Error, number>(new Error())
 
-				const actual = adt.map(() => newAdt)
+				const actual = adt.flatMap(() => newAdt)
 
 				expect(actual).toBeLeft(newAdt)
 			})
@@ -230,7 +230,7 @@ describe('Either', () => {
 			it('supports data return', () => {
 				const newAdt = 999
 
-				const actual = adt.map(() => newAdt)
+				const actual = adt.flatMap(() => newAdt)
 
 				expect(actual).toBeLeft(adt)
 			})
@@ -238,7 +238,7 @@ describe('Either', () => {
 			it('supports right return', () => {
 				const newAdt = right<Error, number>(999)
 
-				const actual = adt.map(() => newAdt)
+				const actual = adt.flatMap(() => newAdt)
 
 				expect(actual).toBeLeft(adt)
 			})
@@ -246,7 +246,7 @@ describe('Either', () => {
 			it('supports left return', () => {
 				const newAdt = left<Error, number>(new Error())
 
-				const actual = adt.map(() => newAdt)
+				const actual = adt.flatMap(() => newAdt)
 
 				expect(actual).toBeLeft(adt)
 			})
@@ -379,11 +379,11 @@ describe('Either', () => {
 	describe('integration', () => {
 		it('works', () => {
 			const actual = right<string, number>(0)
-				.map((it) => it + 10)
-				.map((it) => it * 2)
-				.map(() => left<string, number>('nooo'))
+				.flatMap((it) => it + 10)
+				.flatMap((it) => it * 2)
+				.flatMap(() => left<string, number>('nooo'))
 				.mapLeft(() => right<Error, number>(100))
-				.map((it) => (it === 100 ? right<Error, string>('happy') : left<Error, string>(new Error())))
+				.flatMap((it) => (it === 100 ? right<Error, string>('happy') : left<Error, string>(new Error())))
 				.fold(
 					() => 'very sad',
 					(it) => it
