@@ -171,7 +171,7 @@ describe('Maybe', () => {
 	})
 
 	describe('none', () => {
-		const adt = none<number>()
+		const adt = none()
 
 		runMonadChecks(adt, none)
 
@@ -200,7 +200,7 @@ describe('Maybe', () => {
 			it('supports data return', () => {
 				const newAdt = 999
 
-				const actual = adt.map(() => newAdt)
+				const actual = adt.flatMap(() => newAdt)
 
 				expect(actual).toBeNone()
 			})
@@ -208,7 +208,7 @@ describe('Maybe', () => {
 			it('supports just return', () => {
 				const newAdt = just(999)
 
-				const actual = adt.map(() => newAdt)
+				const actual = adt.flatMap(() => newAdt)
 
 				expect(actual).toBeNone()
 			})
@@ -216,7 +216,7 @@ describe('Maybe', () => {
 			it('supports none return', () => {
 				const newAdt = none()
 
-				const actual = adt.map(() => newAdt)
+				const actual = adt.flatMap(() => newAdt)
 
 				expect(actual).toBeNone()
 			})
@@ -260,7 +260,7 @@ describe('Maybe', () => {
 			})
 
 			it('supports none return', () => {
-				const newAdt = none<number>()
+				const newAdt = none()
 
 				const actual = adt.orElse(() => newAdt)
 

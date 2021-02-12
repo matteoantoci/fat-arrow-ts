@@ -65,7 +65,7 @@ describe('Either', () => {
 			})
 		})
 
-		describe('map', () => {
+		describe('flatMap', () => {
 			it('supports data return', () => {
 				const newAdt = 999
 
@@ -134,6 +134,16 @@ describe('Either', () => {
 					expect(spy).toHaveBeenCalledWith(value)
 					expect(actual).toBe(expected)
 				})
+			})
+		})
+
+		describe('bimap', () => {
+			it('maps right type', () => {
+				const expected = 'right'
+
+				const actual = adt.bimap(() => 'left', () => 'right')
+
+				expect(actual).toBeRight(expected)
 			})
 		})
 
@@ -226,7 +236,7 @@ describe('Either', () => {
 			})
 		})
 
-		describe('map', () => {
+		describe('flatMap', () => {
 			it('supports data return', () => {
 				const newAdt = 999
 
@@ -295,6 +305,16 @@ describe('Either', () => {
 					expect(spy).toHaveBeenCalledWith(error)
 					expect(actual).toBe(expected)
 				})
+			})
+		})
+
+		describe('bimap', () => {
+			it('maps left type', () => {
+				const expected = 'left'
+
+				const actual = adt.bimap(() => expected, () => 'right')
+
+				expect(actual).toBeLeft(expected)
 			})
 		})
 

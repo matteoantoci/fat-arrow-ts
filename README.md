@@ -371,6 +371,9 @@ console.log(recovered.isJust) // true
 console.log(recovered.fold()) // 'N/A'
 ```
 
+##### `bimap`
+
+TBD...
 
 #### Maybe Jest matchers
 

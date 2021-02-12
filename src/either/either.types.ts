@@ -6,11 +6,11 @@ export type LeftValueOrEither<E> = E | Either<E, any>
 
 interface EitherProto<E, A> extends Serializer {
 	equals(value: AnyEither): boolean
-	map<B>(ifRight: (right: A) => RightValueOrEither<B>): Either<E, B>
 	flatMap<B>(ifRight: (right: A) => RightValueOrEither<B>): Either<E, B>
 	mapIf(predicate: (right: A) => boolean, ifTrue: (right: A) => RightValueOrEither<A>): Either<E, A>
 	mapLeft<G>(fn: (left: E) => LeftValueOrEither<G>): Either<G, A>
 	orElse(ifLeft: (left: E) => RightValueOrEither<A>): Either<E, A>
+	bimap<G, B>(ifLeft: (left: E) => LeftValueOrEither<G>, ifRight: (right: A) => RightValueOrEither<B>): Either<G, B>
 }
 
 interface Fold<E, A, T> {

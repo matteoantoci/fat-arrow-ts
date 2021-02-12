@@ -6,7 +6,6 @@ export type JustValueOrMaybe<A> = A | Maybe<A>
 
 interface MaybeProto<A> extends Serializer {
 	equals(value: AnyMaybe): boolean
-	map<B>(ifJust: (just: A) => JustValueOrMaybe<B>): Maybe<B>
 	flatMap<B>(ifJust: (just: A) => JustValueOrMaybe<B>): Maybe<B>
 	mapIf(predicate: (just: A) => boolean, ifTrue: (just: A) => JustValueOrMaybe<A>): Maybe<A>
 	orElse(ifNone: () => JustValueOrMaybe<A>): Maybe<A>

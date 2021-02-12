@@ -18,7 +18,6 @@ export const just = <A>(value: NonNullable<JustValueOrMaybe<A>>): Maybe<A> =>
 					(it) => equal(it, data)
 				),
 			fold: <B>(_?: () => B, ifJust?: (value: A) => B) => (ifJust ? ifJust(data) : data),
-			map: (ifJust) => maybe(ifJust(data)),
 			flatMap: (ifJust) => maybe(ifJust(data)),
 			mapIf: (predicate, ifTrue) => (predicate(data) ? maybe(ifTrue(data)) : maybe(data)),
 			orElse: () => maybe(data),
@@ -28,7 +27,7 @@ export const just = <A>(value: NonNullable<JustValueOrMaybe<A>>): Maybe<A> =>
 const NONE_VALUE = null;
 
 export const none = once(
-	<A = [Error, 'Please specify type in none']>(): Maybe<A> =>
+	<A = any>(): Maybe<A> =>
 		builder.flatten<null, Maybe<A>>(NONE_VALUE).seal(
 			(): None<A> => ({
 				toJSON: () => NONE_VALUE,
@@ -40,7 +39,6 @@ export const none = once(
 						() => true,
 						() => false
 					),
-				map: <B>() => none<B>(),
 				flatMap: <B>() => none<B>(),
 				mapIf: <B>() => none<B>(),
 				orElse: (ifNone) => maybe(ifNone()),

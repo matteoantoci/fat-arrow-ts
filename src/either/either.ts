@@ -22,7 +22,7 @@ export const right = <
 					(it) => equal(it, data)
 				),
 			fold: <B>(_?: any, ifRight?: (value: A) => B) => (ifRight ? ifRight(data) : data),
-			map: (ifRight) => right(ifRight(data)),
+			bimap: (_, ifRight) => right(ifRight(data)),
 			flatMap: (ifRight) => right(ifRight(data)),
 			mapIf: (predicate, ifTrue) => (predicate(data) ? right(ifTrue(data)) : right(data)),
 			mapLeft: () => right(data),
@@ -44,7 +44,7 @@ export const left = <E = [Error, 'Please specify E type in left<E, A>'], A = [Er
 					() => false
 				),
 			fold: <B>(ifLeft?: (value: E) => B) => (ifLeft ? ifLeft(data) : data),
-			map: () => left(data),
+			bimap: (ifLeft) => left(ifLeft(data)),
 			flatMap: () => left(data),
 			mapIf: () => left(data),
 			mapLeft: (ifLeft) => left(ifLeft(data)),
