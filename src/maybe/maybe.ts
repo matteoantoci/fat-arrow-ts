@@ -1,13 +1,13 @@
 import equal from 'fast-deep-equal/es6/react'
 import { once } from '../lambda'
 import { createAdtBuilder } from '../utils/adt-builder'
-import { Just, JustValueOrMaybe, Maybe, None } from './maybe.types'
+import { Just, ValueOrMaybe, Maybe, None } from './maybe.types'
 import { createSerializer } from '../utils/serializer'
 import { left, right } from "../either/either";
 
 const builder = createAdtBuilder({})
 
-export const just = <A>(value: NonNullable<JustValueOrMaybe<A>>): Maybe<A> =>
+export const just = <A>(value: NonNullable<ValueOrMaybe<A>>): Maybe<A> =>
 	builder.flatten<A, Maybe<A>>(value).seal(
 		(data): Just<A> => ({
 			...createSerializer('just', data),
@@ -58,4 +58,4 @@ const isNonNullable = <T>(data: T): data is NonNullable<T> => {
 	}
 }
 
-export const maybe = <A>(value?: JustValueOrMaybe<A> | null): Maybe<A> => (isNonNullable(value) ? just(value) : none())
+export const maybe = <A>(value?: ValueOrMaybe<A> | null): Maybe<A> => (isNonNullable(value) ? just(value) : none())
