@@ -168,6 +168,14 @@ describe('Maybe', () => {
 				})
 			})
 		})
+
+		describe('toEither', () => {
+			it('maps to Either', () => {
+				const actual = adt.toEither(() => 'left');
+
+				expect(actual).toBeRight(value)
+			})
+		})
 	})
 
 	describe('none', () => {
@@ -289,6 +297,16 @@ describe('Maybe', () => {
 					expect(predicate).not.toHaveBeenCalled()
 					expect(ifTrue).not.toHaveBeenCalled()
 				})
+			})
+		})
+
+		describe('toEither', () => {
+			it('maps to Either', () => {
+				const expected = 'left';
+
+				const actual = adt.toEither(() => expected);
+
+				expect(actual).toBeLeft(expected)
 			})
 		})
 	})

@@ -371,7 +371,8 @@ console.log(recovered.isJust) // true
 console.log(recovered.fold()) // 'N/A'
 ```
 
-##### `bimap`
+
+##### `toEither`
 
 TBD...
 
@@ -722,6 +723,11 @@ const recovered = userInput.orElse(e => {
 console.log(recovered.isRight) // true
 console.log(recovered.fold()) // 'Who cares!'
 ```
+
+
+##### `bimap`
+
+TBD...
 
 
 #### Either Jest matchers

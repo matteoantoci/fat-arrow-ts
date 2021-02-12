@@ -1,4 +1,5 @@
 import { Serializer } from "../utils/serializer";
+import { Either, LeftValueOrEither } from "../either/either.types";
 
 export type AnyMaybe = Maybe<any>
 
@@ -9,6 +10,7 @@ interface MaybeProto<A> extends Serializer {
 	flatMap<B>(ifJust: (just: A) => JustValueOrMaybe<B>): Maybe<B>
 	mapIf(predicate: (just: A) => boolean, ifTrue: (just: A) => JustValueOrMaybe<A>): Maybe<A>
 	orElse(ifNone: () => JustValueOrMaybe<A>): Maybe<A>
+	toEither<E>(ifNone: () => LeftValueOrEither<E>): Either<E, A>
 }
 
 interface Fold<A, T> {

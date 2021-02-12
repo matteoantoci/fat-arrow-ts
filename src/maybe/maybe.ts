@@ -3,6 +3,7 @@ import { once } from '../lambda'
 import { createAdtBuilder } from '../utils/adt-builder'
 import { Just, JustValueOrMaybe, Maybe, None } from './maybe.types'
 import { createSerializer } from '../utils/serializer'
+import { left, right } from "../either/either";
 
 const builder = createAdtBuilder({})
 
@@ -21,6 +22,7 @@ export const just = <A>(value: NonNullable<JustValueOrMaybe<A>>): Maybe<A> =>
 			flatMap: (ifJust) => maybe(ifJust(data)),
 			mapIf: (predicate, ifTrue) => (predicate(data) ? maybe(ifTrue(data)) : maybe(data)),
 			orElse: () => maybe(data),
+			toEither: () => right(data),
 		})
 	)
 
@@ -43,6 +45,7 @@ export const none = once(
 				mapIf: <B>() => none<B>(),
 				orElse: (ifNone) => maybe(ifNone()),
 				fold: <B>(ifNone?: () => B) => (ifNone ? ifNone() : NONE_VALUE),
+				toEither: (ifNone) => left(ifNone())
 			})
 		)
 )
