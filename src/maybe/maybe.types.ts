@@ -3,7 +3,7 @@ import { Either, LeftValueOrEither } from "../either/either.types";
 
 export type AnyMaybe = Maybe<any>
 
-export type ValueOrMaybe<A> = A | Maybe<A>
+export type ValueOrMaybe<A> = A | Maybe<A> | undefined | null
 
 interface MaybeProto<A> extends Serializer {
 	equals(value: AnyMaybe): boolean

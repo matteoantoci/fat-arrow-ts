@@ -58,4 +58,4 @@ const isNonNullable = <T>(data: T): data is NonNullable<T> => {
 	}
 }
 
-export const maybe = <A>(value?: ValueOrMaybe<A> | null): Maybe<A> => (isNonNullable(value) ? just(value) : none())
+export const maybe = <A>(value: ValueOrMaybe<A>): Maybe<A> => (isNonNullable(value) ? just(value) : none())
