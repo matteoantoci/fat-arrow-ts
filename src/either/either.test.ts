@@ -141,7 +141,7 @@ describe('Either', () => {
 			it('maps right type', () => {
 				const expected = 'right'
 
-				const actual = adt.bimap(() => 'left', () => 'right')
+				const actual = adt.bimap(() => 'left', () => expected)
 
 				expect(actual).toBeRight(expected)
 			})

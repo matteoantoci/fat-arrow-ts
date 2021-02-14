@@ -176,6 +176,16 @@ describe('Maybe', () => {
 				expect(actual).toBeRight(value)
 			})
 		})
+
+		describe('bimap', () => {
+			it('maps just type', () => {
+				const expected = 'just'
+
+				const actual = adt.bimap(() => 'none', () => expected)
+
+				expect(actual).toBeJust(expected)
+			})
+		})
 	})
 
 	describe('none', () => {
@@ -307,6 +317,16 @@ describe('Maybe', () => {
 				const actual = adt.toEither(() => expected);
 
 				expect(actual).toBeLeft(expected)
+			})
+		})
+
+		describe('bimap', () => {
+			it('maps none type', () => {
+				const expected = 'none'
+
+				const actual = adt.bimap(() => expected, () => 'just')
+
+				expect(actual).toBeJust(expected)
 			})
 		})
 	})

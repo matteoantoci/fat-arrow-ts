@@ -22,6 +22,7 @@ export const just = <A>(value: NonNullable<ValueOrMaybe<A>>): Maybe<A> =>
 			flatMap: (ifJust) => maybe(ifJust(data)),
 			mapIf: (predicate, ifTrue) => (predicate(data) ? maybe(ifTrue(data)) : maybe(data)),
 			orElse: () => maybe(data),
+			bimap: (_, ifJust) => maybe(ifJust(data)),
 			toEither: () => right(data),
 		})
 	)
@@ -45,6 +46,7 @@ export const none = once(
 				mapIf: <B>() => none<B>(),
 				orElse: (ifNone) => maybe(ifNone()),
 				fold: <B>(ifNone?: () => B) => (ifNone ? ifNone() : NONE_VALUE),
+				bimap: (ifNone) => maybe(ifNone()),
 				toEither: (ifNone) => left(ifNone())
 			})
 		)
