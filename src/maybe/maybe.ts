@@ -1,11 +1,11 @@
 import equal from 'fast-deep-equal/es6/react'
 import { once } from '../lambda'
 import { createAdtBuilder } from '../utils/adt-builder'
-import { Just, ValueOrMaybe, Maybe, None } from './maybe.types'
+import { Just, Maybe, None, ValueOrMaybe } from './maybe.types'
 import { createSerializer } from '../utils/serializer'
-import { left, right } from "../either/either";
+import { left, right } from '../either/either'
 
-const builder = createAdtBuilder({})
+const builder = createAdtBuilder({ __adt: true })
 
 export const just = <A>(value: NonNullable<ValueOrMaybe<A>>): Maybe<A> =>
 	builder.flatten<A, Maybe<A>>(value).seal(
@@ -22,19 +22,18 @@ export const just = <A>(value: NonNullable<ValueOrMaybe<A>>): Maybe<A> =>
 			flatMap: (ifJust) => maybe(ifJust(data)),
 			mapIf: (predicate, ifTrue) => (predicate(data) ? maybe(ifTrue(data)) : maybe(data)),
 			orElse: () => maybe(data),
-			bimap: (_, ifJust) => maybe(ifJust(data)),
 			toEither: () => right(data),
 		})
 	)
 
-const NONE_VALUE = null;
+const VOID = (() => {
+})()
 
 export const none = once(
 	<A = any>(): Maybe<A> =>
-		builder.flatten<null, Maybe<A>>(NONE_VALUE).seal(
+		builder.flatten<void, Maybe<A>>(VOID).seal(
 			(): None<A> => ({
-				toJSON: () => NONE_VALUE,
-				toString: () => `none()`,
+				...createSerializer('none', VOID),
 				isJust: false,
 				isNone: true,
 				equals: (operand) =>
@@ -45,8 +44,7 @@ export const none = once(
 				flatMap: <B>() => none<B>(),
 				mapIf: <B>() => none<B>(),
 				orElse: (ifNone) => maybe(ifNone()),
-				fold: <B>(ifNone?: () => B) => (ifNone ? ifNone() : NONE_VALUE),
-				bimap: (ifNone) => maybe(ifNone()),
+				fold: <B>(ifNone?: () => B) => (ifNone ? ifNone() : null),
 				toEither: (ifNone) => left(ifNone())
 			})
 		)

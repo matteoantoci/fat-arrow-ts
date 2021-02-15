@@ -44,12 +44,12 @@ describe('Maybe', () => {
 			expect(adt.isJust).toBe(true)
 		})
 
-		it('is serializable', () => {
+		it('toString', () => {
 			expect(adt.toString()).toBe('just(2)')
 		})
 
 		it('flattens', () => {
-			expect(just(adt)).toBeJust(value)
+			expect(just(adt)).toBeJust(2)
 			expect(just(adt)).toBeJust(adt)
 		})
 
@@ -133,13 +133,13 @@ describe('Maybe', () => {
 				expect(spy).not.toHaveBeenCalled()
 			})
 
-			it('supports left return', () => {
+			it('supports none return', () => {
 				const newAdt = none()
 				const spy = jest.fn().mockReturnValue(newAdt)
 
 				const actual = adt.orElse(spy)
 
-				expect(actual).toBeRight(adt)
+				expect(actual).toBeJust(adt)
 				expect(spy).not.toHaveBeenCalled()
 			})
 		})
@@ -176,16 +176,6 @@ describe('Maybe', () => {
 				expect(actual).toBeRight(value)
 			})
 		})
-
-		describe('bimap', () => {
-			it('maps just type', () => {
-				const expected = 'just'
-
-				const actual = adt.bimap(() => 'none', () => expected)
-
-				expect(actual).toBeJust(expected)
-			})
-		})
 	})
 
 	describe('none', () => {
@@ -197,10 +187,14 @@ describe('Maybe', () => {
 			expect(adt.isNone).toBe(true)
 		})
 
-		it('is serializable', () => {
+		it('toString', () => {
 			expect(adt.toString()).toBe('none()')
-			expect(JSON.stringify(adt)).toBe('null')
-			expect(JSON.stringify({ prop: adt })).toBe('{"prop":null}')
+		})
+
+		it('toJSON', () => {
+			expect(() => {
+				JSON.stringify(adt)
+			}).toThrow('You are trying to serialize a none(). Please fold it before doing it.')
 		})
 
 		it('has identity', () => {
@@ -317,16 +311,6 @@ describe('Maybe', () => {
 				const actual = adt.toEither(() => expected);
 
 				expect(actual).toBeLeft(expected)
-			})
-		})
-
-		describe('bimap', () => {
-			it('maps none type', () => {
-				const expected = 'none'
-
-				const actual = adt.bimap(() => expected, () => 'just')
-
-				expect(actual).toBeJust(expected)
 			})
 		})
 	})

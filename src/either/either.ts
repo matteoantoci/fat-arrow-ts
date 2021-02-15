@@ -2,14 +2,12 @@ import equal from 'fast-deep-equal/es6/react'
 import { createAdtBuilder } from '../utils/adt-builder'
 import { Either, Left, LeftValueOrEither, Right, RightValueOrEither } from './either.types'
 import { createSerializer } from '../utils/serializer'
-import { maybe, none } from "../maybe/maybe";
+import { maybe, none } from '../maybe/maybe'
 
-const builder = createAdtBuilder({})
+const builder = createAdtBuilder({ __adt: true })
 
-export const right = <
-	E = [Error, 'Please specify E type in right<E, A>'],
-	A = [Error, 'Please specify A type in right<E, A>']
->(
+export const right = <E = [Error, 'Please specify E type in right<E, A>'],
+	A = [Error, 'Please specify A type in right<E, A>']>(
 	value: RightValueOrEither<A>
 ): Either<E, A> =>
 	builder.flatten<A, Either<E, A>>(value).seal(

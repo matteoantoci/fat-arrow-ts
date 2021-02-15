@@ -1,5 +1,13 @@
-export const createAdtBuilder = (prototype: object) => {
-	const seal = <I, O>(adt: I): O => Object.freeze(Object.assign(Object.create(prototype), adt))
+export interface Adt {
+	__adt: true
+}
+
+export const isAdt = (input: any): input is Adt => !!input && input.__adt
+
+export const createAdtBuilder = (prototype: Adt) => {
+	const seal = <I, O>(adt: I): O => {
+		return Object.freeze(Object.assign(Object.create(prototype), adt))
+	}
 
 	const hasSamePrototype = <M>(data: any): data is M => {
 		try {

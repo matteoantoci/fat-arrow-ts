@@ -1,6 +1,8 @@
 import { Serializer } from '../utils/serializer'
 import { Maybe } from '../maybe/maybe.types'
 
+export type AnyEither = Either<any, any>
+
 export type RightValueOrEither<A> = A | Either<any, A>
 
 export type LeftValueOrEither<E> = E | Either<E, any>
@@ -38,5 +40,3 @@ export interface Left<E, A> extends EitherProto<E, A>, Fold<E, A, E> {
 }
 
 export type Either<E, A> = Right<E, A> | Left<E, A>
-
-type AnyEither = Either<any, any>

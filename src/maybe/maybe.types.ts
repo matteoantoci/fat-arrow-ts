@@ -14,8 +14,6 @@ interface MaybeProto<A> extends Serializer {
 
 	orElse(ifNone: () => ValueOrMaybe<A>): Maybe<A>
 
-	bimap<B>(ifNone: () => ValueOrMaybe<B>, ifJust: (just: A) => ValueOrMaybe<B>): Maybe<B>
-
 	toEither<E>(ifNone: () => LeftValueOrEither<E>): Either<E, A>
 }
 

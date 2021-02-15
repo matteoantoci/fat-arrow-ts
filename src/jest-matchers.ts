@@ -47,9 +47,9 @@ const getReportHeader = (fnName: string, pass: boolean) => `${matcherHint(
 )}
 `
 
-const getExpectedMessage = (values: TestValues) => printExpected(`${values.side}(${values.expected.fold()})`)
+const getExpectedMessage = (values: TestValues) => printExpected(values.expected.toString())
 
-const getReceivedMessage = (values: TestValues) => `Received: ${printReceived(values.received.fold())}`
+const getReceivedMessage = (values: TestValues) => `Received: ${printReceived(values.received.toString())}`
 
 const getExpectedValueMessage = (pass: boolean, values: TestValues) =>
 	`Expected value${pass ? ' not ' : ' '}to be: ${getExpectedMessage(values)}`

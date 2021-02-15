@@ -1,18 +1,20 @@
-import { createAdtBuilder } from './adt-builder'
+import { Adt, createAdtBuilder, isAdt } from "./adt-builder";
 
 describe('Adt builder', () => {
+	const proto: Adt = { __adt: true }
+
 	it('builds objects', () => {
 		const props = { properties: true }
-		const builder = createAdtBuilder({})
+		const builder = createAdtBuilder(proto)
 
 		const actual = builder.flatten(props).seal(() => props)
 
 		expect(actual).toStrictEqual(props)
+		expect(isAdt(actual)).toBe(true)
 	})
 
 	it('uses a prototype', () => {
 		const props = { properties: true }
-		const proto = {}
 		const builder = createAdtBuilder(proto)
 
 		const actual = builder.flatten(props).seal(() => props)
@@ -22,7 +24,7 @@ describe('Adt builder', () => {
 
 	it('it builds immutable objects', () => {
 		const props = { properties: true }
-		const builder = createAdtBuilder({})
+		const builder = createAdtBuilder(proto)
 
 		const actual = builder.flatten(props).seal(() => props)
 
@@ -34,7 +36,7 @@ describe('Adt builder', () => {
 	describe('when using nullable values', () => {
 		it('flattens the input', () => {
 			const props = { properties: true }
-			const builder = createAdtBuilder({})
+			const builder = createAdtBuilder(proto)
 
 			const actual = builder.flatten(null).seal(() => props)
 
@@ -45,7 +47,7 @@ describe('Adt builder', () => {
 	describe('when using same prototype objects', () => {
 		it('flattens the input', () => {
 			const props = { properties: true }
-			const builder = createAdtBuilder({})
+			const builder = createAdtBuilder(proto)
 			const parent = builder.flatten(props).seal(() => props)
 
 			const actual = builder.flatten(parent).seal(() => props)
@@ -58,7 +60,7 @@ describe('Adt builder', () => {
 	describe('when using different prototype objects', () => {
 		it('flattens the input', () => {
 			const props = { properties: true }
-			const builder = createAdtBuilder({})
+			const builder = createAdtBuilder(proto)
 			const parent = builder.flatten(props).seal(() => props)
 
 			const actual = builder.flatten(props).seal(() => props)
