@@ -1,5 +1,3 @@
-import { Maybe } from '../maybe/maybe.types'
-
 export type AnyEither = Either<any, any>
 
 export type RightValueOrEither<A> = A | Either<any, A>
@@ -10,8 +8,6 @@ interface EitherProto<E, A> {
 	toString(): string
 
 	equals(value: AnyEither): boolean
-
-	of<B>(value: RightValueOrEither<B>): Either<E, B>
 
 	fold(): E | A
 
@@ -26,8 +22,6 @@ interface EitherProto<E, A> {
 	orElse(ifLeft: (left: E) => RightValueOrEither<A>): Either<E, A>
 
 	bimap<G, B>(ifLeft: (left: E) => LeftValueOrEither<G>, ifRight: (right: A) => RightValueOrEither<B>): Either<G, B>
-
-	toMaybe(): Maybe<A>
 }
 
 export interface Right<E, A> extends EitherProto<E, A> {

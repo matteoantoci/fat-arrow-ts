@@ -1,9 +1,7 @@
 import { matcherHint, printExpected, printReceived } from 'jest-matcher-utils'
-import { isEither, left, right } from './either/either'
+import { leftOf, rightOf } from './either/either'
 
 type AdtMock = {
-	isRight?: boolean
-	isLeft?: boolean
 	equals: (value: any) => boolean
 	fold: () => any
 }
@@ -66,32 +64,28 @@ const isLeft = (values: TestValues) => values.received.equals(values.expected)
 
 expect.extend({
 	toBeRight: <T>(received: AdtMock, expected: T) => {
-		const normalize = (value: T | AdtMock) => (isEither(value) ? value : right(value))
-		const values: TestValues = { expected: normalize(expected), received: normalize(received), side: 'right' }
+		const values: TestValues = { expected: rightOf(expected), received: rightOf(received), side: 'right' }
 		const pass = isRight(values)
 		return getValueCheckResults('toBeRight', values, pass)
 	},
 	toBeLeft: <T>(received: AdtMock, expected: T) => {
-		const normalize = (value: T | AdtMock) => (isEither(value) ? value : left(value))
-		const values: TestValues = { expected: normalize(expected), received: normalize(received), side: 'left' }
+		const values: TestValues = { expected: leftOf(expected), received: leftOf(received), side: 'left' }
 		const pass = isLeft(values)
 		return getValueCheckResults('toBeLeft', values, pass)
 	},
 	toHaveBeenLastCalledWithRight: <T>(received: jest.Mock, expected: T) => {
-		const normalize = (value: T | AdtMock) => (isEither(value) ? value : right(value))
 		const values: TestValues = {
-			expected: normalize(expected),
-			received: normalize(getLastCallArgument(received)),
+			expected: rightOf(expected),
+			received: rightOf(getLastCallArgument(received)),
 			side: 'right',
 		}
 		const pass = isRight(values)
 		return getSpyCheckResults('toHaveBeenLastCalledWithRight', values, pass)
 	},
 	toHaveBeenLastCalledWithLeft: <T>(received: jest.Mock, expected: T) => {
-		const normalize = (value: T | AdtMock) => (isEither(value) ? value : left(value))
 		const values: TestValues = {
-			expected: normalize(expected),
-			received: normalize(getLastCallArgument(received)),
+			expected: leftOf(expected),
+			received: leftOf(getLastCallArgument(received)),
 			side: 'left',
 		}
 		const pass = isLeft(values)

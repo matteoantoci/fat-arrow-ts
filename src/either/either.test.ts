@@ -1,9 +1,9 @@
-import { left, right } from './either'
+import { left, leftOf, right, rightOf } from './either'
 import { Either } from './either.types'
 
-const runMonadChecks = (adt: Either<Error, number>) => {
+const runMonadChecks = (adt: Either<Error, number>, of: (value: any) => Either<Error, number>) => {
 	it('has unit', () => {
-		expect(adt.of(adt).equals(adt)).toBe(true)
+		expect(of(adt).equals(adt)).toBe(true)
 	})
 
 	it('has identity', () => {
@@ -11,18 +11,18 @@ const runMonadChecks = (adt: Either<Error, number>) => {
 	})
 
 	it('has left identity', () => {
-		const f = (a: any) => adt.of(a).flatMap((x: number) => x * 2)
+		const f = (a: any) => of(a).flatMap((x: number) => x * 2)
 
 		expect(adt.flatMap(f).equals(f(adt))).toBe(true)
 	})
 
 	it('has right identity', () => {
-		expect(adt.flatMap(adt.of).equals(adt)).toBe(true)
+		expect(adt.flatMap(of).equals(adt)).toBe(true)
 	})
 
 	it('has associativity', () => {
-		const f = (a: any) => adt.of(a).flatMap((x: number) => x * 2)
-		const g = (a: any) => adt.of(a).flatMap((x: number) => x + 2)
+		const f = (a: any) => of(a).flatMap((x: number) => x * 2)
+		const g = (a: any) => of(a).flatMap((x: number) => x + 2)
 
 		adt
 			.flatMap(f)
@@ -37,7 +37,7 @@ describe('Either', () => {
 		const adt = right<Error, number>(value)
 
 		describe('is monad', () => {
-			runMonadChecks(adt)
+			runMonadChecks(adt, rightOf)
 		})
 
 		it('is right', () => {
@@ -214,7 +214,7 @@ describe('Either', () => {
 		const adt = left<Error, number>(error)
 
 		describe('is monad', () => {
-			runMonadChecks(adt)
+			runMonadChecks(adt, leftOf)
 		})
 
 		it('is left', () => {
