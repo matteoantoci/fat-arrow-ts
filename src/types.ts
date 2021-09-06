@@ -1,14 +1,15 @@
-import { Serializer } from '../utils/serializer'
-import { Maybe } from '../maybe/maybe.types'
-
 export type AnyEither = Either<any, any>
 
 export type RightValueOrEither<A> = A | Either<any, A>
 
 export type LeftValueOrEither<E> = E | Either<E, any>
 
-interface EitherProto<E, A> extends Serializer {
+interface EitherProto<E, A> {
+	toString(): string
+
 	equals(value: AnyEither): boolean
+
+	of<B>(value: RightValueOrEither<B>): Either<E, B>
 
 	flatMap<B>(ifRight: (right: A) => RightValueOrEither<B>): Either<E, B>
 
@@ -40,3 +41,5 @@ export interface Left<E, A> extends EitherProto<E, A>, Fold<E, A, E> {
 }
 
 export type Either<E, A> = Right<E, A> | Left<E, A>
+
+export type Maybe<A> = Either<void, A>

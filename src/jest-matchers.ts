@@ -1,6 +1,5 @@
 import { matcherHint, printExpected, printReceived } from 'jest-matcher-utils'
-import { left, right } from './either/either'
-import { just, maybe, none } from './maybe/maybe'
+import { isEither, left, right } from './either/either'
 
 type AdtMock = {
 	isRight?: boolean
@@ -18,17 +17,9 @@ declare global {
 
 			toBeLeft(expected: any): CustomMatcherResult
 
-			toBeJust(expected: NonNullable<any>): CustomMatcherResult
-
-			toBeNone(): CustomMatcherResult
-
 			toHaveBeenLastCalledWithRight(expected: any): CustomMatcherResult
 
 			toHaveBeenLastCalledWithLeft(expected: any): CustomMatcherResult
-
-			toHaveBeenLastCalledWithJust(expected: any): CustomMatcherResult
-
-			toHaveBeenLastCalledWithNone(): CustomMatcherResult
 		}
 	}
 }
@@ -75,57 +66,37 @@ const isRight = (values: TestValues) => !!values.received.isRight && values.rece
 
 const isLeft = (values: TestValues) => !!values.received.isLeft && values.received.equals(values.expected)
 
-const isJust = (values: TestValues) => !!values.received.isJust && values.received.equals(values.expected)
-
-const isNone = (values: TestValues) => !!values.received.isNone && values.received.equals(values.expected)
-
 expect.extend({
-	toBeJust: <T>(received: AdtMock, expected: NonNullable<T>) => {
-		const values: TestValues = { expected: just(expected), received: just(received), side: 'just' }
-		const pass = isJust(values)
-		return getValueCheckResults('toBeJust', values, pass)
-	},
-	toBeNone: (received: AdtMock) => {
-		const values: TestValues = { expected: none(), received: maybe(received), side: 'none' }
-		const pass = isNone(values)
-		return getValueCheckResults('toBeNone', values, pass)
-	},
 	toBeRight: <T>(received: AdtMock, expected: T) => {
-		const values: TestValues = { expected: right(expected), received: right(received), side: 'right' }
+		const normalize = (value: T | AdtMock) => (isEither(value) ? value : right(value))
+		const values: TestValues = { expected: normalize(expected), received: normalize(received), side: 'right' }
 		const pass = isRight(values)
 		return getValueCheckResults('toBeRight', values, pass)
 	},
 	toBeLeft: <T>(received: AdtMock, expected: T) => {
-		const values: TestValues = { expected: left(expected), received: left(received), side: 'left' }
+		const normalize = (value: T | AdtMock) => (isEither(value) ? value : left(value))
+		const values: TestValues = { expected: normalize(expected), received: normalize(received), side: 'left' }
 		const pass = isLeft(values)
 		return getValueCheckResults('toBeLeft', values, pass)
 	},
 	toHaveBeenLastCalledWithRight: <T>(received: jest.Mock, expected: T) => {
+		const normalize = (value: T | AdtMock) => (isEither(value) ? value : right(value))
 		const values: TestValues = {
-			expected: right(expected),
-			received: right(getLastCallArgument(received)),
+			expected: normalize(expected),
+			received: normalize(getLastCallArgument(received)),
 			side: 'right',
 		}
 		const pass = isRight(values)
 		return getSpyCheckResults('toHaveBeenLastCalledWithRight', values, pass)
 	},
 	toHaveBeenLastCalledWithLeft: <T>(received: jest.Mock, expected: T) => {
-		const values: TestValues = { expected: left(expected), received: left(getLastCallArgument(received)), side: 'left' }
+		const normalize = (value: T | AdtMock) => (isEither(value) ? value : left(value))
+		const values: TestValues = {
+			expected: normalize(expected),
+			received: normalize(getLastCallArgument(received)),
+			side: 'left',
+		}
 		const pass = isLeft(values)
 		return getSpyCheckResults('toHaveBeenLastCalledWithLeft', values, pass)
-	},
-	toHaveBeenLastCalledWithJust: <T>(received: jest.Mock, expected: NonNullable<T>) => {
-		const values: TestValues = {
-			expected: just(expected),
-			received: just(getLastCallArgument(received)),
-			side: 'just',
-		}
-		const pass = isJust(values)
-		return getSpyCheckResults('toHaveBeenLastCalledWithJust', values, pass)
-	},
-	toHaveBeenLastCalledWithNone: (received: jest.Mock) => {
-		const values: TestValues = { expected: none(), received: maybe(received), side: 'none' }
-		const pass = isNone(values)
-		return getSpyCheckResults('toHaveBeenLastCalledWithNone', values, pass)
 	},
 })

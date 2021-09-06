@@ -1,7 +1,7 @@
-export type { Either } from './either/either.types'
+export type { Either } from './types'
 export { right, left } from './either/either'
 
-export type { Maybe } from './maybe/maybe.types'
+export type { Maybe } from './types'
 export { just, none, maybe } from './maybe/maybe'
 
 export type { Result } from './result/result'

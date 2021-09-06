@@ -1,35 +1,33 @@
-import { ifElse, left, right } from './either'
-import { Either } from './either.types'
+import { left, right } from './either'
+import { Either } from '../types'
 
-const runMonadChecks = (adt: Either<Error, number>, of: (value: any) => Either<Error, number>) => {
-	describe('Monad', () => {
-		it('has unit', () => {
-			expect(of(adt).equals(adt)).toBe(true)
-		})
+const runMonadChecks = (adt: Either<Error, number>) => {
+	it('has unit', () => {
+		expect(adt.of(adt).equals(adt)).toBe(true)
+	})
 
-		it('has identity', () => {
-			expect(adt.equals(adt)).toBe(true)
-		})
+	it('has identity', () => {
+		expect(adt.equals(adt)).toBe(true)
+	})
 
-		it('has left identity', () => {
-			const f = (a: any) => of(a).flatMap((x: number) => x * 2)
+	it('has left identity', () => {
+		const f = (a: any) => adt.of(a).flatMap((x: number) => x * 2)
 
-			expect(adt.flatMap(f).equals(f(adt))).toBe(true)
-		})
+		expect(adt.flatMap(f).equals(f(adt))).toBe(true)
+	})
 
-		it('has right identity', () => {
-			expect(adt.flatMap(of).equals(adt)).toBe(true)
-		})
+	it('has right identity', () => {
+		expect(adt.flatMap(adt.of).equals(adt)).toBe(true)
+	})
 
-		it('has associativity', () => {
-			const f = (a: any) => of(a).flatMap((x: number) => x * 2)
-			const g = (a: any) => of(a).flatMap((x: number) => x + 2)
+	it('has associativity', () => {
+		const f = (a: any) => adt.of(a).flatMap((x: number) => x * 2)
+		const g = (a: any) => adt.of(a).flatMap((x: number) => x + 2)
 
-			adt
-				.flatMap(f)
-				.flatMap(f)
-				.equals(adt.flatMap((x: any) => f(x).flatMap(g)))
-		})
+		adt
+			.flatMap(f)
+			.flatMap(f)
+			.equals(adt.flatMap((x: any) => f(x).flatMap(g)))
 	})
 }
 
@@ -38,7 +36,9 @@ describe('Either', () => {
 		const value = 2
 		const adt = right<Error, number>(value)
 
-		runMonadChecks(adt, right)
+		describe('is monad', () => {
+			runMonadChecks(adt)
+		})
 
 		it('is right', () => {
 			expect(adt.isRight).toBe(true)
@@ -46,11 +46,6 @@ describe('Either', () => {
 
 		it('is serializable', () => {
 			expect(adt.toString()).toBe('right(2)')
-		})
-
-		it('flattens', () => {
-			expect(right(adt)).toBeRight(value)
-			expect(right(adt)).toBeRight(adt)
 		})
 
 		describe('equals', () => {
@@ -141,7 +136,10 @@ describe('Either', () => {
 			it('maps right type', () => {
 				const expected = 'right'
 
-				const actual = adt.bimap(() => 'left', () => expected)
+				const actual = adt.bimap(
+					() => 'left',
+					() => expected
+				)
 
 				expect(actual).toBeRight(expected)
 			})
@@ -204,30 +202,27 @@ describe('Either', () => {
 			})
 		})
 
-		describe('toMaybe', () => {
-			it('maps to just', () => {
-				expect(adt.toMaybe()).toBeJust(value)
-			})
-		})
+		// describe('toMaybe', () => {
+		// 	it('maps to just', () => {
+		// 		expect(adt.toMaybe()).toBeJust(value)
+		// 	})
+		// })
 	})
 
 	describe('left', () => {
 		const error = new Error()
 		const adt = left<Error, number>(error)
 
-		runMonadChecks(adt, left)
+		describe('is monad', () => {
+			runMonadChecks(adt)
+		})
 
 		it('is left', () => {
 			expect(adt.isLeft).toBe(true)
 		})
 
 		it('is serializable', () => {
-			expect(adt.toString()).toBe('left({})')
-		})
-
-		it('flattens', () => {
-			expect(left(adt)).toBeLeft(error)
-			expect(left(adt)).toBeLeft(adt)
+			expect(adt.toString()).toBe('left(Error)')
 		})
 
 		describe('equals', () => {
@@ -318,7 +313,10 @@ describe('Either', () => {
 			it('maps left type', () => {
 				const expected = 'left'
 
-				const actual = adt.bimap(() => expected, () => 'right')
+				const actual = adt.bimap(
+					() => expected,
+					() => 'right'
+				)
 
 				expect(actual).toBeLeft(expected)
 			})
@@ -374,39 +372,39 @@ describe('Either', () => {
 			})
 		})
 
-		describe('toMaybe', () => {
-			it('maps to none', () => {
-				expect(adt.toMaybe()).toBeNone()
-			})
-		})
+		// describe('toMaybe', () => {
+		// 	it('maps to none', () => {
+		// 		expect(adt.toMaybe()).toBeNone()
+		// 	})
+		// })
 	})
 
-	describe('ifElse', () => {
-		describe('when predicate is truthy', () => {
-			it('creates Either', () => {
-				expect(
-					ifElse(
-						true,
-						() => new Error(),
-						() => 5
-					)
-				).toBeRight(5)
-			})
-		})
-
-		describe('when predicate is falsy', () => {
-			it('creates Either', () => {
-				const error = new Error()
-				expect(
-					ifElse(
-						false,
-						() => left<Error, number>(error),
-						() => right<Error, number>(5)
-					)
-				).toBeLeft(error)
-			})
-		})
-	})
+	// describe('ifElse', () => {
+	// 	describe('when predicate is truthy', () => {
+	// 		it('creates Either', () => {
+	// 			expect(
+	// 				ifElse(
+	// 					true,
+	// 					() => new Error(),
+	// 					() => 5
+	// 				)
+	// 			).toBeRight(5)
+	// 		})
+	// 	})
+	//
+	// 	describe('when predicate is falsy', () => {
+	// 		it('creates Either', () => {
+	// 			const error = new Error()
+	// 			expect(
+	// 				ifElse(
+	// 					false,
+	// 					() => left<Error, number>(error),
+	// 					() => right<Error, number>(5)
+	// 				)
+	// 			).toBeLeft(error)
+	// 		})
+	// 	})
+	// })
 
 	describe('integration', () => {
 		it('works', () => {
