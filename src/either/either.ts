@@ -1,5 +1,5 @@
 import equal from 'fast-deep-equal/es6/react'
-import { Either, Left, Right } from '../types'
+import { Either, Left, Right } from './either.types'
 import { maybe, none } from '../maybe/maybe'
 
 const PROTOTYPE = {}
@@ -14,12 +14,7 @@ export const isEither = <E, A>(input: E | A | Either<E, A>): input is Either<E, 
 
 const seal = <O>(adt: object): O => Object.freeze(Object.assign(Object.create(PROTOTYPE), adt))
 
-export const right = <
-	E = [Error, 'Please specify E type in right<E, A>'],
-	A = [Error, 'Please specify A type in right<E, A>']
->(
-	value: A
-): Either<E, A> => {
+export const right = <E, A>(value: A): Either<E, A> => {
 	const flatten = <X, Y>(data: Y | Either<X, Y>): Either<X, Y> => (isEither(data) ? data : seal(identity(data)))
 
 	const identity = <X, Y>(data: Y): Right<X, Y> => ({
@@ -44,12 +39,7 @@ export const right = <
 	return seal(identity(value))
 }
 
-export const left = <
-	E = [Error, 'Please specify E type in left<E, A>'],
-	A = [Error, 'Please specify A type in left<E, A>']
->(
-	value: E
-): Either<E, A> => {
+export const left = <E, A>(value: E): Either<E, A> => {
 	const flatten = <X, Y>(data: X | Either<X, Y>): Either<X, Y> => (isEither(data) ? data : seal(identity(data)))
 
 	const identity = <X, Y>(data: X): Left<X, Y> => ({

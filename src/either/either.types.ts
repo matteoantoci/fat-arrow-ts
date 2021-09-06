@@ -1,3 +1,5 @@
+import { Maybe } from '../maybe/maybe.types'
+
 export type AnyEither = Either<any, any>
 
 export type RightValueOrEither<A> = A | Either<any, A>
@@ -10,6 +12,10 @@ interface EitherProto<E, A> {
 	equals(value: AnyEither): boolean
 
 	of<B>(value: RightValueOrEither<B>): Either<E, B>
+
+	fold(): E | A
+
+	fold<B>(ifLeft: (left: E) => B, ifRight: (right: A) => B): B
 
 	flatMap<B>(ifRight: (right: A) => RightValueOrEither<B>): Either<E, B>
 
@@ -24,22 +30,14 @@ interface EitherProto<E, A> {
 	toMaybe(): Maybe<A>
 }
 
-interface Fold<E, A, T> {
-	fold(): T
-
-	fold<B>(ifLeft: (left: E) => B, ifRight: (right: A) => B): B
-}
-
-export interface Right<E, A> extends EitherProto<E, A>, Fold<E, A, A> {
+export interface Right<E, A> extends EitherProto<E, A> {
 	isLeft: false
 	isRight: true
 }
 
-export interface Left<E, A> extends EitherProto<E, A>, Fold<E, A, E> {
+export interface Left<E, A> extends EitherProto<E, A> {
 	isLeft: true
 	isRight: false
 }
 
 export type Either<E, A> = Right<E, A> | Left<E, A>
-
-export type Maybe<A> = Either<void, A>

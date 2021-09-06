@@ -1,5 +1,5 @@
 import { isEither, left, right } from '../either/either'
-import { Either, RightValueOrEither } from '../types'
+import { Either, RightValueOrEither } from '../either/either.types'
 
 export type Result<A> = Either<Error, A>
 

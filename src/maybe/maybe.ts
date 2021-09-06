@@ -1,5 +1,9 @@
-import { Maybe } from '../types'
 import { left, right } from '../either/either'
+import { Maybe } from './maybe.types'
+
+export const just = <A>(value: NonNullable<A>): Maybe<A> => right<void, A>(value)
+
+export const none = <A>(): Maybe<A> => left<void, A>(undefined)
 
 const isNonNullable = <T>(data: T): data is NonNullable<T> => {
 	try {
@@ -8,9 +12,5 @@ const isNonNullable = <T>(data: T): data is NonNullable<T> => {
 		return false
 	}
 }
-
-export const just = <A>(value: NonNullable<A>): Maybe<A> => right<void, A>(value)
-
-export const none = <A>(): Maybe<A> => left<void, A>(undefined)
 
 export const maybe = <A>(value: A): Maybe<A> => (isNonNullable(value) ? just(value) : none())

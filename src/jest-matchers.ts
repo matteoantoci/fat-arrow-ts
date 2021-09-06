@@ -4,8 +4,6 @@ import { isEither, left, right } from './either/either'
 type AdtMock = {
 	isRight?: boolean
 	isLeft?: boolean
-	isJust?: boolean
-	isNone?: boolean
 	equals: (value: any) => boolean
 	fold: () => any
 }
@@ -62,9 +60,9 @@ ${getExpectedSpyMessage(pass, values)}
 ${getReceivedMessage(values)}`,
 })
 
-const isRight = (values: TestValues) => !!values.received.isRight && values.received.equals(values.expected)
+const isRight = (values: TestValues) => values.received.equals(values.expected)
 
-const isLeft = (values: TestValues) => !!values.received.isLeft && values.received.equals(values.expected)
+const isLeft = (values: TestValues) => values.received.equals(values.expected)
 
 expect.extend({
 	toBeRight: <T>(received: AdtMock, expected: T) => {

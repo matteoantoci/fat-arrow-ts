@@ -1,5 +1,5 @@
 import { Either, left, maybe, right } from '../../src'
-import { repeat } from '../../src/lambda'
+import { repeat } from '../../src/lambda/lambda'
 
 type Cell = Either<string, string>
 

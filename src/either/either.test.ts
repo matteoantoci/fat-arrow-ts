@@ -1,5 +1,5 @@
 import { left, right } from './either'
-import { Either } from '../types'
+import { Either } from './either.types'
 
 const runMonadChecks = (adt: Either<Error, number>) => {
 	it('has unit', () => {
@@ -370,56 +370,6 @@ describe('Either', () => {
 					expect(ifTrue).not.toHaveBeenCalled()
 				})
 			})
-		})
-
-		// describe('toMaybe', () => {
-		// 	it('maps to none', () => {
-		// 		expect(adt.toMaybe()).toBeNone()
-		// 	})
-		// })
-	})
-
-	// describe('ifElse', () => {
-	// 	describe('when predicate is truthy', () => {
-	// 		it('creates Either', () => {
-	// 			expect(
-	// 				ifElse(
-	// 					true,
-	// 					() => new Error(),
-	// 					() => 5
-	// 				)
-	// 			).toBeRight(5)
-	// 		})
-	// 	})
-	//
-	// 	describe('when predicate is falsy', () => {
-	// 		it('creates Either', () => {
-	// 			const error = new Error()
-	// 			expect(
-	// 				ifElse(
-	// 					false,
-	// 					() => left<Error, number>(error),
-	// 					() => right<Error, number>(5)
-	// 				)
-	// 			).toBeLeft(error)
-	// 		})
-	// 	})
-	// })
-
-	describe('integration', () => {
-		it('works', () => {
-			const actual = right<string, number>(0)
-				.flatMap((it) => it + 10)
-				.flatMap((it) => it * 2)
-				.flatMap(() => left<string, number>('nooo'))
-				.mapLeft(() => right<Error, number>(100))
-				.flatMap((it) => (it === 100 ? right<Error, string>('happy') : left<Error, string>(new Error())))
-				.fold(
-					() => 'very sad',
-					(it) => it
-				)
-
-			expect(actual).toBe('happy')
 		})
 	})
 })

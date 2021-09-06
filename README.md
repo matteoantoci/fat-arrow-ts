@@ -9,32 +9,21 @@ Fat Arrow is a library for Typed Functional Programming in TypeScript compatible
 	+ [Setup Jest matchers](#setup-jest-matchers)
 - [Quick start](#quick-start)
 - [Essentials](#essentials)
-	* [Flattening](#flattening)
-	* [Maybe](#maybe)
-		+ [`maybe`](#maybe)
-		+ [`just`](#just)
-		+ [`none`](#none)
-		+ [Maybe API](#maybe-api)
-		+ [Maybe Jest matchers](#maybe-jest-matchers)
-			+ [`toBeJust`](#tobejust)
-			+ [`toBeNone`](#tobenone)
-			+ [`toHaveBeenLastCalledWithJust`](#tohavebeenlastcalledwithjust)
-			+ [`toHaveBeenLastCalledWithNone`](#tohavebeenlastcalledwithnone)
 	* [Either](#either)
 		+ [`right`](#right)
 		+ [`left`](#left)
 		+ [Either API](#either-api)
 		+ [Either Jest matchers](#either-jest-matchers)
-			+ [`toBeRight`](#toberight)
-			+ [`toBeLeft`](#tobeleft)
-			+ [`toHaveBeenLastCalledWithRight`](#tohavebeenlastcalledwithright)
-			+ [`toHaveBeenLastCalledWithLeft`](#tohavebeenlastcalledwithleft)
+            + [`toBeRight`](#toberight)
+            + [`toBeLeft`](#tobeleft)
+            + [`toHaveBeenLastCalledWithRight`](#tohavebeenlastcalledwithright)
+            + [`toHaveBeenLastCalledWithLeft`](#tohavebeenlastcalledwithleft)
+	* [Maybe](#maybe)
+		+ [`maybe`](#maybe)
+		+ [`just`](#just)
+		+ [`none`](#none)
 	* [Result](#result)
 		+ [`tryCatch`](#trycatch)
-	* [Validation](#validation)
-		+ [`validate`](#validate)
-		+ [`pass`](#pass)
-		+ [`fail`](#fail)
 - [Examples](#examples)
 
 
@@ -98,351 +87,6 @@ print(getDivision(10, 5).flatMap(addTwo)) // Result is 4. Hooray!
 
 
 ## Essentials
-
-### Flattening
-
-Fat Arrow's factory functions and data types' methods support flattening to accept both TS native values and data types themselves; in the latter case, data types objects will be flattened.  
-
-```ts  
-import { right } from 'fat-arrow-ts';  
-  
-const myValue = right<Error, number>(5)  
-  
-console.log(right(myValue).equals(myValue)) // true  
-```
-
-
-### Maybe
-
-An `Maybe<A>` value is useful to model nullable values.
-
-
-#### `maybe`
-
-Takes a value in input and creates a `Maybe<A>` object.
-* if the input value is non-nullable the produced object will have _just_ state.
-* if the input value is nullable (`null | undefined`) the produced object will have _none_ state;
-
-```ts  
-import { Maybe, maybe } from 'fat-arrow-ts';  
-  
-const myMap = new Map([  
-    ['key1', 'value1'],  
-    ['key2', 'value2'],  
-])  
-  
-const getValue = (key: string): Maybe<string> => maybe(myMap.get(key))
-
-//-- If value is "just" --//
-
-const existing = getValue('key1')  
-  
-console.log(existing.fold()) // 'value1'  
-console.log(existing.isJust) // true  
-  
-// Flattening  
-console.log(maybe(existing).equals(existing)) // true  
-console.log(maybe(existing).isJust) // true  
-
-//-- If value is "none" --//
-  
-const missing = getValue('foo')  
-  
-console.log(missing.fold()) // undefined  
-console.log(missing.isNone) // true  
-  
-// Flattening  
-console.log(maybe(missing).equals(missing)) // true  
-console.log(maybe(missing).isNone) // true  
-```
-
-
-#### `just`
-
-Takes a non-nullable value in input and creates a `Maybe<A>` object with _just_ state.
-
-```ts  
-import { just, none, maybe } from 'fat-arrow-ts';  
-  
-const myValue = just(5)  
-  
-console.log(myValue.fold()) // 5  
-console.log(myValue.isJust) // true  
-  
-// Flattening  
-console.log(maybe(myValue).equals(myValue)) // true  
-console.log(just(myValue).equals(myValue)) // true  
-```
-
-
-#### `none`
-
-Creates a `Maybe<A>` object with _none_ state.
-
-```ts  
-import { just, none, maybe } from 'fat-arrow-ts';  
-  
-const myValue = none()  
-  
-console.log(myValue.fold()) // null 
-console.log(myValue.isLeft) // true
-console.log(myValue === none()) // true
-  
-// Flattening  
-console.log(maybe(myValue).equals(myValue)) // true  
-console.log(just(myValue).equals(myValue)) // true  
-```
-
-
-#### Maybe API
-
-##### `isJust`
-
-States if `Maybe<A>` is in _just_ state.
-
-```ts
-import { just } from 'fat-arrow-ts';  
-  
-const myValue = just(5)  
-  
-console.log(myValue.isJust) // true 
-```
-
-
-
-##### `isNone`
-
-States if `Maybe<A>` is in _none_ state.
-
-```ts
-import { none } from 'fat-arrow-ts';  
-  
-const myValue = none()
-  
-console.log(myValue.isNone) // true 
-```
-
-
-##### `equals`
-
-Takes an `Maybe<any, any>` in input and asserts if the passed value has the same state and **structural equality**.
-
-```ts
-import { just, none } from 'fat-arrow-ts';  
-  
-// With just()
-const aJustValue = just({ foo: 'foo' })
-console.log(aJustValue.equals(aJustValue)) // true
-
-const anotherJustValue = just({ bar: 'bar' })
-console.log(anotherJustValue.equals(aJustValue)) // false
-
-// Deep comparison
-console.log(aJustValue.equals(just({ foo: 'foo' }))) // true
-
-// With none()
-const aNoneValue = none()
-console.log(aNoneValue.equals(none())) // true
-console.log(aNoneValue === none()) // true
-```
-
-
-##### `fold`
-
-It lets you handle or unwrap the raw value in your data type instances.
-
-It comes with two overloaded call signatures
-* `() => void | A`: will return the value as it is
-* `(ifNone: () => B, isJust: (just: A) => B) => B`: will accept two callbacks that will let you trigger side effects or map the value before returning it.
-
-```ts
-import { right, left } from 'fat-arrow-ts';  
-  
-const aJustValue = just(5)
-
-console.log(myValue.fold()) // 5
-
-// Mapping values
-const aNoneValue = none()
-
-console.log(aNoneValue.fold(() => 0, it => it)) // 0
-
-// Triggering side effects
-aNoneValue.fold(
-  () => {
-    // Only the 'none' callback will be applied to the value
-    console.error('Nothing to see here!') // 'Nothing to see here!'
-  }, 
-  it => {
-    console.log(it)
-  }
-)
-```
-
-##### `flatMap`
-
-Takes a callback of type `<B>(value: A) => B | Maybe<B>` and applies it to the _just_ value of your type class instances.
-
-By default `flatMap` method will try to convert the returned value to an `Maybe<B>` _just_ state so that you can also produce raw values from your callbacks.
-
-Returning a _none_ value, you can switch to a _none_ state.
-
-If you are used to ES Promises you may find similarities with the `.then()` method.
-
-```ts
-import { just, none, Maybe } from 'fat-arrow-ts'; 
-  
-const myValue = just(5)
- 
-const justResult: Maybe<number> = myValue.flatMap(
-  it => it + 5
-)
-
-console.log(justResult.isJust) // true 
-console.log(justResult.fold()) // 10
-
-// Will be flattened
-const sameTypeJustResult: Maybe<number> = myValue.flatMap(
-  it => just(it + 5)
-)
-
-console.log(sameTypeJustResult.isJust) // true 
-console.log(sameTypeJustResult.fold()) // 10
-
-// You can return just values with a different type
-const anotherTypeJustResult: Maybe<string> = myValue.flatMap(
-  it => just('foo')
-)
-
-console.log(anotherTypeJustResult.isJust) // true 
-console.log(anotherTypeJustResult.fold()) // 'foo'
-
-// You can return none values
-const noneResult: Maybe<number> = myValue.flatMap(
-  it => none()
-)
-
-console.log(noneResult.isNone) // true 
-console.log(noneResult.fold()) // undefined
-```
-
-
-##### `mapIf`
-
-Works very similar to `flatMap` but it also accepts a _predicate_ `(value: A) => boolean` as first parameter.
-
-It will map your type class instances only if the predicate returns `true`.
-
-```ts
-import { Maybe } from 'fat-arrow-ts';
-
-const getUserPersonalWebsiteFromInput = (): Maybe<string> => {
-	//...
-}
-
-const maybeInput = getUserPersonalWebsiteFromInput()
-
-// Only a non-nullable input will be trimmed
-const normalizedUrl = maybeInput.mapIf(
-  it => it.endsWith('/'), it => it.slice(0, -1)
-)
-```
-
-
-##### `orElse`
-
-It takes a callback of type `() => A | Maybe<A>` and lets you recover from a nullable value.
-
-If you are used to ES Promises you may find similarities with the `.catch()` method.
-
-
-```ts
-import { Maybe } from 'fat-arrow-ts'; 
-
-const getUserInput = (): Maybe<string> => { 
-  //...
-}
-
-const maybeInput = getUserInput()
-
-const recovered = maybeInput.orElse(() => 'N/A')
-
-console.log(recovered.isJust) // true
-console.log(recovered.fold()) // 'N/A'
-```
-
-
-##### `toEither`
-
-TBD...
-
-#### Maybe Jest matchers
-
-See [Setup Jest matchers](#setup-jest-matchers) for installation instructions.
-
-
-
-##### toBeJust
-
-Asserts if `expected` is _just_ and has the expected value. It accepts both raw values and data type instances.
-
-```ts
-import { just } from 'fat-arrow-ts'
- 
-it('is just', () => {
-    const actual = maybe(5) // or just(5)
-
-    expect(actual).toBeJust(5);
-})
-```
-
-
-
-##### toBeNone
-
-Asserts if `expected` is _none_.
-
-```ts
-import { none } from 'fat-arrow-ts'
- 
-it('is none', () => {
-    const actual = none()
-
-    expect(actual).toBeNone();
-})
-```
-
-
-
-##### toHaveBeenLastCalledWithJust
-
-Asserts if a `jest.Mock` has been called last time with the expected _just_ value
-
-```ts
-it('is called with just', () => {
-    const spy = jest.fn()
-
-    runYourCode(spy)
-
-    expect(spy).toHaveBeenLastCalledWithJust('expected just value');
-})
-```
-
-
-
-##### toHaveBeenLastCalledWithNone
-
-Asserts if a `jest.Mock` has been called last time with a _none_ value
-
-```ts
-it('is called with none', () => {
-    const spy = jest.fn()
-
-    runYourCode(spy)
-
-    expect(spy).toHaveBeenLastCalledWithNone();
-})
-```
 
 
 ### Either
@@ -803,6 +447,150 @@ it('is called with left', () => {
 })
 ```
 
+### Maybe
+
+An `Maybe<A>` value is useful to model nullable values.
+
+
+#### `maybe`
+
+Takes a value in input and creates a `Maybe<A>` object.
+* if the input value is non-nullable the produced object will have _just_ state.
+* if the input value is nullable (`null | undefined`) the produced object will have _none_ state;
+
+```ts  
+import { Maybe, maybe } from 'fat-arrow-ts';  
+  
+const myMap = new Map([  
+    ['key1', 'value1'],  
+    ['key2', 'value2'],  
+])  
+  
+const getValue = (key: string): Maybe<string> => maybe(myMap.get(key))
+
+//-- If value is "just" --//
+
+const existing = getValue('key1')  
+  
+console.log(existing.fold()) // 'value1'  
+console.log(existing.isJust) // true  
+  
+// Flattening  
+console.log(maybe(existing).equals(existing)) // true  
+console.log(maybe(existing).isJust) // true  
+
+//-- If value is "none" --//
+  
+const missing = getValue('foo')  
+  
+console.log(missing.fold()) // undefined  
+console.log(missing.isNone) // true  
+  
+// Flattening  
+console.log(maybe(missing).equals(missing)) // true  
+console.log(maybe(missing).isNone) // true  
+```
+
+
+#### `just`
+
+Takes a non-nullable value in input and creates a `Maybe<A>` object with _just_ state.
+
+```ts  
+import { just, none, maybe } from 'fat-arrow-ts';  
+  
+const myValue = just(5)  
+  
+console.log(myValue.fold()) // 5  
+console.log(myValue.isJust) // true  
+  
+// Flattening  
+console.log(maybe(myValue).equals(myValue)) // true  
+console.log(just(myValue).equals(myValue)) // true  
+```
+
+
+#### `none`
+
+Creates a `Maybe<A>` object with _none_ state.
+
+```ts  
+import { just, none, maybe } from 'fat-arrow-ts';  
+  
+const myValue = none()  
+  
+console.log(myValue.fold()) // null 
+console.log(myValue.isLeft) // true
+console.log(myValue === none()) // true
+  
+// Flattening  
+console.log(maybe(myValue).equals(myValue)) // true  
+console.log(just(myValue).equals(myValue)) // true  
+```
+
+
+##### toBeJust
+
+Asserts if `expected` is _just_ and has the expected value. It accepts both raw values and data type instances.
+
+```ts
+import { just } from 'fat-arrow-ts'
+ 
+it('is just', () => {
+    const actual = maybe(5) // or just(5)
+
+    expect(actual).toBeJust(5);
+})
+```
+
+
+
+##### toBeNone
+
+Asserts if `expected` is _none_.
+
+```ts
+import { none } from 'fat-arrow-ts'
+ 
+it('is none', () => {
+    const actual = none()
+
+    expect(actual).toBeNone();
+})
+```
+
+
+
+##### toHaveBeenLastCalledWithJust
+
+Asserts if a `jest.Mock` has been called last time with the expected _just_ value
+
+```ts
+it('is called with just', () => {
+    const spy = jest.fn()
+
+    runYourCode(spy)
+
+    expect(spy).toHaveBeenLastCalledWithJust('expected just value');
+})
+```
+
+
+
+##### toHaveBeenLastCalledWithNone
+
+Asserts if a `jest.Mock` has been called last time with a _none_ value
+
+```ts
+it('is called with none', () => {
+    const spy = jest.fn()
+
+    runYourCode(spy)
+
+    expect(spy).toHaveBeenLastCalledWithNone();
+})
+```
+
 ### Result
 
 A `Result<A>` is a type alias for `Either<Error, A>`.
@@ -841,84 +629,6 @@ const mySafeValue = safeResult.flatMap((it) => it.toUpperCase())
   
 console.log(mySafeValue.fold()) // Error
 console.log(mySafeValue.isLeft) // true  
-```
-
-### Validation
-
-A `Validation<E, A>` is a type alias for `Either<E[], A>`.
-
-As you can see you can have many _left_ values for a single _right_ value. This kind of data type is useful to model validation outputs.
-
-#### `validate`
-
-It takes a value in input and an array of validation functions. It then runs through all the validation functions collecting all possible _left_ values, if any.
-
-A validation function must return a `pass` value, containing `A`, otherwise a `fail` value containing `E`.
-
-If all the validations pass the validation output will have _right_ state, otherwise a _left_ state.
-
-```ts
-import { fail, pass, validate, Validation } from 'fat-arrow-ts'
-
-const isPasswordLongEnough = (password: string): Validation<string, string> =>
-		password.length > 6 ? pass(password) : fail('Password must have more than 6 characters.')
-
-const isPasswordStrongEnough = (password: string): Validation<string, string> =>
-	/[\W]/.test(password) ? pass(password) : fail('Password must contain a special character.')
-
-const validations = [isPasswordLongEnough, isPasswordStrongEnough]
-
-const validatePassword = (pwd: string) => validate(pwd, validations)
-
-//-- If all validations pass --//
-console.log(validatePassword('qwertyu!').fold()) // 'qwertyu!'
-console.log(validatePassword('qwertyu!').isRight) // true
-
-//-- If one (or more) validations fail --//
-console.log(validatePassword('qwerty').fold()) // ['Password must have more than 6 characters.', 'Password must contain a special character.']
-console.log(validatePassword('qwerty').isLeft) // true
-```
-
-#### `pass`
-
-Takes a value in input and creates a `Validation<E, A>` object with _right_ state.
-
-```ts  
-import { pass, fail } from 'fat-arrow-ts';  
-  
-const myValue = pass(5)  
-  
-console.log(myValue.fold()) // 5  
-console.log(myValue.isRight) // true  
-  
-// Flattening  
-console.log(pass(myValue).equals(myValue)) // true  
-console.log(fail(myValue).equals(myValue)) // true
-```
-
-#### `fail`
-
-Takes a value in input and creates a `Validation<E, A>` object with _left_ state.
-
-The input could be a plain `E` value or an array `E[]`.
-
-```ts  
-import { pass, fail } from 'fat-arrow-ts';  
-  
-const myValue = fail('error')
-  
-console.log(myValue.fold()) // ['error']
-console.log(myValue.isLeft) // true
-
-// Using arrays
-const anotherValue = fail(['first error', 'second error'])
-
-console.log(myValue.fold()) // ['first error', 'second error']
-console.log(myValue.isLeft) // true
-  
-// Flattening  
-console.log(pass(myValue).equals(myValue)) // true  
-console.log(fail(myValue).equals(myValue)) // true  
 ```
 
 
