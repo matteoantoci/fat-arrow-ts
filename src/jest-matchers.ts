@@ -1,10 +1,6 @@
 import { matcherHint, printExpected, printReceived } from 'jest-matcher-utils'
 import { leftOf, rightOf } from './either/either'
-
-type AdtMock = {
-	equals: (value: any) => boolean
-	fold: () => any
-}
+import { AnyEither } from './either/either.types'
 
 declare global {
 	namespace jest {
@@ -20,7 +16,7 @@ declare global {
 	}
 }
 
-type TestValues = { expected: AdtMock; received: AdtMock; side: string }
+type TestValues = { expected: AnyEither; received: AnyEither; side: string }
 
 const getLastCallArgument = (mock: jest.Mock) => {
 	const lastCall = mock.mock.calls[mock.mock.calls.length - 1]
@@ -63,12 +59,12 @@ const isRight = (values: TestValues) => values.received.equals(values.expected)
 const isLeft = (values: TestValues) => values.received.equals(values.expected)
 
 expect.extend({
-	toBeRight: <T>(received: AdtMock, expected: T) => {
+	toBeRight: <T>(received: AnyEither, expected: T) => {
 		const values: TestValues = { expected: rightOf(expected), received: rightOf(received), side: 'right' }
 		const pass = isRight(values)
 		return getValueCheckResults('toBeRight', values, pass)
 	},
-	toBeLeft: <T>(received: AdtMock, expected: T) => {
+	toBeLeft: <T>(received: AnyEither, expected: T) => {
 		const values: TestValues = { expected: leftOf(expected), received: leftOf(received), side: 'left' }
 		const pass = isLeft(values)
 		return getValueCheckResults('toBeLeft', values, pass)
