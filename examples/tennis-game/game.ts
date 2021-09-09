@@ -19,7 +19,7 @@ const createPlayer = (name: string): Player => ({
 	scoreIndex: 0,
 })
 
-type GameState = { players: Player[] }
+type GameState = { players: [Player, Player] }
 
 export type Game = { playerTwoScores: () => void; getScore: () => string; playerOneScores: () => void }
 

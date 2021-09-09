@@ -1,8 +1,8 @@
 export type AnyEither = Either<any, any>
 
-export type RightValueOrEither<A> = A | Either<any, A>
+export type RightValueOrEither<E, A> = A | Either<E, A>
 
-export type LeftValueOrEither<E> = E | Either<E, any>
+export type LeftValueOrEither<E, A> = E | Either<E, A>
 
 interface EitherProto<E, A> {
 	toString(): string
@@ -13,15 +13,18 @@ interface EitherProto<E, A> {
 
 	fold<B>(ifLeft: (left: E) => B, ifRight: (right: A) => B): B
 
-	flatMap<B>(ifRight: (right: A) => RightValueOrEither<B>): Either<E, B>
+	flatMap<B = A>(ifRight: (right: A) => RightValueOrEither<E, B>): Either<E, B>
 
-	mapIf(predicate: (right: A) => boolean, ifTrue: (right: A) => RightValueOrEither<A>): Either<E, A>
+	mapIf(predicate: (right: A) => boolean, ifTrue: (right: A) => RightValueOrEither<E, A>): Either<E, A>
 
-	mapLeft<G>(fn: (left: E) => LeftValueOrEither<G>): Either<G, A>
+	mapLeft<G = E>(fn: (left: E) => LeftValueOrEither<G, A>): Either<G, A>
 
-	orElse(ifLeft: (left: E) => RightValueOrEither<A>): Either<E, A>
+	orElse(ifLeft: (left: E) => RightValueOrEither<E, A>): Either<E, A>
 
-	bimap<G, B>(ifLeft: (left: E) => LeftValueOrEither<G>, ifRight: (right: A) => RightValueOrEither<B>): Either<G, B>
+	bimap<G = E, B = A>(
+		ifLeft: (left: E) => LeftValueOrEither<G, B>,
+		ifRight: (right: A) => RightValueOrEither<G, B>
+	): Either<G, B>
 }
 
 export interface Right<E, A> extends EitherProto<E, A> {

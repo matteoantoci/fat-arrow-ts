@@ -2,8 +2,8 @@ import { leftOf, rightOf } from './either'
 import { AnyEither, Either, Left, LeftValueOrEither, Right, RightValueOrEither } from '../types'
 
 export const tryCatch = <A>(
-	tryFn: () => RightValueOrEither<A>,
-	catchFn: (e: any) => LeftValueOrEither<Error>
+	tryFn: () => RightValueOrEither<Error, A>,
+	catchFn: (e: any) => LeftValueOrEither<Error, A>
 ): Either<Error, A> => {
 	try {
 		return rightOf(tryFn())
