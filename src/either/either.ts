@@ -13,6 +13,10 @@ const isEither = <E, A>(input: E | A | Either<E, A>): input is Either<E, A> => {
 
 const seal = <O>(adt: O): O => Object.freeze(Object.assign(Object.create(PROTOTYPE), adt))
 
+const toJSON = () => {
+	throw new Error(`Either value can't be serialized to JSON. Please fold it first.`)
+}
+
 const createRight = <E, A>(data: A): Right<E, A> =>
 	seal({
 		isLeft: false,
@@ -29,6 +33,7 @@ const createRight = <E, A>(data: A): Right<E, A> =>
 		mapIf: (predicate, ifTrue) => (predicate(data) ? rightOf(ifTrue(data)) : rightOf(data)),
 		mapLeft: () => rightOf(data),
 		orElse: () => rightOf(data),
+		toJSON,
 	})
 
 const createLeft = <E, A>(data: E): Left<E, A> =>
@@ -47,6 +52,7 @@ const createLeft = <E, A>(data: E): Left<E, A> =>
 		mapIf: () => leftOf(data),
 		mapLeft: (ifLeft) => leftOf(ifLeft(data)),
 		orElse: (ifLeft) => rightOf(ifLeft(data)),
+		toJSON,
 	})
 
 export const rightOf = <E, A>(data: A | Either<E, A>): Either<E, A> => (isEither(data) ? data : createRight(data))

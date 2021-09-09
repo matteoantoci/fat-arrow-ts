@@ -44,10 +44,6 @@ describe('Either', () => {
 			expect(adt.isRight).toBe(true)
 		})
 
-		it('is serializable', () => {
-			expect(adt.toString()).toBe('right(2)')
-		})
-
 		describe('equals', () => {
 			it('asserts equality', () => {
 				expect(adt.equals(right(2))).toBeTruthy()
@@ -202,11 +198,21 @@ describe('Either', () => {
 			})
 		})
 
-		// describe('toMaybe', () => {
-		// 	it('maps to just', () => {
-		// 		expect(adt.toMaybe()).toBeJust(value)
-		// 	})
-		// })
+		describe('when serialized', () => {
+			describe('toString', () => {
+				it('is serializable', () => {
+					expect(adt.toString()).toBe('right(2)')
+				})
+			})
+
+			describe('toJSON', () => {
+				it('throws error', () => {
+					expect(() => {
+						JSON.stringify(adt)
+					}).toThrowError(`Either value can't be serialized to JSON. Please fold it first.`)
+				})
+			})
+		})
 	})
 
 	describe('left', () => {
@@ -219,10 +225,6 @@ describe('Either', () => {
 
 		it('is left', () => {
 			expect(adt.isLeft).toBe(true)
-		})
-
-		it('is serializable', () => {
-			expect(adt.toString()).toBe('left(Error)')
 		})
 
 		describe('equals', () => {
@@ -368,6 +370,22 @@ describe('Either', () => {
 					expect(adt.mapIf(predicate, ifTrue)).toBeLeft(adt)
 					expect(predicate).not.toHaveBeenCalled()
 					expect(ifTrue).not.toHaveBeenCalled()
+				})
+			})
+		})
+
+		describe('when serialized', () => {
+			describe('toString', () => {
+				it('is serializable', () => {
+					expect(adt.toString()).toBe('left(Error)')
+				})
+			})
+
+			describe('toJSON', () => {
+				it('throws error', () => {
+					expect(() => {
+						JSON.stringify(adt)
+					}).toThrowError(`Either value can't be serialized to JSON. Please fold it first.`)
 				})
 			})
 		})
