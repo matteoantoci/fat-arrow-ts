@@ -9,10 +9,6 @@ interface EitherProto<E, A> {
 
 	equals(value: AnyEither): boolean
 
-	fold(): E | A
-
-	fold<B>(ifLeft: (left: E) => B, ifRight: (right: A) => B): B
-
 	flatMap<B = A>(ifRight: (right: A) => RightValueOrEither<E, B>): Either<E, B>
 
 	mapIf(predicate: (right: A) => boolean, ifTrue: (right: A) => RightValueOrEither<E, A>): Either<E, A>
@@ -30,11 +26,19 @@ interface EitherProto<E, A> {
 export interface Right<E, A> extends EitherProto<E, A> {
 	isLeft: false
 	isRight: true
+
+	fold(): A
+
+	fold<B>(ifLeft: (left: E) => B, ifRight: (right: A) => B): B
 }
 
 export interface Left<E, A> extends EitherProto<E, A> {
 	isLeft: true
 	isRight: false
+
+	fold(): E
+
+	fold<B>(ifLeft: (left: E) => B, ifRight: (right: A) => B): B
 }
 
 export type Either<E, A> = Right<E, A> | Left<E, A>

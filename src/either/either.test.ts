@@ -201,7 +201,11 @@ describe('Either', () => {
 		describe('when serialized', () => {
 			describe('toString', () => {
 				it('is serializable', () => {
-					expect(adt.toString()).toBe('right(2)')
+					expect(adt.toString()).toBe('Right(2)')
+					expect(right(1).toString()).toBe('Right(1)')
+					expect(right(true).toString()).toBe('Right(true)')
+					expect(right('some string').toString()).toBe('Right("some string")')
+					expect(right({ foo: 'bar' }).toString()).toBe('Right({"foo":"bar"})')
 				})
 			})
 
@@ -216,7 +220,7 @@ describe('Either', () => {
 	})
 
 	describe('left', () => {
-		const error = new Error()
+		const error = new Error('error')
 		const adt = left<Error, number>(error)
 
 		describe('is monad', () => {
@@ -234,7 +238,7 @@ describe('Either', () => {
 			})
 
 			it('asserts deep equality', () => {
-				expect(adt.equals(left(new Error()))).toBeTruthy()
+				expect(adt.equals(left(new Error('error')))).toBeTruthy()
 				expect(adt.equals(left(new Error('foooo')))).toBeFalsy()
 			})
 		})
@@ -377,7 +381,11 @@ describe('Either', () => {
 		describe('when serialized', () => {
 			describe('toString', () => {
 				it('is serializable', () => {
-					expect(adt.toString()).toBe('left(Error)')
+					expect(adt.toString()).toBe('Left(Error("error"))')
+					expect(left(1).toString()).toBe('Left(1)')
+					expect(left(true).toString()).toBe('Left(true)')
+					expect(left('some string').toString()).toBe('Left("some string")')
+					expect(left({ foo: 'bar' }).toString()).toBe('Left({"foo":"bar"})')
 				})
 			})
 

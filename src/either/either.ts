@@ -1,5 +1,7 @@
 import equal from 'fast-deep-equal/es6/react'
+import safeStringify from 'fast-safe-stringify'
 import { Either, Left, Right } from '../types'
+import { maybe } from '../maybe/maybe'
 
 const PROTOTYPE = {}
 
@@ -17,11 +19,28 @@ const toJSON = () => {
 	throw new Error(`Either value can't be serialized to JSON. Please fold it first.`)
 }
 
+const getType = (entity: any) =>
+	maybe(entity)
+		.flatMap((it) => Object.prototype.toString.call(it))
+		.flatMap((it) => maybe(it.split(' ')[1]))
+		.flatMap((it) => it.split(']')[0])
+
+const toString = (kind: string, data: any) => {
+	const content = safeStringify(data)
+	return getType(data).fold(
+		() => `${kind}(${content})`,
+		(type) => {
+			if (type === 'Error') return `${kind}(${data.name}("${data.message}"))`
+			return `${kind}(${content})`
+		}
+	)
+}
+
 const createRight = <E, A>(data: A): Right<E, A> =>
 	seal({
 		isLeft: false,
 		isRight: true,
-		toString: () => `right(${data})`,
+		toString: () => toString('Right', data),
 		equals: (operand) =>
 			operand.fold(
 				() => false,
@@ -40,7 +59,7 @@ const createLeft = <E, A>(data: E): Left<E, A> =>
 	seal({
 		isLeft: true,
 		isRight: false,
-		toString: () => `left(${data})`,
+		toString: () => toString('Left', data),
 		equals: (operand) =>
 			operand.fold(
 				(it) => equal(it, data),
