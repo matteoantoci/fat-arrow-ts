@@ -1,4 +1,5 @@
-import { just, maybe, none } from './maybe'
+import { just, maybe, nothing } from './maybe'
+import { noop } from '../lambda/lambda'
 
 describe('Maybe', () => {
 	describe('just', () => {
@@ -9,8 +10,8 @@ describe('Maybe', () => {
 		})
 	})
 
-	describe('none', () => {
-		const adt = none()
+	describe('nothing', () => {
+		const adt = nothing()
 
 		it('is left', () => {
 			expect(adt).toBeLeft(undefined)
@@ -27,7 +28,7 @@ describe('Maybe', () => {
 		it('handles nullables', () => {
 			expect(maybe(null)).toBeLeft(undefined)
 			expect(maybe(undefined)).toBeLeft(undefined)
-			expect(maybe((() => {})())).toBeLeft(undefined)
+			expect(maybe(noop())).toBeLeft(undefined)
 		})
 	})
 })

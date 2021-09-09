@@ -20,3 +20,5 @@ export const rotate = <T>(n: number, arr: T[]): T[] => arr.slice(n, arr.length).
 
 export const chunk = <T>(size: number, arr: T[]): T[][] =>
 	repeat(Math.ceil(arr.length / size), (index) => index * size).map((begin) => arr.slice(begin, begin + size))
+
+export const noop = () => {}
