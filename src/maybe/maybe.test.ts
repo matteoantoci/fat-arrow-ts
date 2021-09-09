@@ -16,6 +16,10 @@ describe('Maybe', () => {
 		it('is left', () => {
 			expect(adt).toBeLeft(undefined)
 		})
+
+		it('is nothing', () => {
+			expect(adt).toBeNothing()
+		})
 	})
 
 	describe('maybe', () => {
@@ -26,9 +30,9 @@ describe('Maybe', () => {
 		})
 
 		it('handles nullables', () => {
-			expect(maybe(null)).toBeLeft(undefined)
-			expect(maybe(undefined)).toBeLeft(undefined)
-			expect(maybe(noop())).toBeLeft(undefined)
+			expect(maybe(null)).toBeNothing()
+			expect(maybe(undefined)).toBeNothing()
+			expect(maybe(noop())).toBeNothing()
 		})
 	})
 

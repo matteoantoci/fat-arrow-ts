@@ -1,6 +1,7 @@
 import { matcherHint, printExpected, printReceived } from 'jest-matcher-utils'
 import { leftOf, rightOf } from './either/either'
 import { AnyEither } from './types'
+import { nothing } from './maybe/maybe'
 
 declare global {
 	namespace jest {
@@ -12,11 +13,15 @@ declare global {
 			toHaveBeenLastCalledWithRight(expected: any): CustomMatcherResult
 
 			toHaveBeenLastCalledWithLeft(expected: any): CustomMatcherResult
+
+			toBeNothing(): CustomMatcherResult
+
+			toHaveBeenLastCalledWithNothing(): CustomMatcherResult
 		}
 	}
 }
 
-type TestValues = { expected: AnyEither; received: AnyEither; side: string }
+type TestValues = { expected: AnyEither; received: AnyEither }
 
 const getLastCallArgument = (mock: jest.Mock) => {
 	const lastCall = mock.mock.calls[mock.mock.calls.length - 1]
@@ -58,33 +63,45 @@ const isRight = (values: TestValues) => values.received.equals(values.expected)
 
 const isLeft = (values: TestValues) => values.received.equals(values.expected)
 
+const toBeRight = <T>(received: AnyEither, expected: T) => {
+	const values: TestValues = { expected: rightOf(expected), received: rightOf(received) }
+	const pass = isRight(values)
+	return getValueCheckResults('toBeRight', values, pass)
+}
+
+const toBeLeft = <T>(received: AnyEither, expected: T) => {
+	const values: TestValues = { expected: leftOf(expected), received: leftOf(received) }
+	const pass = isLeft(values)
+	return getValueCheckResults('toBeLeft', values, pass)
+}
+
+const toBeNothing = (received: AnyEither) => toBeLeft(received, nothing())
+
+const toHaveBeenLastCalledWithRight = <T>(received: jest.Mock, expected: T) => {
+	const values: TestValues = {
+		expected: rightOf(expected),
+		received: rightOf(getLastCallArgument(received)),
+	}
+	const pass = isRight(values)
+	return getSpyCheckResults('toHaveBeenLastCalledWithRight', values, pass)
+}
+
+const toHaveBeenLastCalledWithLeft = <T>(received: jest.Mock, expected: T) => {
+	const values: TestValues = {
+		expected: leftOf(expected),
+		received: leftOf(getLastCallArgument(received)),
+	}
+	const pass = isLeft(values)
+	return getSpyCheckResults('toHaveBeenLastCalledWithLeft', values, pass)
+}
+
+const toHaveBeenLastCalledWithNothing = (received: jest.Mock) => toHaveBeenLastCalledWithLeft(received, nothing())
+
 expect.extend({
-	toBeRight: <T>(received: AnyEither, expected: T) => {
-		const values: TestValues = { expected: rightOf(expected), received: rightOf(received), side: 'right' }
-		const pass = isRight(values)
-		return getValueCheckResults('toBeRight', values, pass)
-	},
-	toBeLeft: <T>(received: AnyEither, expected: T) => {
-		const values: TestValues = { expected: leftOf(expected), received: leftOf(received), side: 'left' }
-		const pass = isLeft(values)
-		return getValueCheckResults('toBeLeft', values, pass)
-	},
-	toHaveBeenLastCalledWithRight: <T>(received: jest.Mock, expected: T) => {
-		const values: TestValues = {
-			expected: rightOf(expected),
-			received: rightOf(getLastCallArgument(received)),
-			side: 'right',
-		}
-		const pass = isRight(values)
-		return getSpyCheckResults('toHaveBeenLastCalledWithRight', values, pass)
-	},
-	toHaveBeenLastCalledWithLeft: <T>(received: jest.Mock, expected: T) => {
-		const values: TestValues = {
-			expected: leftOf(expected),
-			received: leftOf(getLastCallArgument(received)),
-			side: 'left',
-		}
-		const pass = isLeft(values)
-		return getSpyCheckResults('toHaveBeenLastCalledWithLeft', values, pass)
-	},
+	toBeRight,
+	toBeLeft,
+	toBeNothing,
+	toHaveBeenLastCalledWithRight,
+	toHaveBeenLastCalledWithLeft,
+	toHaveBeenLastCalledWithNothing,
 })
