@@ -1,5 +1,5 @@
 import equal from 'fast-deep-equal/es6/react'
-import { Either, Left, Right } from './either.types'
+import { Either, Left, Right } from '../types'
 
 const PROTOTYPE = {}
 

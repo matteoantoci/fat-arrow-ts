@@ -1,5 +1,5 @@
 import { left, leftOf, right, rightOf } from './either'
-import { Either } from './either.types'
+import { Either } from '../types'
 
 const runMonadChecks = (adt: Either<Error, number>, of: (value: any) => Either<Error, number>) => {
 	it('has unit', () => {

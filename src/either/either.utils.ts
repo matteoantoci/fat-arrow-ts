@@ -1,5 +1,5 @@
 import { leftOf, rightOf } from './either'
-import { Either, LeftValueOrEither, RightValueOrEither } from './either.types'
+import { Either, LeftValueOrEither, RightValueOrEither } from '../types'
 
 export const tryCatch = <A>(
 	tryFn: () => RightValueOrEither<A>,

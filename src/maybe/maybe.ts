@@ -1,5 +1,5 @@
 import { left, right } from '../either/either'
-import { Maybe } from './maybe.types'
+import { Maybe } from '../types'
 
 export const just = <A>(value: NonNullable<A>): Maybe<A> => right<void, A>(value)
 

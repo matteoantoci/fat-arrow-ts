@@ -1,6 +1,6 @@
 import { matcherHint, printExpected, printReceived } from 'jest-matcher-utils'
 import { leftOf, rightOf } from './either/either'
-import { AnyEither } from './either/either.types'
+import { AnyEither } from './types'
 
 declare global {
 	namespace jest {

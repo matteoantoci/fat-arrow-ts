@@ -35,3 +35,5 @@ export interface Left<E, A> extends EitherProto<E, A> {
 }
 
 export type Either<E, A> = Right<E, A> | Left<E, A>
+
+export type Maybe<A> = Either<void, A>
