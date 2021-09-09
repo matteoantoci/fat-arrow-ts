@@ -1,4 +1,6 @@
-import { tryCatch } from './either.utils'
+import { partition, tryCatch } from './either.utils'
+import { left, right } from './either'
+import { nothing } from '../maybe/maybe'
 
 describe('Either utils', () => {
 	describe('tryCatch', () => {
@@ -24,6 +26,21 @@ describe('Either utils', () => {
 					)
 				).toBeLeft(new Error('some error'))
 			})
+		})
+	})
+
+	describe('partition', () => {
+		const eithers = [left(1), right(4), left(5), nothing(), right(6)]
+
+		it('partitions an either array', () => {
+			const [lefts, rights] = partition(eithers)
+
+			expect(lefts[0]).toBeLeft(1)
+			expect(lefts[1]).toBeLeft(5)
+			expect(lefts[2]).toBeNothing()
+
+			expect(rights[0]).toBeRight(4)
+			expect(rights[1]).toBeRight(6)
 		})
 	})
 })
