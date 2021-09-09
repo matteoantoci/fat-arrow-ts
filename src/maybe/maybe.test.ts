@@ -1,4 +1,4 @@
-import { just, maybe, nothing } from './maybe'
+import { just, maybe, maybeFirst, maybeLast, nothing } from './maybe'
 import { noop } from '../lambda/lambda'
 
 describe('Maybe', () => {
@@ -29,6 +29,50 @@ describe('Maybe', () => {
 			expect(maybe(null)).toBeLeft(undefined)
 			expect(maybe(undefined)).toBeLeft(undefined)
 			expect(maybe(noop())).toBeLeft(undefined)
+		})
+	})
+
+	describe('maybeFirst', () => {
+		describe('when array is empty', () => {
+			const array: number[] = []
+
+			it('returns nothing', () => {
+				const actual = maybeFirst(array)
+
+				expect(actual).toBeLeft(undefined)
+			})
+		})
+
+		describe('when array is not empty', () => {
+			const array: number[] = [1, 2, 3]
+
+			it('returns nothing', () => {
+				const actual = maybeFirst(array)
+
+				expect(actual).toBeRight(1)
+			})
+		})
+	})
+
+	describe('maybeLast', () => {
+		describe('when array is empty', () => {
+			const array: number[] = []
+
+			it('returns nothing', () => {
+				const actual = maybeLast(array)
+
+				expect(actual).toBeLeft(undefined)
+			})
+		})
+
+		describe('when array is not empty', () => {
+			const array: number[] = [1, 2, 3]
+
+			it('returns nothing', () => {
+				const actual = maybeLast(array)
+
+				expect(actual).toBeRight(3)
+			})
 		})
 	})
 })
