@@ -1,4 +1,4 @@
-export type { Either, Maybe } from './types'
+export type { Either, Maybe, Right, Left } from './types'
 
 export { right, left } from './either/either'
 
