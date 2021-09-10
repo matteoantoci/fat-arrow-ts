@@ -36,10 +36,11 @@ const toString = (kind: string, data: any) => {
 	)
 }
 
-const createRight = <E, A>(data: A): Right<E, A> =>
-	seal({
+const createRight = <E, A>(data: A) =>
+	seal<Right<E, A>>({
 		isLeft: false,
 		isRight: true,
+		toJSON,
 		toString: () => toString('Right', data),
 		equals: (operand) =>
 			operand.fold(
@@ -47,31 +48,28 @@ const createRight = <E, A>(data: A): Right<E, A> =>
 				(it) => equal(it, data)
 			),
 		fold: <B>(_?: any, ifRight?: (data: A) => B) => (ifRight ? ifRight(data) : data),
-		bimap: (_, ifRight) => rightOf(ifRight(data)),
 		flatMap: (ifRight) => rightOf(ifRight(data)),
-		mapIf: (predicate, ifTrue) => (predicate(data) ? rightOf(ifTrue(data)) : rightOf(data)),
 		mapLeft: () => rightOf(data),
-		orElse: () => rightOf(data),
-		toJSON,
+		bimap: (_, ifRight) => rightOf(ifRight(data)),
+		mapIf: (predicate, ifTrue) => (predicate(data) ? rightOf(ifTrue(data)) : rightOf(data)),
 	})
 
-const createLeft = <E, A>(data: E): Left<E, A> =>
-	seal({
+const createLeft = <E, A>(data: E) =>
+	seal<Left<E, A>>({
 		isLeft: true,
 		isRight: false,
 		toString: () => toString('Left', data),
+		toJSON,
 		equals: (operand) =>
 			operand.fold(
 				(it) => equal(it, data),
 				() => false
 			),
 		fold: <B>(ifLeft?: (value: E) => B) => (ifLeft ? ifLeft(data) : data),
-		bimap: (ifLeft) => leftOf(ifLeft(data)),
 		flatMap: () => leftOf(data),
-		mapIf: () => leftOf(data),
 		mapLeft: (ifLeft) => leftOf(ifLeft(data)),
-		orElse: (ifLeft) => rightOf(ifLeft(data)),
-		toJSON,
+		bimap: (ifLeft) => leftOf(ifLeft(data)),
+		mapIf: () => leftOf(data),
 	})
 
 export const rightOf = <E, A>(data: A | Either<E, A>): Either<E, A> => (isEither(data) ? data : createRight(data))

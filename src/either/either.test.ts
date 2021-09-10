@@ -156,38 +156,6 @@ describe('Either', () => {
 			})
 		})
 
-		describe('orElse', () => {
-			it('supports data return', () => {
-				const newAdt = 999
-				const spy = jest.fn().mockReturnValue(newAdt)
-
-				const actual = adt.orElse(spy)
-
-				expect(actual).toBeRight(adt)
-				expect(spy).not.toHaveBeenCalled()
-			})
-
-			it('supports right return', () => {
-				const newAdt = right(999)
-				const spy = jest.fn().mockReturnValue(newAdt)
-
-				const actual = adt.orElse(spy)
-
-				expect(actual).toBeRight(adt)
-				expect(spy).not.toHaveBeenCalled()
-			})
-
-			it('supports left return', () => {
-				const newAdt = left<Error, number>(new Error())
-				const spy = jest.fn().mockReturnValue(newAdt)
-
-				const actual = adt.orElse(spy)
-
-				expect(actual).toBeRight(adt)
-				expect(spy).not.toHaveBeenCalled()
-			})
-		})
-
 		describe('mapIf', () => {
 			describe('when predicate is truthy', () => {
 				it('maps correctly', () => {
@@ -355,32 +323,6 @@ describe('Either', () => {
 				)
 
 				expect(actual).toBeLeft(expected)
-			})
-		})
-
-		describe('orElse', () => {
-			it('supports data return', () => {
-				const newAdt = 999
-
-				const actual = adt.orElse(() => newAdt)
-
-				expect(actual).toBeRight(newAdt)
-			})
-
-			it('supports right return', () => {
-				const newAdt = right<Error, number>(999)
-
-				const actual = adt.orElse(() => newAdt)
-
-				expect(actual).toBeRight(newAdt)
-			})
-
-			it('supports left return', () => {
-				const newAdt = left<Error, number>(new Error())
-
-				const actual = adt.orElse(() => newAdt)
-
-				expect(actual).toBeLeft(newAdt)
 			})
 		})
 

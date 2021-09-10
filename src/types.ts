@@ -7,6 +7,8 @@ export type LeftValueOrEither<E, A> = E | Either<E, A>
 interface EitherProto<E, A> {
 	toString(): string
 
+	toJSON(): never
+
 	equals(value: AnyEither): boolean
 
 	flatMap<B = A>(ifRight: (right: A) => RightValueOrEither<E, B>): Either<E, B>
@@ -14,8 +16,6 @@ interface EitherProto<E, A> {
 	mapIf(predicate: (right: A) => boolean, ifTrue: (right: A) => RightValueOrEither<E, A>): Either<E, A>
 
 	mapLeft<G = E>(fn: (left: E) => LeftValueOrEither<G, A>): Either<G, A>
-
-	orElse(ifLeft: (left: E) => RightValueOrEither<E, A>): Either<E, A>
 
 	bimap<G = E, B = A>(
 		ifLeft: (left: E) => LeftValueOrEither<G, B>,
