@@ -1,4 +1,4 @@
-import { just, maybe, maybeFirst, maybeLast, nothing } from './maybe'
+import { just, maybe, maybeFind, maybeFindIndex, maybeFirst, maybeLast, nothing } from './maybe'
 import { noop } from '../lambda/lambda'
 
 describe('Maybe', () => {
@@ -43,14 +43,14 @@ describe('Maybe', () => {
 			it('returns nothing', () => {
 				const actual = maybeFirst(array)
 
-				expect(actual).toBeLeft(undefined)
+				expect(actual).toBeNothing()
 			})
 		})
 
 		describe('when array is not empty', () => {
 			const array: number[] = [1, 2, 3]
 
-			it('returns nothing', () => {
+			it('returns right', () => {
 				const actual = maybeFirst(array)
 
 				expect(actual).toBeRight(1)
@@ -65,17 +65,57 @@ describe('Maybe', () => {
 			it('returns nothing', () => {
 				const actual = maybeLast(array)
 
-				expect(actual).toBeLeft(undefined)
+				expect(actual).toBeNothing()
 			})
 		})
 
 		describe('when array is not empty', () => {
 			const array: number[] = [1, 2, 3]
 
-			it('returns nothing', () => {
+			it('returns right', () => {
 				const actual = maybeLast(array)
 
 				expect(actual).toBeRight(3)
+			})
+		})
+	})
+
+	describe('maybeFind', () => {
+		const array: number[] = [1, 2, 3]
+
+		describe('when NOT found', () => {
+			it('returns nothing', () => {
+				const actual = maybeFind(array, (it) => it === 4)
+
+				expect(actual).toBeNothing()
+			})
+		})
+
+		describe('when found', () => {
+			it('returns right', () => {
+				const actual = maybeFind(array, (it) => it === 1)
+
+				expect(actual).toBeRight(1)
+			})
+		})
+	})
+
+	describe('maybeFindIndex', () => {
+		const array: number[] = [1, 2, 3]
+
+		describe('when NOT found', () => {
+			it('returns nothing', () => {
+				const actual = maybeFindIndex(array, (it) => it === 4)
+
+				expect(actual).toBeNothing()
+			})
+		})
+
+		describe('when found', () => {
+			it('returns right', () => {
+				const actual = maybeFindIndex(array, (it) => it === 1)
+
+				expect(actual).toBeRight(0)
 			})
 		})
 	})

@@ -18,3 +18,18 @@ export const maybe = <A>(value: A | undefined | null): Maybe<A> => (isNonNullabl
 export const maybeFirst = <T>(array: T[]): Maybe<T> => maybe(array[0])
 
 export const maybeLast = <T>(array: T[]): Maybe<T> => maybe(array[array.length - 1])
+
+export const maybeFind = <T>(
+	array: T[],
+	predicate: (value: T, index: number, obj: T[]) => unknown,
+	thisArg?: any
+): Maybe<T> => maybe(array.find(predicate, thisArg))
+
+export const maybeFindIndex = <T>(
+	array: T[],
+	predicate: (value: T, index: number, obj: T[]) => unknown,
+	thisArg?: any
+): Maybe<number> => {
+	const index = array.findIndex(predicate, thisArg)
+	return index >= 0 ? just(index) : nothing()
+}
