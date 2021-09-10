@@ -1,7 +1,6 @@
 import equal from 'fast-deep-equal/es6/react'
 import safeStringify from 'fast-safe-stringify'
 import { Either, Left, Right } from '../types'
-import { maybe } from '../maybe/maybe'
 
 const PROTOTYPE = {}
 
@@ -15,26 +14,14 @@ const isEither = <E, A>(input: E | A | Either<E, A>): input is Either<E, A> => {
 
 const seal = <O>(adt: O): O => Object.freeze(Object.assign(Object.create(PROTOTYPE), adt))
 
-const toJSON = () => {
+const toJSON = (): never => {
 	throw new Error(`Either value can't be serialized to JSON. Please fold it first.`)
 }
 
-const getType = (entity: any) =>
-	maybe(entity)
-		.flatMap((it) => Object.prototype.toString.call(it))
-		.flatMap((it) => maybe(it.split(' ')[1]))
-		.flatMap((it) => it.split(']')[0])
+const isError = (data: any): data is Error => Object.getPrototypeOf(data) === Error.prototype
 
-const toString = (kind: string, data: any) => {
-	const content = safeStringify(data)
-	return getType(data).fold(
-		() => `${kind}(${content})`,
-		(type) => {
-			if (type === 'Error') return `${kind}(${data.name}("${data.message}"))`
-			return `${kind}(${content})`
-		}
-	)
-}
+const toString = (kind: string, data: any) =>
+	isError(data) ? `${kind}(${data.name}("${data.message}"))` : `${kind}(${safeStringify(data)})`
 
 const createRight = <E, A>(data: A) =>
 	seal<Right<E, A>>({
@@ -50,7 +37,6 @@ const createRight = <E, A>(data: A) =>
 		fold: <B>(_?: any, ifRight?: (data: A) => B) => (ifRight ? ifRight(data) : data),
 		flatMap: (ifRight) => rightOf(ifRight(data)),
 		mapLeft: () => rightOf(data),
-		bimap: (_, ifRight) => rightOf(ifRight(data)),
 		mapIf: (predicate, ifTrue) => (predicate(data) ? rightOf(ifTrue(data)) : rightOf(data)),
 	})
 
@@ -68,7 +54,6 @@ const createLeft = <E, A>(data: E) =>
 		fold: <B>(ifLeft?: (value: E) => B) => (ifLeft ? ifLeft(data) : data),
 		flatMap: () => leftOf(data),
 		mapLeft: (ifLeft) => leftOf(ifLeft(data)),
-		bimap: (ifLeft) => leftOf(ifLeft(data)),
 		mapIf: () => leftOf(data),
 	})
 

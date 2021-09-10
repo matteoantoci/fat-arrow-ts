@@ -143,19 +143,6 @@ describe('Either', () => {
 			})
 		})
 
-		describe('bimap', () => {
-			it('maps right type', () => {
-				const expected = 'right'
-
-				const actual = adt.bimap(
-					() => 'left',
-					() => expected
-				)
-
-				expect(actual).toBeRight(expected)
-			})
-		})
-
 		describe('mapIf', () => {
 			describe('when predicate is truthy', () => {
 				it('maps correctly', () => {
@@ -310,19 +297,6 @@ describe('Either', () => {
 
 					expect(actual).toBe('left')
 				})
-			})
-		})
-
-		describe('bimap', () => {
-			it('maps left type', () => {
-				const expected = 'left'
-
-				const actual = adt.bimap(
-					() => expected,
-					() => 'right'
-				)
-
-				expect(actual).toBeLeft(expected)
 			})
 		})
 
