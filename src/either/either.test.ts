@@ -109,21 +109,36 @@ describe('Either', () => {
 		})
 
 		describe('fold', () => {
-			describe('without params', () => {
+			it('runs the proper callback', () => {
+				const spy = jest.fn()
+
+				adt.fold(() => 999, spy)
+
+				expect(spy).toHaveBeenCalledWith(value)
+			})
+
+			describe('without callbacks', () => {
 				it('folds', () => {
 					expect(right(5).fold()).toBe(5)
 				})
 			})
 
-			describe('with params', () => {
+			describe('with left callback', () => {
 				it('folds', () => {
-					const expected = 'right'
-					const spy = jest.fn().mockReturnValue(expected)
+					const actual = adt.fold(() => 999)
 
-					const actual = adt.fold(() => 999, spy)
+					expect(actual).toBe(value)
+				})
+			})
 
-					expect(spy).toHaveBeenCalledWith(value)
-					expect(actual).toBe(expected)
+			describe('with both callbacks', () => {
+				it('folds', () => {
+					const actual = adt.fold(
+						() => 'left',
+						() => 'right'
+					)
+
+					expect(actual).toBe('right')
 				})
 			})
 		})
@@ -296,21 +311,36 @@ describe('Either', () => {
 		})
 
 		describe('fold', () => {
-			describe('without params', () => {
+			it('runs the proper callback', () => {
+				const spy = jest.fn()
+
+				adt.fold(spy, () => 111)
+
+				expect(spy).toHaveBeenCalledWith(error)
+			})
+
+			describe('without callbacks', () => {
 				it('folds', () => {
 					expect(left(3).fold()).toBe(3)
 				})
 			})
 
-			describe('with params', () => {
+			describe('with left callback', () => {
 				it('folds', () => {
-					const expected = 'value'
-					const spy = jest.fn().mockReturnValue(expected)
+					const actual = adt.fold(() => 999)
 
-					const actual = adt.fold(spy, () => 'right')
+					expect(actual).toBe(999)
+				})
+			})
 
-					expect(spy).toHaveBeenCalledWith(error)
-					expect(actual).toBe(expected)
+			describe('with both callbacks', () => {
+				it('folds', () => {
+					const actual = adt.fold(
+						() => 'left',
+						() => 'right'
+					)
+
+					expect(actual).toBe('left')
 				})
 			})
 		})

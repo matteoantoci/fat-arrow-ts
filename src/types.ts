@@ -23,22 +23,22 @@ interface EitherProto<E, A> {
 	): Either<G, B>
 }
 
-export interface Right<E, A> extends EitherProto<E, A> {
-	isLeft: false
-	isRight: true
+interface Fold<E, A, T> {
+	fold(): T
 
-	fold(): A
+	fold(ifLeft: (left: E) => A): A
 
-	fold<B>(ifLeft: (left: E) => B, ifRight: (right: A) => B): B
+	fold<B = A>(ifLeft: (left: E) => B, ifRight: (right: A) => B): B
 }
 
-export interface Left<E, A> extends EitherProto<E, A> {
+export interface Right<E, A> extends EitherProto<E, A>, Fold<E, A, A> {
+	isLeft: false
+	isRight: true
+}
+
+export interface Left<E, A> extends EitherProto<E, A>, Fold<E, A, E> {
 	isLeft: true
 	isRight: false
-
-	fold(): E
-
-	fold<B>(ifLeft: (left: E) => B, ifRight: (right: A) => B): B
 }
 
 export type Either<E, A> = Right<E, A> | Left<E, A>
