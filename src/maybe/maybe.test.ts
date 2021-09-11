@@ -85,7 +85,7 @@ describe('Maybe', () => {
 
 		describe('when NOT found', () => {
 			it('returns nothing', () => {
-				const actual = maybeFind(array, (it) => it === 4)
+				const actual = maybeFind((it) => it === 4)(array)
 
 				expect(actual).toBeNothing()
 			})
@@ -93,7 +93,7 @@ describe('Maybe', () => {
 
 		describe('when found', () => {
 			it('returns right', () => {
-				const actual = maybeFind(array, (it) => it === 1)
+				const actual = maybeFind((it) => it === 1)(array)
 
 				expect(actual).toBeRight(1)
 			})
@@ -105,7 +105,7 @@ describe('Maybe', () => {
 
 		describe('when NOT found', () => {
 			it('returns nothing', () => {
-				const actual = maybeFindIndex(array, (it) => it === 4)
+				const actual = maybeFindIndex((it) => it === 4)(array)
 
 				expect(actual).toBeNothing()
 			})
@@ -113,7 +113,7 @@ describe('Maybe', () => {
 
 		describe('when found', () => {
 			it('returns right', () => {
-				const actual = maybeFindIndex(array, (it) => it === 1)
+				const actual = maybeFindIndex((it) => it === 1)(array)
 
 				expect(actual).toBeRight(0)
 			})
