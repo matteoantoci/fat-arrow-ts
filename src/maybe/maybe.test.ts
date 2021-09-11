@@ -1,4 +1,4 @@
-import { just, maybe, maybeFind, maybeFindIndex, maybeFirst, maybeLast, nothing } from './maybe'
+import { just, maybe, maybeFirst, maybeLast, nothing } from './maybe'
 import { noop } from '../lambda/lambda'
 
 describe('Maybe', () => {
@@ -76,46 +76,6 @@ describe('Maybe', () => {
 				const actual = maybeLast(array)
 
 				expect(actual).toBeRight(3)
-			})
-		})
-	})
-
-	describe('maybeFind', () => {
-		const array: number[] = [1, 2, 3]
-
-		describe('when NOT found', () => {
-			it('returns nothing', () => {
-				const actual = maybeFind((it) => it === 4)(array)
-
-				expect(actual).toBeNothing()
-			})
-		})
-
-		describe('when found', () => {
-			it('returns right', () => {
-				const actual = maybeFind((it) => it === 1)(array)
-
-				expect(actual).toBeRight(1)
-			})
-		})
-	})
-
-	describe('maybeFindIndex', () => {
-		const array: number[] = [1, 2, 3]
-
-		describe('when NOT found', () => {
-			it('returns nothing', () => {
-				const actual = maybeFindIndex((it) => it === 4)(array)
-
-				expect(actual).toBeNothing()
-			})
-		})
-
-		describe('when found', () => {
-			it('returns right', () => {
-				const actual = maybeFindIndex((it) => it === 1)(array)
-
-				expect(actual).toBeRight(0)
 			})
 		})
 	})
