@@ -14,7 +14,3 @@ const isNonNullable = <T>(data: T): data is NonNullable<T> => {
 }
 
 export const maybe = <A>(value: A | undefined | null): Maybe<A> => (isNonNullable(value) ? just(value) : nothing())
-
-export const maybeFirst = <T>(array: T[]): Maybe<T> => maybe(array[0])
-
-export const maybeLast = <T>(array: T[]): Maybe<T> => maybe(array[array.length - 1])
