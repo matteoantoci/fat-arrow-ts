@@ -14,8 +14,6 @@ interface EitherProto<E, A> {
 	flatMap<B = A>(ifRight: (right: A) => RightValueOrEither<E, B>): Either<E, B>
 
 	mapLeft<G = E>(fn: (left: E) => LeftValueOrEither<G, A>): Either<G, A>
-
-	mapIf(predicate: (right: A) => boolean, ifTrue: (right: A) => RightValueOrEither<E, A>): Either<E, A>
 }
 
 interface Fold<E, A, T> {

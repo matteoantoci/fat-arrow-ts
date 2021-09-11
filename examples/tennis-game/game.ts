@@ -1,5 +1,6 @@
 import { maybe } from '../../src/maybe/maybe'
 import { left, right } from '../../src/either/either'
+import { Either } from '../../src'
 
 const SCORES = ['love', 'fifteen', 'thirty', 'forty']
 
@@ -18,6 +19,8 @@ const createPlayer = (name: string): Player => ({
 	name,
 	scoreIndex: 0,
 })
+
+const createScoreMessage: (data: string) => Either<string, string> = left
 
 type GameState = { players: [Player, Player] }
 
@@ -62,12 +65,12 @@ export const createGame = (firstPlayerName: string, secondPlayerName: string): G
 	return {
 		getScore: (): string =>
 			right<string, string>(`${getAllScoreText(playerOne)},${getAllScoreText(playerTwo)}`)
-				.mapIf(isDeuce, () => left('Deuce'))
-				.mapIf(hasPlayerOneAdvantage, () => left(`Advantage ${playerOne.name}`))
-				.mapIf(hasPlayerTwoAdvantage, () => left(`Advantage ${playerTwo.name}`))
-				.mapIf(isPlayerOneWinning, () => left(`${playerOne.name} wins`))
-				.mapIf(isPlayerTwoWinning, () => left(`${playerTwo.name} wins`))
-				.mapIf(isAll, () => left(`${getAllScoreText(playerOne)} all`))
+				.flatMap((it) => (isDeuce() ? createScoreMessage('Deuce') : it))
+				.flatMap((it) => (hasPlayerOneAdvantage() ? createScoreMessage(`Advantage ${playerOne.name}`) : it))
+				.flatMap((it) => (hasPlayerTwoAdvantage() ? createScoreMessage(`Advantage ${playerTwo.name}`) : it))
+				.flatMap((it) => (isPlayerOneWinning() ? createScoreMessage(`${playerOne.name} wins`) : it))
+				.flatMap((it) => (isPlayerTwoWinning() ? createScoreMessage(`${playerTwo.name} wins`) : it))
+				.flatMap((it) => (isAll() ? createScoreMessage(`${getAllScoreText(playerOne)} all`) : it))
 				.fold(),
 		playerOneScores: () => score(playerOne),
 		playerTwoScores: () => score(playerTwo),
