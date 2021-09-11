@@ -4,19 +4,23 @@ export type RightValueOrEither<E, A> = A | Either<E, A>
 
 export type LeftValueOrEither<E, A> = E | Either<E, A>
 
-interface EitherProto<E, A> {
+interface Serializable {
 	toString(): string
 
 	toJSON(): never
-
-	equals(value: AnyEither): boolean
-
-	flatMap<B = A>(ifRight: (right: A) => RightValueOrEither<E, B>): Either<E, B>
-
-	mapLeft<G = E>(fn: (left: E) => LeftValueOrEither<G, A>): Either<G, A>
 }
 
-interface Fold<E, A, T> {
+interface EQ {
+	equals(value: AnyEither): boolean
+}
+
+interface Chainable<E, A> {
+	flatMap<B = A>(ifRight: (right: A) => RightValueOrEither<E, B>): Either<E, B>
+
+	mapLeft<G = E>(ifLeft: (left: E) => LeftValueOrEither<G, A>): Either<G, A>
+}
+
+interface Foldable<E, A, T> {
 	fold(): T
 
 	fold(ifLeft: (left: E) => A): A
@@ -24,12 +28,14 @@ interface Fold<E, A, T> {
 	fold<B = A>(ifLeft: (left: E) => B, ifRight: (right: A) => B): B
 }
 
-export interface Right<E, A> extends EitherProto<E, A>, Fold<E, A, A> {
+interface EitherPrototype<E, A, T> extends Serializable, EQ, Chainable<E, A>, Foldable<E, A, T> {}
+
+export interface Right<E, A> extends EitherPrototype<E, A, A> {
 	isLeft: false
 	isRight: true
 }
 
-export interface Left<E, A> extends EitherProto<E, A>, Fold<E, A, E> {
+export interface Left<E, A> extends EitherPrototype<E, A, E> {
 	isLeft: true
 	isRight: false
 }
