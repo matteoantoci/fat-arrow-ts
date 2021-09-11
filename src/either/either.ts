@@ -37,7 +37,6 @@ const createRight = <E, A>(data: A) =>
 		fold: <B>(_?: any, ifRight?: (data: A) => B) => (ifRight ? ifRight(data) : data),
 		flatMap: (ifRight) => rightOf(ifRight(data)),
 		mapLeft: () => rightOf(data),
-		mapIf: (predicate, ifTrue) => (predicate(data) ? rightOf(ifTrue(data)) : rightOf(data)),
 	})
 
 const createLeft = <E, A>(data: E) =>
@@ -54,7 +53,6 @@ const createLeft = <E, A>(data: E) =>
 		fold: <B>(ifLeft?: (value: E) => B) => (ifLeft ? ifLeft(data) : data),
 		flatMap: () => leftOf(data),
 		mapLeft: (ifLeft) => leftOf(ifLeft(data)),
-		mapIf: () => leftOf(data),
 	})
 
 export const rightOf = <E, A>(data: A | Either<E, A>): Either<E, A> => (isEither(data) ? data : createRight(data))

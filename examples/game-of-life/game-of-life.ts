@@ -89,7 +89,7 @@ export const createGameOfLife = (width: number, height: number): GameOfLife => {
 
 				if (livingNeighbours === 3) return createAliveCell()
 
-				return cell.mapIf(() => livingNeighbours < 2 || livingNeighbours > 3, createDeadCell)
+				return cell.flatMap((it) => (livingNeighbours < 2 || livingNeighbours > 3 ? createDeadCell() : it))
 			})
 		)
 

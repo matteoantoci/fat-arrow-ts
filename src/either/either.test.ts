@@ -143,31 +143,6 @@ describe('Either', () => {
 			})
 		})
 
-		describe('mapIf', () => {
-			describe('when predicate is truthy', () => {
-				it('maps correctly', () => {
-					const expected = right('foo')
-					const predicate = jest.fn().mockReturnValue(true)
-					const ifTrue = jest.fn().mockReturnValue(expected)
-
-					expect(adt.mapIf(predicate, ifTrue)).toBeRight(expected)
-					expect(predicate).toHaveBeenLastCalledWith(value)
-					expect(ifTrue).toHaveBeenLastCalledWith(value)
-				})
-			})
-
-			describe('when predicate is falsy', () => {
-				it('maps correctly', () => {
-					const predicate = jest.fn().mockReturnValue(false)
-					const ifTrue = jest.fn().mockReturnValue('foo')
-
-					expect(adt.mapIf(predicate, ifTrue)).toBeRight(adt)
-					expect(predicate).toHaveBeenLastCalledWith(value)
-					expect(ifTrue).not.toHaveBeenCalled()
-				})
-			})
-		})
-
 		describe('when serialized', () => {
 			describe('toString', () => {
 				it('is serializable', () => {
@@ -296,30 +271,6 @@ describe('Either', () => {
 					)
 
 					expect(actual).toBe('left')
-				})
-			})
-		})
-
-		describe('mapIf', () => {
-			describe('when predicate is truthy', () => {
-				it('maps correctly', () => {
-					const predicate = jest.fn().mockReturnValue(true)
-					const ifTrue = jest.fn().mockReturnValue('foo')
-
-					expect(adt.mapIf(predicate, ifTrue)).toBeLeft(adt)
-					expect(predicate).not.toHaveBeenCalled()
-					expect(ifTrue).not.toHaveBeenCalled()
-				})
-			})
-
-			describe('when predicate is falsy', () => {
-				it('maps correctly', () => {
-					const predicate = jest.fn().mockReturnValue(false)
-					const ifTrue = jest.fn().mockReturnValue('foo')
-
-					expect(adt.mapIf(predicate, ifTrue)).toBeLeft(adt)
-					expect(predicate).not.toHaveBeenCalled()
-					expect(ifTrue).not.toHaveBeenCalled()
 				})
 			})
 		})
