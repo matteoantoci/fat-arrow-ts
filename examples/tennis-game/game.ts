@@ -1,11 +1,11 @@
-import { just, maybe } from '../../src/maybe/maybe'
+import { maybe } from '../../src/maybe/maybe'
 import { left, right } from '../../src/either/either'
 
 const SCORES = ['love', 'fifteen', 'thirty', 'forty']
 
 const MAX_SCORE_INDEX = SCORES.length - 1
 
-const capitalize = (s: string) => just(s.charAt(0).toUpperCase() + s.slice(1))
+const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 
 const getAllScoreText = (player: Player) => maybe(SCORES[player.scoreIndex]).flatMap(capitalize).fold()
 
