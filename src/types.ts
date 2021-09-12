@@ -1,9 +1,5 @@
 export type AnyEither = Either<any, any>
 
-export type RightValueOrEither<E, A> = A | Either<E, A>
-
-export type LeftValueOrEither<E, A> = E | Either<E, A>
-
 interface Serializable {
 	toString(): string
 
@@ -15,9 +11,9 @@ interface EQ {
 }
 
 interface Chainable<E, A> {
-	flatMap<B = A>(ifRight: (right: A) => RightValueOrEither<E, B>): Either<E, B>
+	flatMap<B = A>(ifRight: (right: A) => A | B | Either<E, A> | Either<E, B>): Either<E, B>
 
-	mapLeft<G = E>(ifLeft: (left: E) => LeftValueOrEither<G, A>): Either<G, A>
+	mapLeft<G = E>(ifLeft: (left: E) => E | G | Either<G, A> | Either<E, A>): Either<G, A>
 }
 
 interface Foldable<E, A, T> {
@@ -25,7 +21,7 @@ interface Foldable<E, A, T> {
 
 	fold(ifLeft: (left: E) => A): A
 
-	fold<B = A>(ifLeft: (left: E) => B, ifRight: (right: A) => B): B
+	fold<B>(ifLeft: (left: E) => B, ifRight: (right: A) => B): B
 }
 
 interface EitherPrototype<E, A, T> extends Serializable, EQ, Chainable<E, A>, Foldable<E, A, T> {}

@@ -1,12 +1,11 @@
-import { maybe } from '../../src/maybe/maybe'
+import { just, maybe } from '../../src/maybe/maybe'
 import { left, right } from '../../src/either/either'
-import { Either } from '../../src'
 
 const SCORES = ['love', 'fifteen', 'thirty', 'forty']
 
 const MAX_SCORE_INDEX = SCORES.length - 1
 
-const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
+const capitalize = (s: string) => just(s.charAt(0).toUpperCase() + s.slice(1))
 
 const getAllScoreText = (player: Player) => maybe(SCORES[player.scoreIndex]).flatMap(capitalize).fold()
 
@@ -19,8 +18,6 @@ const createPlayer = (name: string): Player => ({
 	name,
 	scoreIndex: 0,
 })
-
-const createScoreMessage: (data: string) => Either<string, string> = left
 
 type GameState = { players: [Player, Player] }
 
@@ -65,12 +62,12 @@ export const createGame = (firstPlayerName: string, secondPlayerName: string): G
 	return {
 		getScore: (): string =>
 			right<string, string>(`${getAllScoreText(playerOne)},${getAllScoreText(playerTwo)}`)
-				.flatMap((it) => (isDeuce() ? createScoreMessage('Deuce') : it))
-				.flatMap((it) => (hasPlayerOneAdvantage() ? createScoreMessage(`Advantage ${playerOne.name}`) : it))
-				.flatMap((it) => (hasPlayerTwoAdvantage() ? createScoreMessage(`Advantage ${playerTwo.name}`) : it))
-				.flatMap((it) => (isPlayerOneWinning() ? createScoreMessage(`${playerOne.name} wins`) : it))
-				.flatMap((it) => (isPlayerTwoWinning() ? createScoreMessage(`${playerTwo.name} wins`) : it))
-				.flatMap((it) => (isAll() ? createScoreMessage(`${getAllScoreText(playerOne)} all`) : it))
+				.flatMap((it) => (isDeuce() ? left('Deuce') : it))
+				.flatMap((it) => (hasPlayerOneAdvantage() ? left(`Advantage ${playerOne.name}`) : it))
+				.flatMap((it) => (hasPlayerTwoAdvantage() ? left(`Advantage ${playerTwo.name}`) : it))
+				.flatMap((it) => (isPlayerOneWinning() ? left(`${playerOne.name} wins`) : it))
+				.flatMap((it) => (isPlayerTwoWinning() ? left(`${playerTwo.name} wins`) : it))
+				.flatMap((it) => (isAll() ? left(`${getAllScoreText(playerOne)} all`) : it))
 				.fold(),
 		playerOneScores: () => score(playerOne),
 		playerTwoScores: () => score(playerTwo),

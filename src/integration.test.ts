@@ -6,9 +6,9 @@ describe('Integration', () => {
 		const actual = right<string, number>(0)
 			.flatMap((it) => it + 10)
 			.flatMap((it) => it * 2)
-			.flatMap(() => left<string, number>('nooo'))
-			.mapLeft(() => right<Error, number>(100))
-			.flatMap((it) => (it === 100 ? right<Error, string>('happy') : left<Error, string>(new Error())))
+			.flatMap(() => left('nooo'))
+			.mapLeft(() => right(100))
+			.flatMap((it) => (it === 100 ? 'happy' : 'very sad'))
 			.fold(
 				() => 'very sad',
 				(it) => it
