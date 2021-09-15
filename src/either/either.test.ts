@@ -6,7 +6,7 @@ const runMonadChecks = (adt: Either<Error, number>, of: (value: any) => Either<E
 		expect(of(adt).equals(adt)).toBe(true)
 	})
 
-	it('has identity', () => {
+	it('has reflexivity', () => {
 		expect(adt.equals(adt)).toBe(true)
 	})
 
@@ -48,7 +48,6 @@ describe('Either', () => {
 			it('asserts equality', () => {
 				expect(adt.equals(right(2))).toBeTruthy()
 				expect(adt.equals(right(1))).toBeFalsy()
-				expect(adt.equals(left(2))).toBeFalsy()
 			})
 
 			it('asserts deep equality', () => {
@@ -174,7 +173,6 @@ describe('Either', () => {
 
 		describe('equals', () => {
 			it('asserts equality', () => {
-				expect(adt.equals(right(error))).toBeFalsy()
 				expect(adt.equals(left(error))).toBeTruthy()
 			})
 
