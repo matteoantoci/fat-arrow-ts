@@ -1,9 +1,16 @@
 export type AnyEither = Either<any, any>
 
-interface Serializable {
+export type Variants = 'Right' | 'Left'
+
+export type EitherJSON<T> = {
+	variant: Variants
+	value: T
+}
+
+export interface Serializable<T> {
 	toString(): string
 
-	toJSON(): never
+	toJSON(): EitherJSON<T>
 }
 
 interface EQ<E, A> {
@@ -28,14 +35,14 @@ interface Foldable<E, A, T> {
 	fold<B>(ifLeft: (left: E) => B, ifRight: (right: A) => B): B
 }
 
-interface EitherPrototype<E, A, T> extends Serializable, EQ<E, A>, Chainable<E, A>, Foldable<E, A, T> {}
+interface EitherPrototype<E, A, T> extends EQ<E, A>, Chainable<E, A>, Foldable<E, A, T> {}
 
-export interface Right<E, A> extends EitherPrototype<E, A, A> {
+export interface Right<E, A> extends Serializable<A>, EitherPrototype<E, A, A> {
 	isLeft: false
 	isRight: true
 }
 
-export interface Left<E, A> extends EitherPrototype<E, A, E> {
+export interface Left<E, A> extends Serializable<E>, EitherPrototype<E, A, E> {
 	isLeft: true
 	isRight: false
 }

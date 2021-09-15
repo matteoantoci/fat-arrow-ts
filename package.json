@@ -20,8 +20,7 @@
   },
   "homepage": "https://github.com/matteoantoci/fat-arrow-ts#readme",
   "dependencies": {
-    "fast-deep-equal": "^3.1.3",
-    "fast-safe-stringify": "^2.1.1"
+    "fast-deep-equal": "^3.1.3"
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",

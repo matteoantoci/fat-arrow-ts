@@ -1,6 +1,6 @@
 import equal from 'fast-deep-equal/es6/react'
-import safeStringify from 'fast-safe-stringify'
 import { Either, Left, Right } from '../types'
+import { createSerializable } from './serializer'
 
 const PROTOTYPE = {}
 
@@ -14,21 +14,11 @@ const isEither = <E, A>(input: E | A | Either<E, A>): input is Either<E, A> => {
 
 const seal = <T>(adt: T): T => Object.freeze(Object.assign(Object.create(PROTOTYPE), adt))
 
-const toJSON = (): never => {
-	throw new Error(`Either value can't be serialized to JSON. Please fold it first.`)
-}
-
-const isError = (data: any): data is Error => Object.getPrototypeOf(data) === Error.prototype
-
-const toString = (kind: string, data: any) =>
-	isError(data) ? `${kind}(${data.name}("${data.message}"))` : `${kind}(${safeStringify(data)})`
-
 const createRight = <E, A>(data: A) =>
 	seal<Right<E, A>>({
+		...createSerializable('Right', data),
 		isLeft: false,
 		isRight: true,
-		toJSON,
-		toString: () => toString('Right', data),
 		equals: (operand) =>
 			operand.fold(
 				() => false,
@@ -45,10 +35,9 @@ const createRight = <E, A>(data: A) =>
 
 const createLeft = <E, A>(data: E) =>
 	seal<Left<E, A>>({
+		...createSerializable('Left', data),
 		isLeft: true,
 		isRight: false,
-		toString: () => toString('Left', data),
-		toJSON,
 		equals: (operand) =>
 			operand.fold(
 				(it) => equal(it, data),

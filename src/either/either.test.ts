@@ -139,22 +139,12 @@ describe('Either', () => {
 		})
 
 		describe('when serialized', () => {
-			describe('toString', () => {
-				it('is serializable', () => {
-					expect(adt.toString()).toBe('Right(2)')
-					expect(right(1).toString()).toBe('Right(1)')
-					expect(right(true).toString()).toBe('Right(true)')
-					expect(right('some string').toString()).toBe('Right("some string")')
-					expect(right({ foo: 'bar' }).toString()).toBe('Right({"foo":"bar"})')
-				})
+			it('serializes to string', () => {
+				expect(adt.toString()).toBe('Right(2)')
 			})
 
-			describe('toJSON', () => {
-				it('throws error', () => {
-					expect(() => {
-						JSON.stringify(adt)
-					}).toThrowError(`Either value can't be serialized to JSON. Please fold it first.`)
-				})
+			it('serializes to JSON', () => {
+				expect(JSON.stringify(adt)).toBe('{"variant":"Right","value":2}')
 			})
 		})
 	})
@@ -266,22 +256,12 @@ describe('Either', () => {
 		})
 
 		describe('when serialized', () => {
-			describe('toString', () => {
-				it('is serializable', () => {
-					expect(adt.toString()).toBe('Left(Error("error"))')
-					expect(left(1).toString()).toBe('Left(1)')
-					expect(left(true).toString()).toBe('Left(true)')
-					expect(left('some string').toString()).toBe('Left("some string")')
-					expect(left({ foo: 'bar' }).toString()).toBe('Left({"foo":"bar"})')
-				})
+			it('serializes to string', () => {
+				expect(adt.toString()).toBe('Left(Error("error"))')
 			})
 
-			describe('toJSON', () => {
-				it('throws error', () => {
-					expect(() => {
-						JSON.stringify(adt)
-					}).toThrowError(`Either value can't be serialized to JSON. Please fold it first.`)
-				})
+			it('serializes to JSON', () => {
+				expect(JSON.stringify(adt)).toBe('{"variant":"Left","value":{}}')
 			})
 		})
 	})
