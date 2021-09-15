@@ -1,5 +1,5 @@
 import { leftOf, rightOf } from './either'
-import { AnyEither, Either, FlatMapArgs, Left, MapLeftArgs, Right } from '../types'
+import { Either, FlatMapArgs, Left, MapLeftArgs, Right } from '../types'
 
 export const tryCatch = <A>(
 	tryFn: () => FlatMapArgs<Error, A>,
@@ -12,11 +12,11 @@ export const tryCatch = <A>(
 	}
 }
 
-type EitherPartition = [Left<any, any>[], Right<any, any>[]]
+type EitherPartition<E, A> = [Left<E, A>[], Right<E, A>[]]
 
-export const partition = (array: AnyEither[]): EitherPartition => {
-	const seed: EitherPartition = [[], []]
-	return array.reduce((acc, item): EitherPartition => {
+export const partition = <E, A>(array: Either<E, A>[]): EitherPartition<E, A> => {
+	const seed: EitherPartition<E, A> = [[], []]
+	return array.reduce((acc, item): EitherPartition<E, A> => {
 		const [lefts, rights] = acc
 		if (item.isLeft) lefts.push(item)
 		if (item.isRight) rights.push(item)

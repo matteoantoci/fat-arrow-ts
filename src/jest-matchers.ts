@@ -1,7 +1,7 @@
 import { matcherHint, printExpected, printReceived } from 'jest-matcher-utils'
 import { leftOf, rightOf } from './either/either'
-import { AnyEither } from './types'
 import { nothing } from './maybe/maybe'
+import { Either } from './types'
 
 declare global {
 	namespace jest {
@@ -21,6 +21,7 @@ declare global {
 	}
 }
 
+type AnyEither = Either<any, any>
 type TestValues = { expected: AnyEither; received: AnyEither }
 
 const getLastCallArgument = (mock: jest.Mock) => {

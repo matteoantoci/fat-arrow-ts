@@ -1,5 +1,3 @@
-export type AnyEither = Either<any, any>
-
 export type Variants = 'Right' | 'Left'
 
 export type EitherJSON<T> = {
