@@ -30,6 +30,7 @@ const createRight = <E, A>(data: A) =>
 			if (!isEither<any, any>(next)) return rightOf(next)
 			return next.isLeft ? leftOf<E, any>(next) : rightOf<E, any>(next)
 		},
+		// ap: (fn) => fn(rightOf(data)),
 		mapLeft: () => rightOf(data),
 	})
 
@@ -45,6 +46,7 @@ const createLeft = <E, A>(data: E) =>
 			),
 		fold: <B>(ifLeft?: (value: E) => B) => (ifLeft ? ifLeft(data) : data),
 		flatMap: () => leftOf(data),
+		// ap: (fn) => fn(leftOf(data)),
 		mapLeft: (ifLeft) => {
 			const next = ifLeft(data)
 			if (!isEither<any, any>(next)) return leftOf(next)

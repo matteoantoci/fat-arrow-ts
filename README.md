@@ -635,4 +635,4 @@ console.log(mySafeValue.isLeft) // true
 ## Examples
 
 * [Game of life](examples/game-of-life/game-of-life.ts)
-* [Tennis game](examples/tennis-game/game.ts)
+* [Tennis game](examples/tennis-game/tennis-game.ts)

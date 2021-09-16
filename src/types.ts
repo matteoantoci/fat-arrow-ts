@@ -1,14 +1,9 @@
 export type Variants = 'Right' | 'Left'
 
-export type EitherJSON<T> = {
-	variant: Variants
-	value: T
-}
-
-export interface Serializable<T> {
+export interface Serializable {
 	toString(): string
 
-	toJSON(): EitherJSON<T>
+	toJSON(): object
 }
 
 interface EQ<E, A> {
@@ -20,27 +15,29 @@ export type FlatMapArgs<E, A, B = A> = A | B | Either<E, A> | Either<E, B>
 export type MapLeftArgs<E, A, G = E> = E | G | Either<G, A> | Either<E, A>
 
 interface Chainable<E, A> {
-	flatMap<B = A>(ifRight: (right: A) => FlatMapArgs<E, A, B>): Either<E, B>
+	flatMap<B = A>(ifRight: (right: A) => A | B | Either<E, A> | Either<E, B>): Either<E, B>
 
 	mapLeft<G = E>(ifLeft: (left: E) => MapLeftArgs<E, A, G>): Either<G, A>
+
+	// ap<B = A>(fn: (either: Either<E, A>) => FlatMapArgs<E, A, B>): Either<E, B>
 }
 
-interface Foldable<E, A, T> {
-	fold(): T
+interface Foldable<E, A> {
+	fold<B>(ifLeft: (left: E) => B, ifRight: (right: A) => B): B
 
 	fold(ifLeft: (left: E) => A): A
 
-	fold<B>(ifLeft: (left: E) => B, ifRight: (right: A) => B): B
+	fold(): A | E
 }
 
-interface EitherPrototype<E, A, T> extends EQ<E, A>, Chainable<E, A>, Foldable<E, A, T> {}
+interface EitherPrototype<E, A> extends Serializable, EQ<E, A>, Chainable<E, A>, Foldable<E, A> {}
 
-export interface Right<E, A> extends Serializable<A>, EitherPrototype<E, A, A> {
+export interface Right<E, A> extends EitherPrototype<E, A> {
 	isLeft: false
 	isRight: true
 }
 
-export interface Left<E, A> extends Serializable<E>, EitherPrototype<E, A, E> {
+export interface Left<E, A> extends EitherPrototype<E, A> {
 	isLeft: true
 	isRight: false
 }
