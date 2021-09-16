@@ -7,10 +7,12 @@ const wrap = (variant: Variants, serialized: string): string => `${variant}(${se
 
 const stringify = <T>(value: T) => (isError(value) ? `${value.name}("${value.message}")` : JSON.stringify(value))
 
-export const createSerializable = <T>(variant: Variants, value: T): Serializable<T> => ({
+const toJSON = () => {
+	console.warn(`Either values can't be serialized to JSON. Please, "fold" them first.`)
+	return {}
+}
+
+export const createSerializable = <T>(variant: Variants, value: T): Serializable => ({
 	toString: constant(() => wrap(variant, stringify(value))),
-	toJSON: constant(() => {
-		console.warn(`Either values should not be serialized directly to JSON. Please, consider applying "fold" first.`)
-		return { variant, value }
-	}),
+	toJSON,
 })

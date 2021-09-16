@@ -144,7 +144,7 @@ describe('Either', () => {
 			})
 
 			it('serializes to JSON', () => {
-				expect(JSON.stringify(adt)).toBe('{"variant":"Right","value":2}')
+				expect(JSON.stringify(adt)).toBe('{}')
 			})
 		})
 	})
@@ -261,7 +261,7 @@ describe('Either', () => {
 			})
 
 			it('serializes to JSON', () => {
-				expect(JSON.stringify(adt)).toBe('{"variant":"Left","value":{}}')
+				expect(JSON.stringify(adt)).toBe('{}')
 			})
 		})
 	})

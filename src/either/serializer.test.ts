@@ -1,51 +1,48 @@
 import { createSerializable } from './serializer'
 
 describe('Serializer', () => {
-	describe('when value is Number', () => {
+	describe('when serialized to JSON', () => {
 		const serializable = createSerializable('Right', 1)
 
-		it('serializes to string', () => {
-			expect(serializable.toString()).toBe('Right(1)')
+		it('prevents JSON serialization', () => {
+			expect(JSON.stringify(serializable)).toBe('{}')
 		})
 
-		it('serializes to JSON', () => {
-			expect(JSON.stringify(serializable)).toBe('{"variant":"Right","value":1}')
+		it('logs warning', () => {
+			jest.spyOn(console, 'warn')
+
+			JSON.stringify(serializable)
+
+			expect(console.warn).toHaveBeenNthCalledWith(
+				1,
+				`Either values can't be serialized to JSON. Please, "fold" them first.`
+			)
+		})
+	})
+
+	describe('when value is Number', () => {
+		it('serializes to string', () => {
+			expect(createSerializable('Right', 1).toString()).toBe('Right(1)')
 		})
 	})
 
 	describe('when value is Boolean', () => {
-		const serializable = createSerializable('Right', true)
-
 		it('serializes to string', () => {
-			expect(serializable.toString()).toBe('Right(true)')
-		})
-
-		it('serializes to JSON', () => {
-			expect(JSON.stringify(serializable)).toBe('{"variant":"Right","value":true}')
+			expect(createSerializable('Right', true).toString()).toBe('Right(true)')
 		})
 	})
 
 	describe('when value is Number', () => {
-		const serializable = createSerializable('Right', 'some string')
-
 		it('serializes to string', () => {
-			expect(serializable.toString()).toBe('Right("some string")')
-		})
-
-		it('serializes to JSON', () => {
-			expect(JSON.stringify(serializable)).toBe('{"variant":"Right","value":"some string"}')
+			expect(createSerializable('Right', 'some string').toString()).toBe('Right("some string")')
 		})
 	})
 
 	describe('when value is Object', () => {
-		const serializable = createSerializable('Right', { foo: 'foo', bar: 'bar' })
-
 		it('serializes to string', () => {
-			expect(serializable.toString()).toBe('Right({"foo":"foo","bar":"bar"})')
-		})
-
-		it('serializes to JSON', () => {
-			expect(JSON.stringify(serializable)).toBe('{"variant":"Right","value":{"foo":"foo","bar":"bar"}}')
+			expect(createSerializable('Right', { foo: 'foo', bar: 'bar' }).toString()).toBe(
+				'Right({"foo":"foo","bar":"bar"})'
+			)
 		})
 	})
 
@@ -56,10 +53,6 @@ describe('Serializer', () => {
 
 		it('serializes to string', () => {
 			expect(serializable.toString()).toBe('Right(Error("error"))')
-		})
-
-		it('serializes to JSON', () => {
-			expect(JSON.stringify(serializable)).toBe('{"variant":"Right","value":{}}')
 		})
 	})
 })
