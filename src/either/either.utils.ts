@@ -1,9 +1,9 @@
 import { leftOf, rightOf } from './either'
-import { Either, FlatMapArgs, Left, MapLeftArgs, Right } from '../types'
+import { Either, Left, Right } from '../types'
 
 export const tryCatch = <A>(
-	tryFn: () => FlatMapArgs<Error, A>,
-	catchFn: (e: any) => MapLeftArgs<Error, A>
+	tryFn: () => A | Either<Error, A>,
+	catchFn: (e: any) => Error | Either<Error, A>
 ): Either<Error, A> => {
 	try {
 		return rightOf(tryFn())

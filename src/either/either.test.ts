@@ -11,7 +11,7 @@ const runMonadChecks = (adt: Either<Error, number>, of: (value: any) => Either<E
 	})
 
 	it('has left identity', () => {
-		const f = (a: any) => of(a).flatMap((x: number) => x * 2)
+		const f = (a: any) => of(a).flatMap((x: number) => of(x * 2))
 
 		expect(adt.flatMap(f).equals(f(adt))).toBe(true)
 	})
@@ -21,8 +21,8 @@ const runMonadChecks = (adt: Either<Error, number>, of: (value: any) => Either<E
 	})
 
 	it('has associativity', () => {
-		const f = (a: any) => of(a).flatMap((x: number) => x * 2)
-		const g = (a: any) => of(a).flatMap((x: number) => x + 2)
+		const f = (a: any) => of(a).flatMap((x: number) => of(x * 2))
+		const g = (a: any) => of(a).flatMap((x: number) => of(x + 2))
 
 		adt
 			.flatMap(f)
@@ -76,6 +76,14 @@ describe('Either', () => {
 				const actual = adt.flatMap(() => newAdt)
 
 				expect(actual).toBeLeft(newAdt)
+			})
+
+			it('supports nested return', () => {
+				const newAdt = right<Error, number>(999)
+
+				const actual = adt.flatMap(() => right(newAdt))
+
+				expect(actual).toBeRight(right(newAdt))
 			})
 		})
 
@@ -217,6 +225,14 @@ describe('Either', () => {
 				const actual = adt.mapLeft(() => newAdt)
 
 				expect(actual).toBeLeft(newAdt)
+			})
+
+			it('supports nested return', () => {
+				const newAdt = left<Error, number>(new Error())
+
+				const actual = adt.mapLeft(() => left(newAdt))
+
+				expect(actual).toBeLeft(left(newAdt))
 			})
 		})
 

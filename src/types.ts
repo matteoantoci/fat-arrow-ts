@@ -15,7 +15,7 @@ export type FlatMapArgs<E, A, B = A> = A | B | Either<E, A> | Either<E, B>
 export type MapLeftArgs<E, A, G = E> = E | G | Either<G, A> | Either<E, A>
 
 interface Chainable<E, A> {
-	flatMap<B = A>(ifRight: (right: A) => A | B | Either<E, A> | Either<E, B>): Either<E, B>
+	flatMap<B = A>(ifRight: (right: A) => FlatMapArgs<E, A, B>): Either<E, B>
 
 	mapLeft<G = E>(ifLeft: (left: E) => MapLeftArgs<E, A, G>): Either<G, A>
 
