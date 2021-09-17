@@ -27,6 +27,7 @@ const createRight = <E, A>(data: A) =>
 		fold: <B>(_?: any, ifRight?: (data: A) => B) => (ifRight ? ifRight(data) : data),
 		flatMap: (ifRight) => {
 			const next = ifRight(data)
+			if (!isEither<E, any>(next)) return rightOf(next)
 			return next.isLeft ? leftOf<E, any>(next) : rightOf<E, any>(next)
 		},
 		// ap: (fn) => fn(rightOf(data)),
@@ -48,6 +49,7 @@ const createLeft = <E, A>(data: E) =>
 		// ap: (fn) => fn(leftOf(data)),
 		mapLeft: (ifLeft) => {
 			const next = ifLeft(data)
+			if (!isEither<any, A>(next)) return leftOf(next)
 			return next.isRight ? rightOf<any, A>(next) : leftOf<any, A>(next)
 		},
 	})
@@ -56,16 +58,10 @@ export const rightOf = <E, A>(data: A | Either<E, A>): Either<E, A> => (isEither
 
 export const leftOf = <E, A>(data: E | Either<E, A>): Either<E, A> => (isEither(data) ? data : createLeft(data))
 
-export const right = <
-	E = [Error, 'Cannot infer E type in right<E, A>'],
-	A = [Error, 'Cannot infer A type in right<E, A>']
->(
+export const right = <E = [Error, 'Specify Left type in right()'], A = [Error, 'Specify Right type in right()']>(
 	value: A
 ): Either<E, A> => createRight(value)
 
-export const left = <
-	E = [Error, 'Cannot infer E type in left<E, A>'],
-	A = [Error, 'Cannot infer A type in left<E, A>']
->(
+export const left = <E = [Error, 'Specify Left type in left()'], A = [Error, 'Specify Right type in left()']>(
 	value: E
 ): Either<E, A> => createLeft(value)

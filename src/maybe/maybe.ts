@@ -1,9 +1,9 @@
 import { left, right } from '../either/either'
 import { Maybe } from '../types'
 
-export const just = <A>(value: NonNullable<A>): Maybe<A> => right<void, A>(value)
+export const just = <A>(value: NonNullable<A>): Maybe<A> => right(value)
 
-export const nothing = <A>(): Maybe<A> => left<void, A>(undefined)
+export const nothing = <A = [Error, 'Specify Right type nothing()']>(): Maybe<A> => left(undefined)
 
 const isNonNullable = <T>(data: T): data is NonNullable<T> => {
 	try {

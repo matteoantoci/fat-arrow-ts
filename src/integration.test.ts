@@ -4,11 +4,11 @@ import { maybe } from './maybe/maybe'
 describe('Integration', () => {
 	it('can be chained', () => {
 		const actual: string = right<string, number>(0)
-			.flatMap((it) => right(it + 10))
-			.flatMap((it) => right(it * 2))
-			.flatMap(() => left('nooo'))
+			.flatMap((it) => it + 10)
+			.flatMap((it) => it * 2)
+			.flatMap((it) => (it === 20 ? left('yessss') : it))
 			.mapLeft(() => right(100))
-			.flatMap((it) => right(it === 100 ? 'happy' : 'very sad'))
+			.flatMap((it) => (it === 100 ? 'happy' : 'very sad'))
 			.fold(
 				() => 'very sad',
 				(it) => it

@@ -10,14 +10,10 @@ interface EQ<E, A> {
 	equals(value: Either<E, A>): boolean
 }
 
-export type FlatMapArgs<E, A, B = A> = Either<E, A> | Either<E, B>
-
-export type MapLeftArgs<E, A, G = E> = Either<G, A> | Either<E, A>
-
 interface Chainable<E, A> {
-	flatMap<B = A>(ifRight: (right: A) => FlatMapArgs<E, A, B>): Either<E, B>
+	flatMap<B = A>(ifRight: (right: A) => A | B | Either<E, A> | Either<E, B>): Either<E, B>
 
-	mapLeft<G = E>(ifLeft: (left: E) => MapLeftArgs<E, A, G>): Either<G, A>
+	mapLeft<G = E>(ifLeft: (left: E) => E | G | Either<G, A> | Either<E, A>): Either<G, A>
 
 	// ap<B = A>(fn: (either: Either<E, A>) => FlatMapArgs<E, A, B>): Either<E, B>
 }
