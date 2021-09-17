@@ -4,7 +4,7 @@ import { createSerializable } from './serializer'
 
 const PROTOTYPE = {}
 
-const isEither = <E, A>(input: E | A | Either<E, A>): input is Either<E, A> => {
+export const isEither = <E, A>(input: E | A | Either<E, A>): input is Either<E, A> => {
 	try {
 		return Object.getPrototypeOf(input) === PROTOTYPE
 	} catch (_) {
