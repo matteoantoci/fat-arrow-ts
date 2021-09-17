@@ -56,12 +56,6 @@ describe('Either', () => {
 		})
 
 		describe('flatMap', () => {
-			it('supports data return', () => {
-				const actual = adt.flatMap(() => 999)
-
-				expect(actual).toBeRight(999)
-			})
-
 			it('supports right return', () => {
 				const newAdt = right<Error, number>(999)
 
@@ -88,12 +82,6 @@ describe('Either', () => {
 		})
 
 		describe('mapLeft', () => {
-			it('supports data return', () => {
-				const actual = adt.mapLeft(() => 999)
-
-				expect(actual).toBeRight(adt)
-			})
-
 			it('supports right return', () => {
 				const newAdt = right<Error, number>(999)
 
@@ -181,12 +169,6 @@ describe('Either', () => {
 		})
 
 		describe('flatMap', () => {
-			it('supports data return', () => {
-				const actual = adt.flatMap(() => 999)
-
-				expect(actual).toBeLeft(adt)
-			})
-
 			it('supports right return', () => {
 				const newAdt = right<Error, number>(999)
 
@@ -205,12 +187,6 @@ describe('Either', () => {
 		})
 
 		describe('mapLeft', () => {
-			it('supports data return', () => {
-				const actual = adt.mapLeft(() => 999)
-
-				expect(actual).toBeLeft(999)
-			})
-
 			it('supports right return', () => {
 				const newAdt = right(999)
 

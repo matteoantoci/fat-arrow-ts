@@ -89,11 +89,11 @@ export const createGameOfLife = (width: number, height: number): GameOfLife => {
 
 				if (livingNeighbours === 3) return createAliveCell()
 
-				return cell.flatMap((it) => (livingNeighbours < 2 || livingNeighbours > 3 ? createDeadCell() : it))
+				return cell.flatMap((it) => (livingNeighbours < 2 || livingNeighbours > 3 ? createDeadCell() : right(it)))
 			})
 		)
 
-	const computeNextGeneration = () => {
+	const computeNextGeneration = (): void => {
 		state.grid = createNextGeneration()
 	}
 
