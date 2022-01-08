@@ -32,7 +32,7 @@ Include this in your setup file
 ```ts
 // In setupTests.ts
 
-import 'fat-arrow-ts/jest-matchers'
+import 'fat-arrow-ts/src/jest-matchers'
 ```
 
 
