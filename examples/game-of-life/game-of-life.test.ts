@@ -167,17 +167,19 @@ describe('Game of life', () => {
 	})
 
 	it('testAnHandMadeGrid', () => {
-		gameOfLife.setLivingCell(1, 4);
-		gameOfLife.setLivingCell(2, 3);
-		gameOfLife.setLivingCell(2, 4);
+		gameOfLife.setLivingCell(1, 4)
+		gameOfLife.setLivingCell(2, 3)
+		gameOfLife.setLivingCell(2, 4)
 
 		gameOfLife.computeNextGeneration()
 
-		expect(gameOfLife.dumpGrid()).toBe(`
+		expect(gameOfLife.dumpGrid()).toBe(
+			`
 ........
 ...**...
 ...**...
 ........
-		`.trim())
+		`.trim()
+		)
 	})
 })

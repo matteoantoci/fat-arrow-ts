@@ -1,13 +1,9 @@
-export type { Either } from './either/either.types'
+export type { Either, Maybe, Right, Left } from './types'
+
 export { right, left } from './either/either'
 
-export type { Maybe } from './maybe/maybe.types'
-export { just, none, maybe } from './maybe/maybe'
+export { tryCatch, partition } from './either/either.utils'
 
-export type { Result } from './result/result'
-export { tryCatch } from './result/result'
+export { just, nothing, maybe } from './maybe/maybe'
 
-export type { Validation } from './validation/validation'
-export { validate, fail, pass } from './validation/validation'
-
-export { repeat, rotate, chunk, once } from './lambda'
+export { repeat, rotate, chunk, constant, noop, maybeFirst, maybeLast } from './lambda/lambda'

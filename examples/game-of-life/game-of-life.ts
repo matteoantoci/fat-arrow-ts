@@ -1,5 +1,5 @@
 import { Either, left, maybe, right } from '../../src'
-import { repeat } from '../../src/lambda'
+import { repeat } from '../../src/lambda/lambda'
 
 type Cell = Either<string, string>
 
@@ -45,7 +45,7 @@ const createInitialState = (width: number, height: number): GameOfLifeState => (
 export const createGameOfLife = (width: number, height: number): GameOfLife => {
 	const state: GameOfLifeState = createInitialState(width, height)
 
-	const getCell = (row: number, col: number) => maybe(state.grid[row]).flatMap((it) => maybe(it[col]))
+	const getCell = (row: number, col: number) => maybe(state.grid[row]).mapRight((it) => maybe(it[col]))
 
 	const setLivingCell = (row: number, col: number): void => {
 		maybe(state.grid[row]).fold(
@@ -89,11 +89,11 @@ export const createGameOfLife = (width: number, height: number): GameOfLife => {
 
 				if (livingNeighbours === 3) return createAliveCell()
 
-				return cell.mapIf(() => livingNeighbours < 2 || livingNeighbours > 3, createDeadCell)
+				return cell.mapRight((it) => (livingNeighbours < 2 || livingNeighbours > 3 ? createDeadCell() : right(it)))
 			})
 		)
 
-	const computeNextGeneration = () => {
+	const computeNextGeneration = (): void => {
 		state.grid = createNextGeneration()
 	}
 

@@ -1,7 +1,8 @@
-import { createGame, Game } from './game'
+import { createGame, TennisGame } from './tennis-game'
+import { repeat } from '../../src'
 
 describe('Tennis game', () => {
-	let game: Game
+	let game: TennisGame
 
 	beforeEach(() => {
 		game = createGame('Foo', 'Bar')
@@ -115,8 +116,8 @@ describe('Tennis game', () => {
 		})
 	})
 
-	const setScore = (game: Game, p1Score: number, p2Score: number) => {
-		Array(p1Score).fill(null).forEach(game.playerOneScores)
-		Array(p2Score).fill(null).forEach(game.playerTwoScores)
+	const setScore = (game: TennisGame, p1Score: number, p2Score: number) => {
+		repeat(p1Score, game.playerOneScores)
+		repeat(p2Score, game.playerTwoScores)
 	}
 })
