@@ -2,7 +2,14 @@ import { constant } from '../lambda/lambda'
 import { Serializable, Variants } from '../types'
 import { isEither } from './either'
 
-const isError = (data: any): data is Error => data instanceof Error || Object.getPrototypeOf(data) === Error.prototype
+const isError = (data: any): data is Error => {
+	if (data instanceof Error) return true
+	try {
+		return Object.getPrototypeOf(data) === Error.prototype
+	} catch (_) {
+		return false
+	}
+}
 
 const wrap = (variant: Variants, serialized: string): string => `${variant}(${serialized})`
 

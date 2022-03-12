@@ -20,10 +20,8 @@ interface Chainable<E, A> {
 
 interface Foldable<E, A> {
 	fold<B>(ifLeft: (left: E) => B, ifRight: (right: A) => B): B
-
 	fold(ifLeft: (left: E) => A): A
-
-	fold(): A extends E ? A : never
+	fold(): E | A
 }
 
 interface EitherPrototype<E, A> extends Serializable, EQ<E, A>, Chainable<E, A>, Foldable<E, A> {}
