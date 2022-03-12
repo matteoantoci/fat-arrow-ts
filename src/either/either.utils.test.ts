@@ -23,9 +23,9 @@ describe('Either utils', () => {
 						() => {
 							throw new Error('some error')
 						},
-						(it) => it
+						(it) => ({ data: it.message })
 					)
-				).toBeLeft(new Error('some error'))
+				).toBeLeft({ data: 'some error' })
 			})
 		})
 	})
