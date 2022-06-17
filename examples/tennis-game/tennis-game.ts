@@ -12,7 +12,10 @@ const MAX_SCORE_INDEX = SCORES.length - 1
 
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 
-const getAllScoreText = (player: Player) => maybe(SCORES[player.scoreIndex]).mapRight(capitalize).fold()
+const getAllScoreText = (player: Player) =>
+	maybe(SCORES[player.scoreIndex])
+		.flatMap(capitalize)
+		.getOrElse(() => '')
 
 const createPlayer = (name: string): Player => ({
 	name,
@@ -53,24 +56,24 @@ export const createGame = (firstPlayerName: string, secondPlayerName: string): T
 
 	const handleDraw = (): MaybeScore =>
 		isDeuce()
-			.mapRight(() => 'Deuce')
-			.mapLeft(() => isAll().mapRight(() => `${getAllScoreText(playerOne)} all`))
+			.flatMap(() => 'Deuce')
+			.mapLeft(() => isAll().flatMap(() => `${getAllScoreText(playerOne)} all`))
 
 	const handleAdvantage = (): MaybeScore => {
 		const rank = getRank()
 		const spread = Math.abs(rank)
 		const topPlayer = rank > 0 ? playerOne : playerTwo
 		return allCanWin()
-			.mapRight(() => (spread === 1 ? `Advantage ${topPlayer.name}` : nothing()))
+			.flatMap(() => (spread === 1 ? `Advantage ${topPlayer.name}` : nothing()))
 			.mapLeft(() => (canWin(topPlayer) && spread >= 2 ? just(`${topPlayer.name} wins`) : nothing()))
 	}
 
 	return {
 		getScore: (): string =>
 			isDraw()
-				.mapRight(handleDraw)
+				.flatMap(handleDraw)
 				.mapLeft(handleAdvantage)
-				.fold(() => `${getAllScoreText(playerOne)},${getAllScoreText(playerTwo)}`),
+				.getOrElse(() => `${getAllScoreText(playerOne)},${getAllScoreText(playerTwo)}`),
 		playerOneScores: () => score(playerOne),
 		playerTwoScores: () => score(playerTwo),
 	}

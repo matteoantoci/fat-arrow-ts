@@ -11,23 +11,23 @@ const runMonadChecks = (adt: Either<Error, number>, of: (value: any) => Either<E
 	})
 
 	it('has left identity', () => {
-		const f = (a: any) => of(a).mapRight((x: number) => of(x * 2))
+		const f = (a: any) => of(a).flatMap((x: number) => of(x * 2))
 
-		expect(adt.mapRight(f).equals(f(adt))).toBe(true)
+		expect(adt.flatMap(f).equals(f(adt))).toBe(true)
 	})
 
 	it('has right identity', () => {
-		expect(adt.mapRight(of).equals(adt)).toBe(true)
+		expect(adt.flatMap(of).equals(adt)).toBe(true)
 	})
 
 	it('has associativity', () => {
-		const f = (a: any) => of(a).mapRight((x: number) => of(x * 2))
-		const g = (a: any) => of(a).mapRight((x: number) => of(x + 2))
+		const f = (a: any) => of(a).flatMap((x: number) => of(x * 2))
+		const g = (a: any) => of(a).flatMap((x: number) => of(x + 2))
 
 		adt
-			.mapRight(f)
-			.mapRight(f)
-			.equals(adt.mapRight((x: any) => f(x).mapRight(g)))
+			.flatMap(f)
+			.flatMap(f)
+			.equals(adt.flatMap((x: any) => f(x).flatMap(g)))
 	})
 }
 
@@ -59,15 +59,15 @@ describe('Either', () => {
 			it('supports right return', () => {
 				const newAdt = right<Error, number>(999)
 
-				const actual = adt.mapRight(() => newAdt)
-
-				expect(actual).toBeRight(newAdt)
+				expect(adt.flatMap(() => newAdt)).toBeRight(newAdt)
+				expect(adt.flatMap(() => right(newAdt))).toBeRight(right(newAdt))
+				expect(adt.flatMap(() => right(newAdt))).not.toBeRight(newAdt)
 			})
 
 			it('supports left return', () => {
 				const newAdt = left<Error, number>(new Error())
 
-				const actual = adt.mapRight(() => newAdt)
+				const actual = adt.flatMap(() => newAdt)
 
 				expect(actual).toBeLeft(newAdt)
 			})
@@ -75,7 +75,7 @@ describe('Either', () => {
 			it('supports nested return', () => {
 				const newAdt = right<Error, number>(999)
 
-				const actual = adt.mapRight(() => right(newAdt))
+				const actual = adt.flatMap(() => right(newAdt))
 
 				expect(actual).toBeRight(right(newAdt))
 			})
@@ -108,20 +108,6 @@ describe('Either', () => {
 				expect(spy).toHaveBeenCalledWith(value)
 			})
 
-			describe('without callbacks', () => {
-				it('folds', () => {
-					expect(right(5).fold()).toBe(5)
-				})
-			})
-
-			describe('with left callback', () => {
-				it('folds', () => {
-					const actual = adt.fold(() => 999)
-
-					expect(actual).toBe(value)
-				})
-			})
-
 			describe('with both callbacks', () => {
 				it('folds', () => {
 					const actual = adt.fold(
@@ -131,6 +117,14 @@ describe('Either', () => {
 
 					expect(actual).toBe('right')
 				})
+			})
+		})
+
+		describe('getOrElse', () => {
+			it('runs the proper callback', () => {
+				const actual = adt.getOrElse(() => 999)
+
+				expect(actual).toBe(value)
 			})
 		})
 
@@ -172,7 +166,7 @@ describe('Either', () => {
 			it('supports right return', () => {
 				const newAdt = right<Error, number>(999)
 
-				const actual = adt.mapRight(() => newAdt)
+				const actual = adt.flatMap(() => newAdt)
 
 				expect(actual).toBeLeft(adt)
 			})
@@ -180,7 +174,7 @@ describe('Either', () => {
 			it('supports left return', () => {
 				const newAdt = left<Error, number>(new Error())
 
-				const actual = adt.mapRight(() => newAdt)
+				const actual = adt.flatMap(() => newAdt)
 
 				expect(actual).toBeLeft(adt)
 			})
@@ -221,20 +215,6 @@ describe('Either', () => {
 				expect(spy).toHaveBeenCalledWith(error)
 			})
 
-			describe('without callbacks', () => {
-				it('folds', () => {
-					expect(left(3).fold()).toBe(3)
-				})
-			})
-
-			describe('with left callback', () => {
-				it('folds', () => {
-					const actual = adt.fold(() => 999)
-
-					expect(actual).toBe(999)
-				})
-			})
-
 			describe('with both callbacks', () => {
 				it('folds', () => {
 					const actual = adt.fold(
@@ -244,6 +224,14 @@ describe('Either', () => {
 
 					expect(actual).toBe('left')
 				})
+			})
+		})
+
+		describe('getOrElse', () => {
+			it('runs the proper callback', () => {
+				const actual = adt.getOrElse(() => 999)
+
+				expect(actual).toBe(999)
 			})
 		})
 

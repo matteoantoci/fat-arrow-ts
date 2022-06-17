@@ -26,25 +26,23 @@ const getValueCheckResults = (fnName: string, values: TestValues, pass: boolean)
 	},
 })
 
-const isRight = (values: TestValues) => values.received.equals(values.expected)
-
-const isLeft = (values: TestValues) => values.received.equals(values.expected)
+const equals = (values: TestValues) => values.received.equals(values.expected)
 
 const toBeRight = <T>(received: AnyEither, expected: T) => {
 	const values: TestValues = { expected: rightOf(expected), received: rightOf(received) }
-	const pass = isRight(values)
+	const pass = equals(values)
 	return getValueCheckResults('toBeRight', values, pass)
 }
 
 const toBeLeft = <T>(received: AnyEither, expected: T) => {
 	const values: TestValues = { expected: leftOf(expected), received: leftOf(received) }
-	const pass = isLeft(values)
+	const pass = equals(values)
 	return getValueCheckResults('toBeLeft', values, pass)
 }
 
 const toBeNothing = (received: AnyEither) => {
 	const values: TestValues = { expected: nothing(), received: leftOf(received) }
-	const pass = isLeft(values)
+	const pass = equals(values)
 	return getValueCheckResults('toBeNothing', values, pass)
 }
 

@@ -3,9 +3,11 @@ import { repeat } from '../../src/lambda/lambda'
 
 type Cell = Either<string, string>
 
-const createAliveCell = (): Cell => right('*')
+const ALIVE_VALUE = '*'
+const createAliveCell = (): Cell => right(ALIVE_VALUE)
 
-const createDeadCell = (): Cell => left('.')
+const DEAD_VALUE = '.'
+const createDeadCell = (): Cell => left(DEAD_VALUE)
 
 type CheckPatterns = [row: number, col: number][]
 
@@ -45,7 +47,7 @@ const createInitialState = (width: number, height: number): GameOfLifeState => (
 export const createGameOfLife = (width: number, height: number): GameOfLife => {
 	const state: GameOfLifeState = createInitialState(width, height)
 
-	const getCell = (row: number, col: number) => maybe(state.grid[row]).mapRight((it) => maybe(it[col]))
+	const getCell = (row: number, col: number) => maybe(state.grid[row]).flatMap((it) => maybe(it[col]))
 
 	const setLivingCell = (row: number, col: number): void => {
 		maybe(state.grid[row]).fold(
@@ -89,7 +91,7 @@ export const createGameOfLife = (width: number, height: number): GameOfLife => {
 
 				if (livingNeighbours === 3) return createAliveCell()
 
-				return cell.mapRight((it) => (livingNeighbours < 2 || livingNeighbours > 3 ? createDeadCell() : right(it)))
+				return cell.flatMap((it) => (livingNeighbours < 2 || livingNeighbours > 3 ? createDeadCell() : right(it)))
 			})
 		)
 
@@ -97,7 +99,8 @@ export const createGameOfLife = (width: number, height: number): GameOfLife => {
 		state.grid = createNextGeneration()
 	}
 
-	const dumpGrid = (): string => state.grid.map((row) => row.map((cell) => cell.fold()).join('')).join('\n')
+	const dumpGrid = (): string =>
+		state.grid.map((row) => row.map((cell) => cell.getOrElse(() => DEAD_VALUE)).join('')).join('\n')
 
 	return {
 		countLivingNeighbours,
