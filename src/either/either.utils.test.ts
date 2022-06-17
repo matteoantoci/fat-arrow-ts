@@ -7,25 +7,17 @@ describe('Either utils', () => {
 	describe('tryCatch', () => {
 		describe('when callback runs successfully', () => {
 			it('runs safely', () => {
-				expect(
-					tryCatch(
-						() => 5,
-						() => Error('some error')
-					)
-				).toBeRight(5)
+				expect(tryCatch(() => 5)).toBeRight(5)
 			})
 		})
 
 		describe('when callback throws', () => {
 			it('runs safely', () => {
 				expect(
-					tryCatch(
-						() => {
-							throw new Error('some error')
-						},
-						(it) => ({ data: it.message })
-					)
-				).toBeLeft({ data: 'some error' })
+					tryCatch(() => {
+						throw new Error('some error')
+					})
+				).toBeLeft(Error('some error'))
 			})
 		})
 	})

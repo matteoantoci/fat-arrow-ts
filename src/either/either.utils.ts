@@ -1,11 +1,11 @@
-import { leftOf, rightOf } from './either'
+import { left, right } from './either'
 import { Either, Left, Right } from '../types'
 
-export const tryCatch = <E, A>(tryFn: () => A | Either<E, A>, catchFn: (e: any) => E | Either<E, A>): Either<E, A> => {
+export const tryCatch = <A>(tryFn: () => A): Either<unknown, A> => {
 	try {
-		return rightOf(tryFn())
-	} catch (e: any) {
-		return leftOf(catchFn(e))
+		return right(tryFn())
+	} catch (e) {
+		return left(e)
 	}
 }
 
