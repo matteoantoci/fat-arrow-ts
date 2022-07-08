@@ -18,7 +18,10 @@ const stringify = <T>(value: T): string => {
 
 	if (isEither(value)) {
 		const variant = value.isRight ? 'Right' : 'Left'
-		return wrap(variant, stringify(value.fold()))
+		return wrap(
+			variant,
+			value.fold(() => '', stringify)
+		)
 	}
 
 	return JSON.stringify(value)
