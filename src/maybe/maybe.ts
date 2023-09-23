@@ -3,8 +3,7 @@ import { Maybe } from '../types'
 
 export const just = <A>(value: NonNullable<A>): Maybe<A> => right(value)
 
-export const nothing = <A = [Error, 'Specify Right type nothing()']>(): Maybe<A> =>
-	left<void, NonNullable<A>>(undefined)
+export const nothing = <A = unknown>(): Maybe<A> => left<void, NonNullable<A>>(undefined)
 
 const isNonNullable = <T>(data: T): data is NonNullable<T> => {
 	try {

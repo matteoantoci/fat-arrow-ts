@@ -1,5 +1,5 @@
-import { just, maybe, nothing } from '../../src/maybe/maybe'
-import { Maybe } from '../../src'
+import { just, maybe, nothing } from '../../src'
+import { Maybe, right } from '../../src'
 
 type Player = {
 	name: string
@@ -14,7 +14,7 @@ const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 
 const getAllScoreText = (player: Player) =>
 	maybe(SCORES[player.scoreIndex])
-		.flatMap(capitalize)
+		.flatMap((it) => right(capitalize(it)))
 		.getOrElse(() => '')
 
 const createPlayer = (name: string): Player => ({
@@ -56,16 +56,16 @@ export const createGame = (firstPlayerName: string, secondPlayerName: string): T
 
 	const handleDraw = (): MaybeScore =>
 		isDeuce()
-			.flatMap(() => 'Deuce')
-			.mapLeft(() => isAll().flatMap(() => `${getAllScoreText(playerOne)} all`))
+			.flatMap(() => right('Deuce'))
+			.mapLeft(() => isAll().flatMap(() => right(`${getAllScoreText(playerOne)} all`)))
 
 	const handleAdvantage = (): MaybeScore => {
 		const rank = getRank()
 		const spread = Math.abs(rank)
 		const topPlayer = rank > 0 ? playerOne : playerTwo
 		return allCanWin()
-			.flatMap(() => (spread === 1 ? `Advantage ${topPlayer.name}` : nothing()))
-			.mapLeft(() => (canWin(topPlayer) && spread >= 2 ? just(`${topPlayer.name} wins`) : nothing()))
+			.flatMap(() => (spread === 1 ? just(`Advantage ${topPlayer.name}`) : nothing<string>()))
+			.mapLeft(() => (canWin(topPlayer) && spread >= 2 ? just(`${topPlayer.name} wins`) : nothing<string>()))
 	}
 
 	return {

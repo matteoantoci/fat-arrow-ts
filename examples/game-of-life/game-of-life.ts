@@ -1,5 +1,5 @@
 import { Either, left, maybe, right } from '../../src'
-import { repeat } from '../../src/lambda/lambda'
+import { repeat } from '../../src'
 
 type Cell = Either<string, string>
 
@@ -63,11 +63,13 @@ export const createGameOfLife = (width: number, height: number): GameOfLife => {
 			(acc, [rowIndex, colIndex]) =>
 				getCell(rowIndex, colIndex).fold(
 					() => acc,
-					(it) =>
-						it.fold(
+					(it) => {
+						console.log('@@@', it)
+						return it.fold(
 							() => acc,
 							() => acc + 1
 						)
+					}
 				),
 			0
 		)

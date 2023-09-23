@@ -11,9 +11,9 @@ interface EQ<E, A> {
 }
 
 interface Chainable<E, A> {
-	flatMap<B = A>(ifRight: (right: A) => A | B | Either<E, A> | Either<E, B>): Either<E, B>
+	flatMap<B>(ifRight: (right: A) => Either<E, B>): Either<E, B>
 
-	mapLeft<G = E>(ifLeft: (left: E) => E | G | Either<G, A> | Either<E, A>): Either<G, A>
+	mapLeft<G>(ifLeft: (left: E) => Either<G, A>): Either<G, A>
 }
 
 interface Foldable<E, A> {

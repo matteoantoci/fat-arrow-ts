@@ -4,7 +4,7 @@ import { createSerializable } from './serializer'
 
 const PROTOTYPE = {}
 
-export const isEither = <E, A>(input: E | A | Either<E, A>): input is Either<E, A> => {
+export const isEither = <E, A>(input: unknown): input is Either<E, A> => {
 	try {
 		return Object.getPrototypeOf(input) === PROTOTYPE
 	} catch (_) {
@@ -48,14 +48,10 @@ const createLeft = <E, A>(data: E) => {
 	})
 }
 
-export const rightOf = <E, A>(data: A | Either<E, A>): Either<E, A> => (isEither(data) ? data : createRight(data))
+export const rightOf = <E, A>(data: A): Either<E, A> => (isEither<E, A>(data) ? data : createRight(data))
 
-export const leftOf = <E, A>(data: E | Either<E, A>): Either<E, A> => (isEither(data) ? data : createLeft(data))
+export const leftOf = <E, A>(data: E): Either<E, A> => (isEither<E, A>(data) ? data : createLeft(data))
 
-export const right = <E = [Error, 'Specify Left type in right()'], A = [Error, 'Specify Right type in right()']>(
-	value: A
-): Either<E, A> => createRight(value)
+export const right = createRight
 
-export const left = <E = [Error, 'Specify Left type in left()'], A = [Error, 'Specify Right type in left()']>(
-	value: E
-): Either<E, A> => createLeft(value)
+export const left = createLeft
