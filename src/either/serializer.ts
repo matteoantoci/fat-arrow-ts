@@ -1,4 +1,3 @@
-import { constant } from '../lambda/lambda'
 import { Serializable, Variants } from '../types'
 import { isEither } from './either'
 
@@ -33,6 +32,6 @@ const toJSON = () => {
 }
 
 export const createSerializable = <T>(variant: Variants, value: T): Serializable => ({
-	toString: constant(() => wrap(variant, stringify(value))),
+	toString: () => wrap(variant, stringify(value)),
 	toJSON,
 })
