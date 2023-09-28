@@ -63,13 +63,11 @@ export const createGameOfLife = (width: number, height: number): GameOfLife => {
 			(acc, [rowIndex, colIndex]) =>
 				getCell(rowIndex, colIndex).fold(
 					() => acc,
-					(it) => {
-						console.log('@@@', it)
-						return it.fold(
+					(it) =>
+						it.fold(
 							() => acc,
 							() => acc + 1
 						)
-					}
 				),
 			0
 		)

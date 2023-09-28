@@ -5,5 +5,4 @@ export default {
 	testEnvironment: 'node',
 	testMatch: ['**/?(*.)+(spec|test).[tj]s?(x)'],
 	testPathIgnorePatterns: ['/node_modules/', '/.github/', '/.idea/', '/docs/', '/dist/'],
-	testURL: 'http://localhost',
 }
