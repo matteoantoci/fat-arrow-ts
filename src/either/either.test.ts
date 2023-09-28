@@ -173,7 +173,7 @@ describe('Either', () => {
 
 		describe('mapLeft', () => {
 			it('supports right return', () => {
-				const newAdt = right(999)
+				const newAdt = right<Error, number>(999)
 
 				const actual = adt.mapLeft(() => newAdt)
 
