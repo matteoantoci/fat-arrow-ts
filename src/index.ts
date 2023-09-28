@@ -6,4 +6,4 @@ export { tryCatch, partition } from './either/either.utils'
 
 export { just, nothing, maybe } from './maybe/maybe'
 
-export { repeat, rotate, chunk, constant, noop, maybeFirst, maybeLast } from './lambda/lambda'
+export { repeat, constant, noop, maybeFirst, maybeLast } from './lambda/lambda'
