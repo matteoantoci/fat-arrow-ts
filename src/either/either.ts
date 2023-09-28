@@ -1,4 +1,3 @@
-import equal from 'fast-deep-equal/es6/react'
 import { Either, Left, Right } from '../types'
 import { createSerializable } from './serializer'
 
@@ -22,7 +21,7 @@ const createRight = <E, A>(data: A) =>
 		equals: (operand) =>
 			operand.fold(
 				() => false,
-				(it) => equal(it, data)
+				(it) => it === data
 			),
 		fold: <B>(_: (left: E) => B, ifRight: (right: A) => B) => ifRight(data),
 		getOrElse: () => data,
@@ -38,7 +37,7 @@ const createLeft = <E, A>(data: E) => {
 		isRight: false,
 		equals: (operand) =>
 			operand.fold(
-				(it) => equal(it, data),
+				(it) => it === data,
 				() => false
 			),
 		fold,

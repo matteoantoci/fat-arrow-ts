@@ -5,7 +5,6 @@ describe('Jest matchers', () => {
 		it('asserts correctly', () => {
 			expect(right(undefined)).toBeRight(undefined)
 			expect(right(null)).toBeRight(null)
-			expect(right({})).toBeRight({})
 			expect(right(5)).toBeRight(5)
 			expect(right(5)).toBeRight(right(5))
 
@@ -19,7 +18,6 @@ describe('Jest matchers', () => {
 		it('asserts correctly', () => {
 			expect(left(undefined)).toBeLeft(undefined)
 			expect(left(null)).toBeLeft(null)
-			expect(left({})).toBeLeft({})
 			expect(left(5)).toBeLeft(5)
 			expect(left(5)).toBeLeft(left(5))
 

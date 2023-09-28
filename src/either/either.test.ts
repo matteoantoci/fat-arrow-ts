@@ -49,10 +49,6 @@ describe('Either', () => {
 				expect(adt.equals(right(2))).toBeTruthy()
 				expect(adt.equals(right(1))).toBeFalsy()
 			})
-
-			it('asserts deep equality', () => {
-				expect(right({}).equals(right({}))).toBeTruthy()
-			})
 		})
 
 		describe('flatMap', () => {
@@ -154,11 +150,6 @@ describe('Either', () => {
 		describe('equals', () => {
 			it('asserts equality', () => {
 				expect(adt.equals(left(error))).toBeTruthy()
-			})
-
-			it('asserts deep equality', () => {
-				expect(adt.equals(left(new Error('error')))).toBeTruthy()
-				expect(adt.equals(left(new Error('foooo')))).toBeFalsy()
 			})
 		})
 

@@ -13,11 +13,12 @@ describe('Either utils', () => {
 
 		describe('when callback throws', () => {
 			it('runs safely', () => {
+				const error = new Error('some error')
 				expect(
 					tryCatch(() => {
-						throw new Error('some error')
+						throw error
 					})
-				).toBeLeft(Error('some error'))
+				).toBeLeft(error)
 			})
 		})
 	})
