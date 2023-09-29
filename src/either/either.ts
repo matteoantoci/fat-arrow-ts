@@ -1,4 +1,4 @@
-import { Either, Left, Right } from '../types'
+import { Either } from '../types'
 import { createSerializable } from './serializer'
 
 const PROTOTYPE = {}
@@ -13,38 +13,44 @@ export const isEither = <E, A>(input: unknown): input is Either<E, A> => {
 
 const seal = <T>(adt: T): T => Object.freeze(Object.assign(Object.create(PROTOTYPE), adt))
 
-const createRight = <E, A>(data: A) =>
-	seal<Right<E, A>>({
+const createRight = <E, A>(data: A) => {
+	const equals = (operand: Either<E, A>) =>
+		operand.fold(
+			() => false,
+			(it) => it === data
+		)
+	const map = <B>(ifRight: (right: A) => B) => rightOf<E, any>(ifRight(data))
+	const fold = <B>(_: (left: E) => B, ifRight: (right: A) => B) => ifRight(data)
+	return seal<Either<E, A>>({
 		...createSerializable('Right', data),
 		isLeft: false,
 		isRight: true,
-		equals: (operand) =>
-			operand.fold(
-				() => false,
-				(it) => it === data
-			),
-		fold: <B>(_: (left: E) => B, ifRight: (right: A) => B) => ifRight(data),
+		equals: equals,
+		fold,
 		getOrElse: () => data,
-		// map: (ifRight) => rightOf<E, any>(ifRight(data)),
-		flatMap: (ifRight) => rightOf<E, any>(ifRight(data)),
+		map,
+		flatMap: map,
 		mapLeft: () => rightOf(data),
 	})
+}
 
 const createLeft = <E, A>(data: E) => {
+	const equals = (operand: Either<E, A>) =>
+		operand.fold(
+			(it) => it === data,
+			() => false
+		)
+	const map = <B>() => leftOf<E, B>(data)
 	const fold = <B>(ifLeft: (value: E) => B) => ifLeft(data)
-	return seal<Left<E, A>>({
+	return seal<Either<E, A>>({
 		...createSerializable('Left', data),
 		isLeft: true,
 		isRight: false,
-		equals: (operand) =>
-			operand.fold(
-				(it) => it === data,
-				() => false
-			),
+		equals: equals,
 		fold,
 		getOrElse: fold,
-		// map: () => leftOf(data),
-		flatMap: () => leftOf(data),
+		map: map,
+		flatMap: map,
 		mapLeft: (ifLeft) => leftOf<any, A>(ifLeft(data)),
 	})
 }

@@ -10,14 +10,14 @@ interface EQ<E, A> {
 	equals(value: Either<E, A>): boolean
 }
 
-// type AnyNonEither = Exclude<any, Either<any, any>>
+type Scalar<T> = Exclude<T, Either<any, any>>
 
 interface Chainable<E, A> {
-	// map<B extends AnyNonEither = A>(ifRight: (right: A) => B): Either<E, B>
+	map<B>(ifRight: (right: A) => Scalar<A | B>): Either<E, B>
 
-	flatMap<B = A>(ifRight: (right: A) => Left<E, A> | Right<E, B>): Either<E, B>
+	flatMap<B>(ifRight: (right: A) => Either<E, A | B>): Either<E, B>
 
-	mapLeft<G = E>(ifLeft: (left: E) => Left<G, A> | Right<E, A>): Either<G, A>
+	mapLeft<G>(ifLeft: (left: E) => Either<G | E, A>): Either<G, A>
 }
 
 interface Foldable<E, A> {
